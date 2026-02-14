@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint",
-    "seed": "tsx prisma/seed.ts"
-  },
+  "dev": "next dev",
+  "build": "prisma generate && next build", // Genera el cliente antes de compilar
+  "start": "next start",
+  "lint": "eslint",
+  "seed": "tsx prisma/seed.ts",
+  "postinstall": "prisma generate" // Muy importante para entornos como Coolify/Nixpacks
+},
+
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
     "@hookform/resolvers": "^5.2.2",
