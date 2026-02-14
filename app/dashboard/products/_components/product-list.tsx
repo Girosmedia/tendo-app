@@ -22,10 +22,12 @@ import {
 } from '@/components/ui/table'
 import { ResponsiveTable, ResponsiveTableMinWidth } from '@/components/ui/responsive-table'
 import { Badge } from '@/components/ui/badge'
-import { Search, Package, Briefcase, AlertTriangle } from 'lucide-react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Search, Package, Briefcase, AlertTriangle, Printer } from 'lucide-react'
 import { formatPrice, isLowStock } from '@/lib/products'
 import { Prisma } from '@/lib/generated/prisma/client/client'
 import { EditProductDialog } from './edit-product-dialog'
+import { LabelPreview } from './label-preview'
 
 type Product = {
   id: string
@@ -46,14 +48,17 @@ type Product = {
 interface ProductListProps {
   products: Product[]
   categories: Array<{ id: string; name: string }>
+  organizationName: string
+  organizationLogo?: string | null
 }
 
-export function ProductList({ products: initialProducts, categories }: ProductListProps) {
+export function ProductList({ products: initialProducts, categories, organizationName, organizationLogo }: ProductListProps) {
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState<'all' | ProductType>('all')
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [editingProductId, setEditingProductId] = useState<string | null>(null)
+  const [printingProduct, setPrintingProduct] = useState<Product | null>(null)
 
   // Client-side filtering
   const filteredProducts = useMemo(() => {
@@ -220,14 +225,23 @@ export function ProductList({ products: initialProducts, categories }: ProductLi
                       </div>
 
                       {/* Action Button */}
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="w-full h-11"
-                        onClick={() => setEditingProductId(product.id)}
-                      >
-                        Editar Producto
-                      </Button>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => setEditingProductId(product.id)}
+                        >
+                          Editar
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => setPrintingProduct(product)}
+                        >
+                          <Printer className="h-4 w-4 mr-1" />
+                          Etiqueta
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -307,13 +321,23 @@ export function ProductList({ products: initialProducts, categories }: ProductLi
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => setEditingProductId(product.id)}
-                        >
-                          Editar
-                        </Button>
+                        <div className="flex items-center justify-end gap-2">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => setEditingProductId(product.id)}
+                          >
+                            Editar
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="icon"
+                            onClick={() => setPrintingProduct(product)}
+                            title="Imprimir etiqueta"
+                          >
+                            <Printer className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))
@@ -333,7 +357,29 @@ export function ProductList({ products: initialProducts, categories }: ProductLi
           isOpen={!!editingProductId}
           onClose={() => setEditingProductId(null)}
           categories={categories}
+          organizationName={organizationName}
+          organizationLogo={organizationLogo}
         />
+      )}
+
+      {/* Print Label Dialog */}
+      {printingProduct && (
+        <Dialog open={!!printingProduct} onOpenChange={(open) => !open && setPrintingProduct(null)}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Imprimir Etiqueta</DialogTitle>
+            </DialogHeader>
+            <LabelPreview 
+              product={{
+                name: printingProduct.name,
+                price: Number(printingProduct.price),
+                sku: printingProduct.sku,
+              }}
+              organizationName={organizationName}
+              organizationLogo={organizationLogo}
+            />
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   )

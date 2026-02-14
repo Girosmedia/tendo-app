@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { toast } from 'sonner';
+import { productCompactFormSchema, transformCompactFormDataToApi, type ProductCompactFormData } from '@/lib/validators/product';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -21,15 +21,6 @@ import {
 } from '@/components/ui/form';
 import { Loader2, Save } from 'lucide-react';
 
-const productFormSchema = z.object({
-  name: z.string().min(1, 'El nombre es obligatorio'),
-  sku: z.string().min(1, 'El SKU es obligatorio'),
-  price: z.string().min(1, 'El precio es obligatorio'),
-  description: z.string().optional(),
-});
-
-type ProductFormData = z.infer<typeof productFormSchema>;
-
 interface ProductFormCompactProps {
   initialSKU: string;
   onSuccess: (product: any) => void;
@@ -39,8 +30,8 @@ export function ProductFormCompact({ initialSKU, onSuccess }: ProductFormCompact
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm<ProductFormData>({
-    resolver: zodResolver(productFormSchema),
+  const form = useForm<ProductCompactFormData>({
+    resolver: zodResolver(productCompactFormSchema),
     defaultValues: {
       name: '',
       sku: initialSKU,
@@ -49,22 +40,15 @@ export function ProductFormCompact({ initialSKU, onSuccess }: ProductFormCompact
     },
   });
 
-  async function onSubmit(data: ProductFormData) {
+  async function onSubmit(data: ProductCompactFormData) {
     setIsSubmitting(true);
     
     try {
+      const apiData = transformCompactFormDataToApi(data);
       const res = await fetch('/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...data,
-          type: 'PRODUCT',
-          price: parseFloat(data.price),
-          taxRate: 19,
-          trackInventory: false,
-          currentStock: 0,
-          isActive: true,
-        }),
+        body: JSON.stringify(apiData),
       });
 
       if (!res.ok) {

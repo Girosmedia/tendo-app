@@ -4,23 +4,7 @@ import { db } from '@/lib/db'
 import { getCurrentOrganization, isAdminRole } from '@/lib/organization'
 import { z } from 'zod'
 import { Prisma } from '@/lib/generated/prisma/client/client'
-
-const productUpdateSchema = z.object({
-  type: z.enum(['PRODUCT', 'SERVICE']).optional(),
-  categoryId: z.string().nullable().optional(),
-  sku: z.string().min(1).max(50).optional(),
-  name: z.string().min(1).max(200).optional(),
-  description: z.string().nullable().optional(),
-  imageUrl: z.string().url().nullable().optional().or(z.literal('')),
-  price: z.number().min(0).optional(),
-  cost: z.number().min(0).nullable().optional(),
-  taxRate: z.number().min(0).max(100).optional(),
-  trackInventory: z.boolean().optional(),
-  currentStock: z.number().int().min(0).optional(),
-  minStock: z.number().int().min(0).optional(),
-  unit: z.string().optional(),
-  isActive: z.boolean().optional(),
-})
+import { productUpdateApiSchema } from '@/lib/validators/product'
 
 /**
  * GET /api/products/[id]
@@ -100,7 +84,7 @@ export async function PATCH(
 
     const { id } = await params
     const body = await req.json()
-    const validated = productUpdateSchema.parse(body)
+    const validated = productUpdateApiSchema.parse(body)
 
     // Verificar que el producto existe
     const existingProduct = await db.product.findFirst({

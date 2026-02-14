@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { productEditFormSchema, type ProductEditFormData } from '@/lib/validators/product';
 import {
   Dialog,
   DialogContent,
@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -34,32 +35,16 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
-
-const editProductSchema = z.object({
-  type: z.enum(['PRODUCT', 'SERVICE']),
-  categoryId: z.string().nullable(),
-  sku: z.string().min(1, 'El SKU es requerido').max(50),
-  name: z.string().min(1, 'El nombre es requerido').max(200),
-  description: z.string().nullable(),
-  imageUrl: z.string().url('Debe ser una URL válida').nullable().or(z.literal('')),
-  price: z.number().min(0, 'El precio debe ser mayor o igual a 0'),
-  cost: z.number().min(0).nullable(),
-  taxRate: z.number().min(0).max(100),
-  trackInventory: z.boolean(),
-  currentStock: z.number().int().min(0),
-  minStock: z.number().int().min(0),
-  unit: z.string(),
-  isActive: z.boolean(),
-});
-
-type EditProductInput = z.infer<typeof editProductSchema>;
+import { Loader2, Printer, AlertTriangle } from 'lucide-react';
+import { LabelPreview } from './label-preview';
 
 interface EditProductDialogProps {
   productId: string;
   isOpen: boolean;
   onClose: () => void;
   categories: Array<{ id: string; name: string }>;
+  organizationName?: string;
+  organizationLogo?: string | null;
 }
 
 export function EditProductDialog({
@@ -67,13 +52,17 @@ export function EditProductDialog({
   isOpen,
   onClose,
   categories,
+  organizationName = 'Mi Negocio',
+  organizationLogo = null,
 }: EditProductDialogProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
+  const [showLabelPreview, setShowLabelPreview] = useState(false);
+  const [originalSku, setOriginalSku] = useState<string>('');
 
-  const form = useForm<EditProductInput>({
-    resolver: zodResolver(editProductSchema),
+  const form = useForm<ProductEditFormData>({
+    resolver: zodResolver(productEditFormSchema),
     defaultValues: {
       type: 'PRODUCT',
       categoryId: null,
@@ -94,6 +83,8 @@ export function EditProductDialog({
 
   const type = form.watch('type');
   const trackInventory = form.watch('trackInventory');
+  const currentSku = form.watch('sku');
+  const skuChanged = originalSku && currentSku !== originalSku;
 
   // Fetch product data cuando se abre el diálogo
   useEffect(() => {
@@ -107,6 +98,9 @@ export function EditProductDialog({
         if (!res.ok) throw new Error('Error al cargar producto');
         
         const { product } = await res.json();
+        
+        // Guardar SKU original para detectar cambios
+        setOriginalSku(product.sku);
         
         // Convertir Decimal a number
         form.reset({
@@ -144,7 +138,7 @@ export function EditProductDialog({
     }
   }, [type, trackInventory, form]);
 
-  const onSubmit = async (data: EditProductInput) => {
+  const onSubmit = async (data: ProductEditFormData) => {
     try {
       setIsLoading(true);
 
@@ -273,6 +267,17 @@ export function EditProductDialog({
                   )}
                 />
               </div>
+
+              {/* Advertencia de cambio de SKU */}
+              {skuChanged && (
+                <Alert variant="destructive">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription>
+                    <strong>¡Atención!</strong> Cambiar el SKU puede afectar la trazabilidad del producto.
+                    Si ya imprimiste etiquetas con el SKU anterior (<code className="font-mono">{originalSku}</code>), considera crear un producto nuevo en su lugar.
+                  </AlertDescription>
+                </Alert>
+              )}
 
               {/* Nombre */}
               <FormField
@@ -490,23 +495,56 @@ export function EditProductDialog({
               />
 
               <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={onClose}
-                  disabled={isLoading}
-                >
-                  Cancelar
-                </Button>
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Guardar Cambios
-                </Button>
+                <div className="flex w-full justify-between">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowLabelPreview(true)}
+                    disabled={isLoading || isFetching}
+                  >
+                    <Printer className="mr-2 h-4 w-4" />
+                    Imprimir Etiqueta
+                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={onClose}
+                      disabled={isLoading}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button type="submit" disabled={isLoading}>
+                      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      Guardar Cambios
+                    </Button>
+                  </div>
+                </div>
               </DialogFooter>
             </form>
           </Form>
         )}
       </DialogContent>
+
+      {/* Label Preview Dialog */}
+      {showLabelPreview && (
+        <Dialog open={showLabelPreview} onOpenChange={setShowLabelPreview}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Imprimir Etiqueta</DialogTitle>
+            </DialogHeader>
+            <LabelPreview 
+              product={{
+                name: form.getValues('name'),
+                price: form.getValues('price'),
+                sku: form.getValues('sku'),
+              }}
+              organizationName={organizationName}
+              organizationLogo={organizationLogo}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
     </Dialog>
   );
 }

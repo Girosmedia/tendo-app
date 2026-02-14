@@ -4,23 +4,7 @@ import { db } from '@/lib/db'
 import { getCurrentOrganization, isAdminRole } from '@/lib/organization'
 import { z } from 'zod'
 import { Prisma } from '@/lib/generated/prisma/client/client'
-
-const productSchema = z.object({
-  type: z.enum(['PRODUCT', 'SERVICE']),
-  categoryId: z.string().nullable().optional(),
-  sku: z.string().min(1, 'El SKU es requerido').max(50),
-  name: z.string().min(1, 'El nombre es requerido').max(200),
-  description: z.string().optional(),
-  imageUrl: z.string().url().optional().or(z.literal('')),
-  price: z.number().min(0, 'El precio debe ser mayor o igual a 0'),
-  cost: z.number().min(0).optional(),
-  taxRate: z.number().min(0).max(100).default(19),
-  trackInventory: z.boolean().default(false),
-  currentStock: z.number().int().min(0).default(0),
-  minStock: z.number().int().min(0).default(0),
-  unit: z.string().default('unidad'),
-  isActive: z.boolean().default(true),
-})
+import { productApiSchema } from '@/lib/validators/product'
 
 /**
  * GET /api/products
@@ -117,7 +101,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const validated = productSchema.parse(body)
+    const validated = productApiSchema.parse(body)
 
     // Verificar que el SKU sea único en la organización
     const existingSku = await db.product.findFirst({

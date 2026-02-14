@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { ProductType } from '@/lib/generated/prisma/client/client'
+import { productFormSchema, transformFormDataToApi, type ProductFormData } from '@/lib/validators/product'
 import {
   Dialog,
   DialogContent,
@@ -34,26 +34,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Sparkles } from 'lucide-react'
 import { toast } from 'sonner'
-
-const productSchema = z.object({
-  name: z.string().min(1, 'El nombre es obligatorio'),
-  sku: z.string().min(1, 'El SKU es obligatorio'),
-  description: z.string().optional(),
-  type: z.enum(['PRODUCT', 'SERVICE']),
-  categoryId: z.string().optional(),
-  price: z.string().min(1, 'El precio es obligatorio'),
-  cost: z.string().optional(),
-  taxRate: z.string().optional(),
-  trackInventory: z.boolean().optional(),
-  currentStock: z.string().optional(),
-  minStock: z.string().optional(),
-  unit: z.string().optional(),
-  isActive: z.boolean().optional(),
-})
-
-type ProductFormData = z.infer<typeof productSchema>
 
 interface ProductDialogProps {
   open: boolean
@@ -64,9 +46,10 @@ interface ProductDialogProps {
 export function ProductDialog({ open, onOpenChange, categories }: ProductDialogProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isGeneratingSku, setIsGeneratingSku] = useState(false)
 
   const form = useForm<ProductFormData>({
-    resolver: zodResolver(productSchema),
+    resolver: zodResolver(productFormSchema),
     defaultValues: {
       name: '',
       sku: '',
@@ -87,21 +70,33 @@ export function ProductDialog({ open, onOpenChange, categories }: ProductDialogP
   const productType = form.watch('type')
   const trackInventory = form.watch('trackInventory')
 
+  const handleGenerateSKU = async () => {
+    setIsGeneratingSku(true)
+    try {
+      const response = await fetch('/api/products/generate-sku')
+      if (!response.ok) {
+        throw new Error('Error al generar SKU')
+      }
+      const data = await response.json()
+      form.setValue('sku', data.sku)
+      toast.success('SKU generado automáticamente')
+    } catch (error) {
+      toast.error('Error al generar SKU')
+      console.error(error)
+    } finally {
+      setIsGeneratingSku(false)
+    }
+  }
+
   const onSubmit = async (data: ProductFormData) => {
     setIsSubmitting(true)
     
     try {
+      const apiData = transformFormDataToApi(data)
       const response = await fetch('/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...data,
-          price: parseFloat(data.price),
-          cost: data.cost ? parseFloat(data.cost) : undefined,
-          taxRate: parseFloat(data.taxRate || '19'),
-          currentStock: parseInt(data.currentStock || '0'),
-          minStock: parseInt(data.minStock || '0'),
-        }),
+        body: JSON.stringify(apiData),
       })
 
       if (!response.ok) {
@@ -155,10 +150,28 @@ export function ProductDialog({ open, onOpenChange, categories }: ProductDialogP
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>SKU *</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Ej: LAP-HP-001" {...field} />
-                      </FormControl>
-                      <FormDescription>Código único del producto</FormDescription>
+                      <div className="flex gap-2">
+                        <FormControl>
+                          <Input placeholder="Ej: LAP-HP-001" {...field} />
+                        </FormControl>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={handleGenerateSKU}
+                          disabled={isGeneratingSku || !!field.value}
+                          title={field.value ? 'Limpia el campo para generar un nuevo SKU' : 'Generar SKU automático'}
+                        >
+                          {isGeneratingSku ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Sparkles className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
+                      <FormDescription>
+                        {field.value ? 'Código único del producto' : 'Ingresa un código o genera uno automático'}
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

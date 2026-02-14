@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers'
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
+import { db } from '@/lib/db'
 import { ProductList } from './_components/product-list'
 import { ProductsHeader } from './_components/products-header'
 
@@ -64,15 +65,29 @@ export default async function ProductsPage() {
     redirect('/login')
   }
 
-  const [products, categories] = await Promise.all([
+  const [products, categories, organization] = await Promise.all([
     getProducts(),
     getCategories(),
+    db.organization.findUnique({
+      where: { id: session.user.organizationId },
+      select: { 
+        name: true, 
+        settings: { 
+          select: { logoUrl: true } 
+        } 
+      },
+    }),
   ])
 
   return (
     <div className="flex flex-col gap-6">
       <ProductsHeader categories={categories} />
-      <ProductList products={products} categories={categories} />
+      <ProductList 
+        products={products} 
+        categories={categories} 
+        organizationName={organization?.name || 'Mi Negocio'}
+        organizationLogo={organization?.settings?.logoUrl}
+      />
     </div>
   )
 }
