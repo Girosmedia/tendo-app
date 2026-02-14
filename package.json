@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
   "dev": "next dev",
-  "build": "prisma generate && next build", // Genera el cliente antes de compilar
+  "build": "prisma generate && next build",
   "start": "next start",
   "lint": "eslint",
   "seed": "tsx prisma/seed.ts",
-  "postinstall": "prisma generate" // Muy importante para entornos como Coolify/Nixpacks
+  "postinstall": "prisma generate"
 },
 
   "dependencies": {
