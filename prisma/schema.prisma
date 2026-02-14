@@ -1,0 +1,610 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// AUTH.JS (NEXT-AUTH V5) ADAPTER MODELS
+// ============================================
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id                    String    @id @default(cuid())
+  name                  String?
+  email                 String    @unique
+  emailVerified         DateTime? @map("email_verified")
+  image                 String?
+  password              String?
+  isSuperAdmin          Boolean   @default(false) @map("is_super_admin")
+  currentOrganizationId String?   @map("current_organization_id")
+
+  accounts      Account[]
+  sessions      Session[]
+  memberships   Member[]
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================================
+// MULTI-TENANT CORE MODELS
+// ============================================
+
+enum MemberRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum OrganizationStatus {
+  ACTIVE
+  SUSPENDED
+  TRIAL
+}
+
+model Organization {
+  id        String             @id @default(cuid())
+  name      String
+  slug      String             @unique
+  rut       String             @unique
+  logoUrl   String?            @map("logo_url")
+  status    OrganizationStatus @default(ACTIVE)
+  plan      String             @default("BASIC")
+  modules   String[]           @default([])
+  createdAt DateTime           @default(now()) @map("created_at")
+  updatedAt DateTime           @updatedAt @map("updated_at")
+
+  members       Member[]
+  settings      OrganizationSettings?
+  categories    Category[]
+  products      Product[]
+  customers     Customer[]
+  documents     Document[]
+  cashRegisters CashRegister[]
+  credits       Credit[]
+  payments      Payment[]
+
+  @@map("organizations")
+}
+
+model Member {
+  id             String     @id @default(cuid())
+  userId         String     @map("user_id")
+  organizationId String     @map("organization_id")
+  role           MemberRole @default(MEMBER)
+  isActive       Boolean    @default(true) @map("is_active")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+  @@index([userId])
+  @@map("members")
+}
+
+// ============================================
+// TEAM INVITATIONS
+// ============================================
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  REVOKED
+}
+
+model TeamInvitation {
+  id             String           @id @default(cuid())
+  organizationId String           @map("organization_id")
+  email          String
+  role           MemberRole       @default(MEMBER)
+  token          String           @unique
+  status         InvitationStatus @default(PENDING)
+  invitedBy      String           @map("invited_by") // User ID del que envió la invitación
+  expiresAt      DateTime         @map("expires_at")
+  acceptedAt     DateTime?        @map("accepted_at")
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+
+  @@unique([organizationId, email])
+  @@index([token])
+  @@index([organizationId])
+  @@index([status])
+  @@map("team_invitations")
+}
+
+// ============================================
+// ORGANIZATION SETTINGS
+// ============================================
+
+model OrganizationSettings {
+  id             String   @id @default(cuid())
+  organizationId String   @unique @map("organization_id")
+
+  // Identidad
+  businessName String  @map("business_name")
+  tradeName    String? @map("trade_name")
+  rut          String
+  logoUrl      String? @map("logo_url")
+
+  // Ubicación
+  address String?
+  city    String?
+  region  String?
+  country String  @default("Chile")
+
+  // Contacto
+  phone   String?
+  email   String?
+  website String?
+
+  // Fiscales
+  taxRegime        String? @map("tax_regime")
+  economicActivity String? @map("economic_activity")
+
+  // Regional
+  timezone String @default("America/Santiago")
+  currency String @default("CLP")
+  locale   String @default("es-CL")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("organization_settings")
+}
+
+// ============================================
+// AUDIT LOG
+// ============================================
+
+model AuditLog {
+  id               String   @id @default(cuid())
+  userId           String   @map("user_id")
+  action           String   // CREATE_TENANT, UPDATE_USER, DELETE_TENANT, etc
+  resource         String   // "Organization", "User"
+  resourceId       String   @map("resource_id")
+  changes          Json?    // Diff antes/después
+  ipAddress        String?  @map("ip_address")
+  isImpersonating  Boolean  @default(false) @map("is_impersonating")
+  impersonationId  String?  @map("impersonation_id")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@index([isImpersonating])
+  @@map("audit_logs")
+}
+
+// ============================================
+// IMPERSONATION (SUPPORT SYSTEM)
+// ============================================
+
+model ImpersonationSession {
+  id                 String    @id @default(cuid())
+  superAdminId       String    @map("super_admin_id")
+  targetOrganizationId String  @map("target_organization_id")
+  targetUserId       String?   @map("target_user_id") // Si se impersona a usuario específico
+  isActive           Boolean   @default(true) @map("is_active")
+  expiresAt          DateTime  @map("expires_at")
+  endedAt            DateTime? @map("ended_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+
+  @@index([superAdminId])
+  @@index([targetOrganizationId])
+  @@index([isActive])
+  @@index([expiresAt])
+  @@map("impersonation_sessions")
+}
+
+// ============================================
+// PRODUCTS & SERVICES (CATALOG)
+// ============================================
+
+enum ProductType {
+  PRODUCT
+  SERVICE
+}
+
+model Category {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  name           String
+  slug           String
+  description    String?
+  parentId       String?  @map("parent_id")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  parent       Category?    @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children     Category[]   @relation("CategoryHierarchy")
+  products     Product[]
+
+  @@unique([organizationId, slug])
+  @@index([organizationId])
+  @@map("categories")
+}
+
+model Product {
+  id             String      @id @default(cuid())
+  organizationId String      @map("organization_id")
+  categoryId     String?     @map("category_id")
+  type           ProductType @default(PRODUCT)
+  
+  // Identificación
+  sku            String      // Puede ser código de barras comercial o SKU generado
+  name           String
+  description    String?
+  imageUrl       String?     @map("image_url")
+  
+  // Precios
+  // IMPORTANTE: price = Precio BRUTO (incluye IVA). Es el monto final que se cobra al cliente.
+  // Para obtener el neto: neto = price / (1 + taxRate/100)
+  // Para obtener el IVA: iva = price - neto
+  price          Decimal     @db.Decimal(10, 2)
+  cost           Decimal?    @db.Decimal(10, 2)
+  taxRate        Decimal     @default(19) @db.Decimal(5, 2) @map("tax_rate") // IVA 19% por defecto
+  
+  // Inventario (solo para PRODUCT)
+  trackInventory Boolean     @default(false) @map("track_inventory")
+  currentStock   Int         @default(0) @map("current_stock")
+  minStock       Int         @default(0) @map("min_stock")
+  unit           String      @default("unidad") // unidad, kg, litro, metro, etc
+  
+  // Estado
+  isActive       Boolean     @default(true) @map("is_active")
+  
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  category       Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  documentItems  DocumentItem[]
+
+  @@unique([organizationId, sku])
+  @@index([organizationId])
+  @@index([categoryId])
+  @@index([type])
+  @@index([isActive])
+  @@map("products")
+}
+
+// ============================================
+// CUSTOMERS (CRM LIGHT)
+// ============================================
+
+model Customer {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  
+  // Identificación
+  name           String
+  rut            String?
+  email          String?
+  phone          String?
+  
+  // Ubicación
+  address        String?
+  city           String?
+  region         String?
+  
+  // Comercial (B2B)
+  company        String?              // Nombre empresa (si es cliente corporativo)
+  creditLimit    Decimal?  @db.Decimal(10, 2) @map("credit_limit")  // Límite de crédito
+  currentDebt    Decimal   @db.Decimal(10, 2) @default(0) @map("current_debt")  // Deuda actual
+  
+  // Metadata
+  tags           String[]             // ["VIP", "Mayorista", "Moroso"]
+  notes          String?  @db.Text    // Notas internas
+  isActive       Boolean  @default(true) @map("is_active")
+  
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  documents    Document[]
+  credits      Credit[]
+  payments     Payment[]
+
+  @@unique([organizationId, rut])
+  @@index([organizationId])
+  @@index([name])
+  @@index([email])
+  @@map("customers")
+}
+
+// ============================================
+// DOCUMENTS (SALES, QUOTES, INVOICES)
+// ============================================
+
+enum DocumentType {
+  SALE          // Venta directa (POS)
+  QUOTE         // Cotización
+  INVOICE       // Factura
+  RECEIPT       // Boleta
+  CREDIT_NOTE   // Nota de Crédito
+}
+
+enum DocumentStatus {
+  DRAFT         // Borrador
+  PENDING       // Pendiente (cotización enviada)
+  APPROVED      // Aprobada (cotización)
+  PAID          // Pagada
+  CANCELLED     // Anulada
+}
+
+enum PaymentMethod {
+  CASH          // Efectivo
+  CARD          // Tarjeta (Débito/Crédito)
+  TRANSFER      // Transferencia bancaria
+  CHECK         // Cheque
+  CREDIT        // Crédito (Fiado)
+  MULTI         // Pago mixto (varios métodos)
+}
+
+enum CashRegisterStatus {
+  OPEN          // Caja abierta (turno activo)
+  CLOSED        // Caja cerrada (turno finalizado)
+}
+
+model Document {
+  id             String         @id @default(cuid())
+  organizationId String         @map("organization_id")
+  customerId     String?        @map("customer_id")
+  
+  // Tipo y Estado
+  type           DocumentType   @default(SALE)
+  status         DocumentStatus @default(DRAFT)
+  
+  // Numeración (por organización y tipo)
+  docNumber      Int            @map("doc_number")  // Autoincremental por tipo
+  docPrefix      String?        @map("doc_prefix")   // Ej: "COT", "FAC", "BOL"
+  
+  // Fechas
+  issuedAt       DateTime       @default(now()) @map("issued_at")
+  dueAt          DateTime?      @map("due_at")  // Fecha vencimiento (para cotizaciones, facturas a crédito)
+  paidAt         DateTime?      @map("paid_at")
+  
+  // Pago
+  paymentMethod  PaymentMethod  @default(CASH) @map("payment_method")
+  
+  // Montos (CLP, sin decimales en práctica pero Decimal para precisión)
+  subtotal       Decimal        @db.Decimal(10, 2)
+  taxRate        Decimal        @default(19) @db.Decimal(5, 2) @map("tax_rate") // IVA 19%
+  taxAmount      Decimal        @db.Decimal(10, 2) @map("tax_amount")
+  // Descuento global sobre el total de la venta (se aplica DESPUÉS de sumar items)
+  // Este descuento es ADICIONAL a los descuentos individuales de cada item
+  discount       Decimal        @default(0) @db.Decimal(10, 2)
+  total          Decimal        @db.Decimal(10, 2)
+  
+  // Pago en efectivo (solo para CASH y MULTI)
+  cashReceived   Decimal?       @db.Decimal(10, 2) @map("cash_received")
+  cashChange     Decimal?       @db.Decimal(10, 2) @map("cash_change")
+  
+  // Metadata
+  notes          String?        @db.Text
+  createdBy      String         @map("created_by")  // User ID
+  
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer       Customer?      @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  items          DocumentItem[]
+  credits        Credit[]
+
+  @@unique([organizationId, type, docNumber])
+  @@index([organizationId])
+  @@index([customerId])
+  @@index([type])
+  @@index([status])
+  @@index([issuedAt])
+  @@index([createdBy])
+  @@map("documents")
+}
+
+model DocumentItem {
+  id             String   @id @default(cuid())
+  documentId     String   @map("document_id")
+  productId      String?  @map("product_id")
+  
+  // Detalles del ítem (guardamos snapshot por si producto cambia)
+  sku            String?
+  name           String
+  description    String?
+  
+  // Cantidades y precios
+  quantity       Decimal  @db.Decimal(10, 3)  // 3 decimales para granel
+  unit           String   @default("unidad")  // unidad, kg, litro, etc
+  unitPrice      Decimal  @db.Decimal(10, 2) @map("unit_price")
+  
+  // Descuento e impuestos
+  // IMPORTANTE: discount y discountPercent se sincronizan automáticamente en la UI
+  // Si el usuario aplica 10% de descuento, se calcula el monto y viceversa
+  // El descuento se aplica ANTES del cálculo de IVA: itemTotal = (qty * price) - discount
+  discount       Decimal  @default(0) @db.Decimal(10, 2)  // Descuento en monto (CLP)
+  discountPercent Decimal? @default(0) @db.Decimal(5, 2) @map("discount_percent") // Descuento en porcentaje
+  taxRate        Decimal  @default(19) @db.Decimal(5, 2) @map("tax_rate")
+  
+  // Totales calculados
+  subtotal       Decimal  @db.Decimal(10, 2)  // (quantity * unitPrice) - discount
+  taxAmount      Decimal  @db.Decimal(10, 2) @map("tax_amount")
+  total          Decimal  @db.Decimal(10, 2)  // subtotal + taxAmount
+  
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  document       Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  product        Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([documentId])
+  @@index([productId])
+  @@map("document_items")
+}
+
+// ============================================
+// CASH REGISTER (CIERRE DE CAJA)
+// ============================================
+
+model CashRegister {
+  id             String             @id @default(cuid())
+  organizationId String             @map("organization_id")
+  
+  // Control de sesión
+  status         CashRegisterStatus @default(OPEN)
+  openedBy       String             @map("opened_by")   // User ID del cajero
+  closedBy       String?            @map("closed_by")   // User ID (puede ser diferente si admin cierra)
+  
+  // Fechas
+  openedAt       DateTime           @default(now()) @map("opened_at")
+  closedAt       DateTime?          @map("closed_at")
+  
+  // Montos de efectivo (solo efectivo, otros métodos no entran en arqueo)
+  openingCash    Decimal            @db.Decimal(10, 2) @map("opening_cash")  // Fondo inicial
+  expectedCash   Decimal            @db.Decimal(10, 2) @default(0) @map("expected_cash")  // Calculado: opening + ventas efectivo
+  actualCash     Decimal?           @db.Decimal(10, 2) @map("actual_cash")    // Conteo físico al cerrar
+  difference     Decimal?           @db.Decimal(10, 2)  // Diferencia: actual - expected (+ sobrante, - faltante)
+  
+  // Resumen de ventas del turno (todos los métodos)
+  totalSales     Decimal            @db.Decimal(10, 2) @default(0) @map("total_sales")
+  salesCount     Int                @default(0) @map("sales_count")
+  
+  // Metadata
+  notes          String?            @db.Text  // Observaciones, justificación de diferencias
+  
+  createdAt      DateTime           @default(now()) @map("created_at")
+  updatedAt      DateTime           @updatedAt @map("updated_at")
+  
+  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  @@index([organizationId])
+  @@index([openedBy])
+  @@index([status])
+  @@index([openedAt])
+  @@map("cash_registers")
+}
+
+// ============================================
+// CREDITS & PAYMENTS (CUENTAS POR COBRAR)
+// ============================================
+
+enum CreditStatus {
+  ACTIVE    // Crédito activo con saldo pendiente
+  PAID      // Totalmente pagado
+  CANCELED  // Anulado
+  OVERDUE   // Vencido
+}
+
+model Credit {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  customerId     String       @map("customer_id")
+  documentId     String?      @map("document_id")  // Venta que generó el crédito (opcional)
+  
+  // Montos
+  amount         Decimal      @db.Decimal(10, 2)  // Monto total del crédito
+  balance        Decimal      @db.Decimal(10, 2)  // Saldo pendiente (se reduce con cada pago)
+  
+  // Control
+  status         CreditStatus @default(ACTIVE)
+  dueDate        DateTime     @map("due_date")     // Fecha de vencimiento
+  
+  // Metadata
+  description    String?      @db.Text             // Descripción o concepto
+  notes          String?      @db.Text             // Notas internas
+  
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+  
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer       Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  document       Document?    @relation(fields: [documentId], references: [id], onDelete: SetNull)
+  payments       Payment[]
+  
+  @@index([organizationId])
+  @@index([customerId])
+  @@index([status])
+  @@index([dueDate])
+  @@map("credits")
+}
+
+model Payment {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  creditId       String   @map("credit_id")
+  customerId     String   @map("customer_id")  // Denormalizado para queries rápidas
+  
+  // Pago
+  amount         Decimal  @db.Decimal(10, 2)  // Monto pagado
+  paymentMethod  String   @map("payment_method")  // "CASH", "CARD", "TRANSFER", etc.
+  
+  // Metadata
+  reference      String?  // Número de transferencia, voucher, etc.
+  notes          String?  @db.Text
+  
+  paidAt         DateTime @default(now()) @map("paid_at")  // Fecha del pago
+  createdAt      DateTime @default(now()) @map("created_at")
+  
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  credit         Credit       @relation(fields: [creditId], references: [id], onDelete: Cascade)
+  customer       Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  @@index([organizationId])
+  @@index([creditId])
+  @@index([customerId])
+  @@index([paidAt])
+  @@map("payments")
+}
+
