@@ -164,7 +164,7 @@ export function SettingsForm({ initialData }: SettingsFormProps) {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Building2 className="h-5 w-5 text-indigo-600" />
+              <Building2 className="h-5 w-5 text-primary" />
               <CardTitle>Información General</CardTitle>
             </div>
             <CardDescription>
@@ -258,7 +258,7 @@ export function SettingsForm({ initialData }: SettingsFormProps) {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-indigo-600" />
+              <MapPin className="h-5 w-5 text-primary" />
               <CardTitle>Ubicación</CardTitle>
             </div>
             <CardDescription>
@@ -344,7 +344,7 @@ export function SettingsForm({ initialData }: SettingsFormProps) {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Phone className="h-5 w-5 text-indigo-600" />
+              <Phone className="h-5 w-5 text-primary" />
               <CardTitle>Contacto</CardTitle>
             </div>
             <CardDescription>
@@ -414,7 +414,7 @@ export function SettingsForm({ initialData }: SettingsFormProps) {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-indigo-600" />
+              <FileText className="h-5 w-5 text-primary" />
               <CardTitle>Información Fiscal</CardTitle>
             </div>
             <CardDescription>

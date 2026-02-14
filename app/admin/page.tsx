@@ -21,21 +21,21 @@ export default async function AdminPage() {
       value: totalOrganizations,
       description: `${activeOrganizations} activos`,
       icon: Building2,
-      color: 'text-indigo-600',
+      color: 'text-primary',
     },
     {
       title: 'Total Usuarios',
       value: totalUsers,
       description: 'Usuarios registrados',
       icon: Users,
-      color: 'text-emerald-600',
+      color: 'text-success',
     },
     {
       title: 'Sesión Activa',
       value: session?.user.name || 'Admin',
       description: session?.user.email || '',
       icon: Shield,
-      color: 'text-rose-600',
+      color: 'text-destructive',
     },
   ];
 

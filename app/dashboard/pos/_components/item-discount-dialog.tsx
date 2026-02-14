@@ -123,7 +123,7 @@ export function ItemDiscountDialog({
             {discountAmount > 0 && (
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Con descuento:</span>
-                <span className="text-2xl font-bold text-green-600">
+                <span className="text-2xl font-bold text-success">
                   ${priceWithDiscount.toLocaleString('es-CL')}
                 </span>
               </div>

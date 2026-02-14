@@ -143,9 +143,9 @@ export default function CashRegisterPage() {
 
       {/* Estado Actual */}
       {activeCashRegister && (
-        <Card className="border-green-600">
+        <Card className="border-success">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-green-600">
+            <CardTitle className="flex items-center gap-2 text-success">
               <Calculator className="h-5 w-5" />
               Caja Activa
             </CardTitle>

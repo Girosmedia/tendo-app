@@ -194,7 +194,7 @@ export function CustomersTable({ customers }: CustomersTableProps) {
                     </TableCell>
                     <TableCell>
                       {customer.currentDebt > 0 ? (
-                        <span className="font-medium text-rose-600">
+                        <span className="font-medium text-destructive">
                           {formatCurrency(customer.currentDebt)}
                         </span>
                       ) : (

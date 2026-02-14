@@ -44,7 +44,7 @@ export default async function DashboardLayout({
       {impersonation && (
         <ImpersonationBanner organizationName={organization?.name || 'Organización'} />
       )}
-      <div className="flex min-h-screen w-full bg-slate-50 dark:bg-slate-950" style={impersonation ? { marginTop: '48px' } : {}}>
+      <div className="flex min-h-screen w-full bg-background" style={impersonation ? { marginTop: '48px' } : {}}>
         <AppSidebar 
           user={session.user} 
           organizationName={organization?.name}

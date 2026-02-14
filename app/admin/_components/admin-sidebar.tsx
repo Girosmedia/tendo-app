@@ -77,9 +77,9 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
 
   return (
     <Sidebar>
-      <SidebarHeader className="border-b border-sidebar-border bg-indigo-50 p-4 dark:bg-indigo-950/20">
+      <SidebarHeader className="border-b border-sidebar-border bg-primary/5 p-4 dark:bg-primary/10">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600 text-white">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <ShieldCheck className="h-5 w-5" />
           </div>
           <div className="flex-1 overflow-hidden">
@@ -120,9 +120,9 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
               className="w-full justify-start gap-3 px-2"
               suppressHydrationWarning
             >
-              <Avatar className="h-8 w-8 border-2 border-indigo-600">
+              <Avatar className="h-8 w-8 border-2 border-primary">
                 <AvatarImage src={user.image || undefined} alt={user.name || ''} />
-                <AvatarFallback className="bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
+                <AvatarFallback className="bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary">
                   {getInitials(user.name)}
                 </AvatarFallback>
               </Avatar>

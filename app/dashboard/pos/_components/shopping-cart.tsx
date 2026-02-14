@@ -53,7 +53,7 @@ export function ShoppingCart() {
                 <div className="flex items-center gap-2 mb-1">
                   <p className="font-medium text-sm truncate">{item.name}</p>
                   {hasDiscount && (
-                    <Badge variant="secondary" className="text-xs bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-100">
+                    <Badge variant="success" className="text-xs">
                       {item.discountPercent > 0 ? `-${item.discountPercent}%` : `-$${item.discount.toLocaleString('es-CL')}`}
                     </Badge>
                   )}

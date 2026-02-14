@@ -67,9 +67,9 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
       case 'OWNER':
         return <Crown className="h-4 w-4 text-amber-500" />;
       case 'ADMIN':
-        return <Shield className="h-4 w-4 text-blue-500" />;
+        return <Shield className="h-4 w-4 text-info" />;
       default:
-        return <User className="h-4 w-4 text-gray-500" />;
+        return <User className="h-4 w-4 text-muted-foreground" />;
     }
   };
 

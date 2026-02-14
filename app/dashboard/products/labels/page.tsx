@@ -112,18 +112,18 @@ export default function ProductLabelsPage() {
               {searchResult && (
                 <div className="mt-4">
                   {searchResult.found ? (
-                    <Alert className="border-green-500 bg-green-50 dark:bg-green-950">
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
-                      <AlertDescription className="text-green-800 dark:text-green-200">
+                    <Alert className="border-success bg-success/5 dark:bg-success/10">
+                      <CheckCircle2 className="h-4 w-4 text-success" />
+                      <AlertDescription className="text-success">
                         <strong>Producto encontrado:</strong> {searchResult.product.name}
                         <br />
                         <span className="text-sm">SKU: {searchResult.product.sku}</span>
                       </AlertDescription>
                     </Alert>
                   ) : (
-                    <Alert className="border-orange-500 bg-orange-50 dark:bg-orange-950">
-                      <AlertCircle className="h-4 w-4 text-orange-600" />
-                      <AlertDescription className="text-orange-800 dark:text-orange-200">
+                    <Alert className="border-warning bg-warning/5 dark:bg-warning/10">
+                      <AlertCircle className="h-4 w-4 text-warning" />
+                      <AlertDescription className="text-warning">
                         <strong>Producto no encontrado</strong>
                         <br />
                         <span className="text-sm">SKU buscado: {searchResult.sku}</span>

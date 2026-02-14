@@ -100,7 +100,7 @@ export function CashRegisterTable({ registers, onViewReport }: CashRegisterTable
                 </TableCell>
                 <TableCell>
                   {register.status === 'OPEN' ? (
-                    <Badge variant="default" className="bg-green-600">
+                    <Badge variant="success">
                       Abierta
                     </Badge>
                   ) : (
@@ -118,17 +118,16 @@ export function CashRegisterTable({ registers, onViewReport }: CashRegisterTable
                     <div className="flex items-center justify-end gap-1">
                       {difference > 0 ? (
                         <>
-                          <TrendingUp className="h-3 w-3 text-green-600" />
+                          <TrendingUp className="h-3 w-3 text-success" />
                           <Badge
-                            variant={hasDifference ? 'default' : 'secondary'}
-                            className={hasDifference ? 'bg-green-600' : ''}
+                            variant={hasDifference ? 'success' : 'secondary'}
                           >
                             +{formatCurrency(difference)}
                           </Badge>
                         </>
                       ) : difference < 0 ? (
                         <>
-                          <TrendingDown className="h-3 w-3 text-red-600" />
+                          <TrendingDown className="h-3 w-3 text-destructive" />
                           <Badge variant={hasDifference ? 'destructive' : 'secondary'}>
                             {formatCurrency(difference)}
                           </Badge>

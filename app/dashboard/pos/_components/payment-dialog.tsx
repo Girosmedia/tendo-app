@@ -226,7 +226,7 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <div className="mx-auto mb-4">
-              <CheckCircle2 className="h-16 w-16 text-green-500" />
+              <CheckCircle2 className="h-16 w-16 text-success" />
             </div>
             <DialogTitle className="text-center text-2xl">
               ¡Venta Completada!
@@ -245,11 +245,11 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
             </div>
 
             {selectedMethod === 'CASH' && cashChange > 0 && (
-              <div className="flex justify-between items-center p-4 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
-                <span className="text-green-700 dark:text-green-300 font-medium">
+              <div className="flex justify-between items-center p-4 bg-success/5 dark:bg-success/10 rounded-lg border border-success/20 dark:border-success/30">
+                <span className="text-success font-medium">
                   Vuelto:
                 </span>
-                <span className="text-2xl font-bold text-green-600 dark:text-green-400">
+                <span className="text-2xl font-bold text-success">
                   ${Math.round(cashChange).toLocaleString('es-CL')}
                 </span>
               </div>
@@ -297,7 +297,7 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
                 <span className="font-medium">${totals.taxAmount.toLocaleString('es-CL')}</span>
               </div>
               {discountAmount > 0 && (
-                <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
+                <div className="flex justify-between text-sm text-success">
                   <span className="font-medium">Descuento aplicado:</span>
                   <span className="font-medium">-${discountAmount.toLocaleString('es-CL')}</span>
                 </div>
@@ -390,9 +390,9 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
                 autoFocus
               />
               {cashReceived && parseFloat(cashReceived) >= totals.total && (
-                <div className="flex justify-between items-center p-3 bg-green-50 dark:bg-green-950 rounded-lg">
-                  <span className="text-green-700 dark:text-green-300">Vuelto:</span>
-                  <span className="text-xl font-bold text-green-600 dark:text-green-400">
+                <div className="flex justify-between items-center p-3 bg-success/5 dark:bg-success/10 rounded-lg">
+                  <span className="text-success">Vuelto:</span>
+                  <span className="text-xl font-bold text-success">
                     ${Math.round(cashChange).toLocaleString('es-CL')}
                   </span>
                 </div>
@@ -434,7 +434,7 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
                     <span className="text-muted-foreground">Deuda actual:</span>
                     <span className={cn(
                       "font-medium",
-                      selectedCustomer.currentDebt > 0 && "text-orange-600 dark:text-orange-400"
+                      selectedCustomer.currentDebt > 0 && "text-warning"
                     )}>
                       ${selectedCustomer.currentDebt.toLocaleString('es-CL')}
                     </span>
@@ -444,7 +444,7 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
                     <span className={cn(
                       "text-lg font-bold",
                       (selectedCustomer.creditLimit - selectedCustomer.currentDebt) >= finalTotal 
-                        ? "text-green-600 dark:text-green-400" 
+                        ? "text-success" 
                         : "text-destructive"
                     )}>
                       ${(selectedCustomer.creditLimit - selectedCustomer.currentDebt).toLocaleString('es-CL')}

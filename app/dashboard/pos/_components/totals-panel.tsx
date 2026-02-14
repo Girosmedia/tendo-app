@@ -39,7 +39,7 @@ export function TotalsPanel({ onCheckout, disabled = false }: TotalsPanelProps) 
         </div>
 
         {totalItemDiscounts > 0 && (
-          <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
+          <div className="flex justify-between text-sm text-success">
             <span className="font-medium">Descuentos:</span>
             <span className="font-medium">
               -${totalItemDiscounts.toLocaleString('es-CL')}

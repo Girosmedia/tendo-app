@@ -166,7 +166,7 @@ export function ReportViewer({ cashRegisterId, open, onOpenChange }: ReportViewe
                 </div>
                 <div className="flex justify-between pt-2 border-t">
                   <span className="font-semibold">Diferencia:</span>
-                  <span className={`font-bold ${reportData.cashRegister.difference >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <span className={`font-bold ${reportData.cashRegister.difference >= 0 ? 'text-success' : 'text-destructive'}`}>
                     {formatCurrency(reportData.cashRegister.difference)}
                   </span>
                 </div>

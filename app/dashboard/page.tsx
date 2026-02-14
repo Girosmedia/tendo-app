@@ -141,15 +141,15 @@ export default async function DashboardPage() {
             <p className="text-xs text-muted-foreground flex items-center gap-1">
               {sales.today.growthVsYesterday > 0 ? (
                 <>
-                  <ArrowUp className="h-3 w-3 text-green-500" />
-                  <span className="text-green-500">
+                  <ArrowUp className="h-3 w-3 text-success" />
+                  <span className="text-success">
                     +{formatPercentage(sales.today.growthVsYesterday)}
                   </span>
                 </>
               ) : sales.today.growthVsYesterday < 0 ? (
                 <>
-                  <ArrowDown className="h-3 w-3 text-red-500" />
-                  <span className="text-red-500">
+                  <ArrowDown className="h-3 w-3 text-destructive" />
+                  <span className="text-destructive">
                     {formatPercentage(sales.today.growthVsYesterday)}
                   </span>
                 </>
@@ -179,15 +179,15 @@ export default async function DashboardPage() {
             <p className="text-xs text-muted-foreground flex items-center gap-1">
               {sales.thisMonth.growthVsLastMonth > 0 ? (
                 <>
-                  <ArrowUp className="h-3 w-3 text-green-500" />
-                  <span className="text-green-500">
+                  <ArrowUp className="h-3 w-3 text-success" />
+                  <span className="text-success">
                     +{formatPercentage(sales.thisMonth.growthVsLastMonth)}
                   </span>
                 </>
               ) : sales.thisMonth.growthVsLastMonth < 0 ? (
                 <>
-                  <ArrowDown className="h-3 w-3 text-red-500" />
-                  <span className="text-red-500">
+                  <ArrowDown className="h-3 w-3 text-destructive" />
+                  <span className="text-destructive">
                     {formatPercentage(sales.thisMonth.growthVsLastMonth)}
                   </span>
                 </>
@@ -218,7 +218,7 @@ export default async function DashboardPage() {
               +{customers.newThisMonth} este mes
             </p>
             {customers.withDebt > 0 && (
-              <p className="text-xs text-orange-500 mt-1">
+              <p className="text-xs text-warning mt-1">
                 {customers.withDebt} con deuda
               </p>
             )}
@@ -238,7 +238,7 @@ export default async function DashboardPage() {
               {products.count}
             </div>
             {products.lowStockCount > 0 ? (
-              <p className="text-xs text-orange-500 flex items-center gap-1">
+              <p className="text-xs text-warning flex items-center gap-1">
                 <AlertCircle className="h-3 w-3" />
                 {products.lowStockCount} con stock bajo
               </p>
@@ -256,7 +256,7 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-orange-500" />
+              <AlertCircle className="h-4 w-4 text-warning" />
               Documentos Pendientes
             </CardTitle>
           </CardHeader>
@@ -383,7 +383,7 @@ export default async function DashboardPage() {
       {products.lowStockCount > 0 && products.lowStockProducts && products.lowStockProducts.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-orange-600">
+            <CardTitle className="flex items-center gap-2 text-warning">
               <AlertCircle className="h-5 w-5" />
               Productos con Stock Bajo
             </CardTitle>
@@ -400,7 +400,7 @@ export default async function DashboardPage() {
                     <p className="text-sm text-muted-foreground">{product.sku}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-medium text-orange-600">
+                    <p className="text-sm font-medium text-warning">
                       Stock: {product.currentStock}
                     </p>
                     <p className="text-xs text-muted-foreground">

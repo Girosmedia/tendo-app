@@ -133,7 +133,7 @@ export function CreditDetailsDialog({
               <div className="text-sm text-muted-foreground mb-1">
                 Saldo Pendiente
               </div>
-              <div className="text-2xl font-bold text-orange-600">
+              <div className="text-2xl font-bold text-warning">
                 ${Number(credit.balance).toLocaleString("es-CL")}
               </div>
             </div>

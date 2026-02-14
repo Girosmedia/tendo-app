@@ -27,7 +27,7 @@ export default async function AdminLayout({
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-slate-50 dark:bg-slate-950">
+      <div className="flex min-h-screen w-full bg-background">
         <AdminSidebar user={session.user} />
         <main className="flex-1">
           <div className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

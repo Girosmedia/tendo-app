@@ -232,14 +232,14 @@ export function CloseDialog({ cashRegister, open, onOpenChange, onSuccess }: Clo
                   <div className="flex items-center gap-2">
                     {difference > 0 ? (
                       <>
-                        <TrendingUp className="h-4 w-4 text-green-600" />
-                        <Badge variant="default" className="bg-green-600">
+                        <TrendingUp className="h-4 w-4 text-success" />
+                        <Badge variant="success">
                           + {formatCurrency(difference)}
                         </Badge>
                       </>
                     ) : difference < 0 ? (
                       <>
-                        <TrendingDown className="h-4 w-4 text-red-600" />
+                        <TrendingDown className="h-4 w-4 text-destructive" />
                         <Badge variant="destructive">
                           {formatCurrency(difference)}
                         </Badge>

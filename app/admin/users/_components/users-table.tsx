@@ -107,14 +107,14 @@ export function UsersTable({ users }: UsersTableProps) {
                     <div className="flex items-center gap-2">
                       {user.email}
                       {user.isSuperAdmin && (
-                        <Shield className="h-4 w-4 text-indigo-600" />
+                        <Shield className="h-4 w-4 text-primary" />
                       )}
                     </div>
                   </TableCell>
                   <TableCell>{user.name || '-'}</TableCell>
                   <TableCell>
                     {user.isSuperAdmin ? (
-                      <Badge variant="default" className="bg-indigo-600">
+                      <Badge variant="default">
                         Super Admin
                       </Badge>
                     ) : (
