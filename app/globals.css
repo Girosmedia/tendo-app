@@ -227,3 +227,19 @@
 .animate-bounce-horizontal {
   animation: bounce-horizontal 1s infinite;
 }
+
+/* Border Beam Animation */
+@keyframes border-beam {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.animate-border-beam {
+  animation: border-beam var(--duration) linear infinite;
+  animation-delay: var(--delay);
+  background-size: 200% auto;
+}
