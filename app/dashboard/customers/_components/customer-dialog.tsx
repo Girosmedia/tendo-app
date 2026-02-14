@@ -7,13 +7,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog';
 import {
   Form,
   FormControl,
@@ -24,6 +24,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { CurrencyInput } from '@/components/ui/numeric-input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -152,18 +153,18 @@ export function CustomerDialog({ open, onOpenChange, customer }: CustomerDialogP
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
+      <ResponsiveDialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>
             {isEditing ? 'Editar Cliente' : 'Agregar Cliente'}
-          </DialogTitle>
-          <DialogDescription>
+          </ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             {isEditing
               ? 'Actualiza la información del cliente'
               : 'Completa los datos del nuevo cliente'}
-          </DialogDescription>
-        </DialogHeader>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -339,12 +340,12 @@ export function CustomerDialog({ open, onOpenChange, customer }: CustomerDialogP
                   <FormItem>
                     <FormLabel>Límite de Crédito</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
+                      <CurrencyInput
+                        value={field.value ?? 0}
+                        onChange={field.onChange}
+                        min={0}
                         placeholder="0"
-                        {...field}
-                        value={field.value ?? ''}
-                        onChange={(e) => field.onChange(e.target.valueAsNumber || undefined)}
+                        className="h-11"
                       />
                     </FormControl>
                     <FormDescription>
@@ -397,7 +398,7 @@ export function CustomerDialog({ open, onOpenChange, customer }: CustomerDialogP
               />
             </div>
 
-            <DialogFooter>
+            <ResponsiveDialogFooter>
               <Button
                 type="button"
                 variant="outline"
@@ -412,10 +413,10 @@ export function CustomerDialog({ open, onOpenChange, customer }: CustomerDialogP
                   ? 'Actualizar'
                   : 'Crear Cliente'}
               </Button>
-            </DialogFooter>
+            </ResponsiveDialogFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 }

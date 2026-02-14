@@ -5,13 +5,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog';
 import {
   Form,
   FormControl,
@@ -21,6 +21,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { CurrencyInput } from '@/components/ui/numeric-input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { openCashRegisterSchema, type OpenCashRegisterInput } from '@/lib/validators/cash-register';
@@ -70,14 +71,14 @@ export function OpenDialog({ open, onOpenChange, onSuccess }: OpenDialogProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Abrir Caja</DialogTitle>
-          <DialogDescription>
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
+      <ResponsiveDialogContent className="sm:max-w-[425px]">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>Abrir Caja</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             Ingresa el fondo inicial en efectivo para comenzar el turno.
-          </DialogDescription>
-        </DialogHeader>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -88,13 +89,12 @@ export function OpenDialog({ open, onOpenChange, onSuccess }: OpenDialogProps) {
                 <FormItem>
                   <FormLabel>Fondo Inicial (CLP)</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
+                    <CurrencyInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      min={0}
                       placeholder="20000"
-                      min="0"
-                      step="100"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                      className="h-14"
                     />
                   </FormControl>
                   <FormMessage />
@@ -122,7 +122,7 @@ export function OpenDialog({ open, onOpenChange, onSuccess }: OpenDialogProps) {
               )}
             />
 
-            <DialogFooter>
+            <ResponsiveDialogFooter>
               <Button
                 type="button"
                 variant="outline"
@@ -135,10 +135,10 @@ export function OpenDialog({ open, onOpenChange, onSuccess }: OpenDialogProps) {
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Abrir Caja
               </Button>
-            </DialogFooter>
+            </ResponsiveDialogFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 }

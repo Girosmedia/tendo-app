@@ -3,6 +3,7 @@ import { auth } from '@/auth';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from './_components/app-sidebar';
 import { ImpersonationBanner } from './_components/impersonation-banner';
+import { MobileTabBar } from './_components/mobile-tabbar';
 import { Toaster } from '@/components/ui/sonner';
 import { db } from '@/lib/db';
 import { getActiveImpersonation } from '@/app/actions/impersonation';
@@ -61,9 +62,10 @@ export default async function DashboardLayout({
               </div>
             </div>
           </div>
-          <div className="flex-1 space-y-8 p-4 md:p-8">{children}</div>
+          <div className="flex-1 space-y-4 md:space-y-8 p-3 md:p-8 pb-20 md:pb-8">{children}</div>
         </main>
       </div>
+      <MobileTabBar />
       <Toaster />
     </SidebarProvider>
   );

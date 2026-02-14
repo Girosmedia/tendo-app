@@ -105,18 +105,18 @@ export default function CashRegisterPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 md:gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-            <Calculator className="h-8 w-8" />
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight flex items-center gap-2">
+            <Calculator className="h-6 w-6 md:h-8 md:w-8" />
             Cierre de Caja
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-sm text-muted-foreground mt-0.5">
             Gestiona aperturas, cierres y reportes Z
           </p>
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {activeCashRegister && (
             <Button
               variant="outline"
@@ -128,12 +128,20 @@ export default function CashRegisterPage() {
             </Button>
           )}
           {activeCashRegister ? (
-            <Button onClick={() => setCloseDialogOpen(true)} size="lg">
+            <Button 
+              onClick={() => setCloseDialogOpen(true)} 
+              size="default"
+              className="flex-1 md:flex-initial md:size-lg"
+            >
               <Calculator className="mr-2 h-4 w-4" />
               Cerrar Caja
             </Button>
           ) : (
-            <Button onClick={() => setOpenDialogOpen(true)} size="lg">
+            <Button 
+              onClick={() => setOpenDialogOpen(true)} 
+              size="default"
+              className="flex-1 md:flex-initial md:size-lg"
+            >
               <Plus className="mr-2 h-4 w-4" />
               Abrir Caja
             </Button>

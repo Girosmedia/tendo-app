@@ -17,3 +17,36 @@ export function useIsMobile() {
 
   return !!isMobile
 }
+
+/**
+ * useMediaQuery Hook
+ * 
+ * Parte del Design System Tendo v1.0 - "Zimple Style"
+ * Hook para detectar media queries en tiempo real.
+ * 
+ * @param query - Media query string (ej: "(max-width: 768px)")
+ * @returns boolean - true si la media query coincide
+ */
+export function useMediaQuery(query: string) {
+  const [matches, setMatches] = React.useState<boolean>(false)
+
+  React.useEffect(() => {
+    const media = window.matchMedia(query)
+    
+    // Set initial value
+    setMatches(media.matches)
+
+    // Create listener
+    const listener = (event: MediaQueryListEvent) => {
+      setMatches(event.matches)
+    }
+
+    // Add listener
+    media.addEventListener('change', listener)
+
+    // Cleanup
+    return () => media.removeEventListener('change', listener)
+  }, [query])
+
+  return matches
+}

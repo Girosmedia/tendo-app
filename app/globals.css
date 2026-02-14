@@ -5,10 +5,28 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* --- Design Tokens Tendo v1.0 (Zimple Style) --- */
+  
+  /* Paleta Semántica de Negocio */
+  --color-brand-primary: #4F46E5;    /* Indigo: Acciones de crecimiento */
+  --color-brand-success: #10B981;    /* Emerald: Dinero, utilidad, éxito */
+  --color-brand-alert: #F43F5E;      /* Rose: Deudas, stock bajo, alertas */
+  
+  /* Superficies y Fondos */
+  --color-slate-50: #F8FAFC;         /* Fondo App (Light Mode) */
+  --color-slate-900: #0F172A;        /* Fondo App (Dark Mode/Sidebars) */
+  
+  /* Geometría Zimple */
+  --radius-tendo: 1rem;              /* 16px: Bordes suaves y amigables */
+  --shadow-tendo: 0 10px 15px -3px rgb(0 0 0 / 0.05);
+  
+  /* Tipografía */
+  --font-sans: "Inter", "Geist", system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono);
+  
+  /* --- Mapeo a Variables Shadcn --- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -54,8 +72,8 @@
 }
 
 :root {
-  /* Radius - 12px más amigable para Pymes */
-  --radius: 0.75rem;
+  /* Radius Tendo - 16px bordes amigables (Zimple Style) */
+  --radius: 1rem;
   
   /* Backgrounds - Slate muy limpio */
   --background: oklch(0.99 0 0);
@@ -195,4 +213,17 @@
     @apply bg-background text-foreground;
     @apply bg-background text-foreground;
   }
+}
+/* Animaciones personalizadas Tendo - Zimple Style */
+@keyframes bounce-horizontal {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+}
+
+.animate-bounce-horizontal {
+  animation: bounce-horizontal 1s infinite;
 }

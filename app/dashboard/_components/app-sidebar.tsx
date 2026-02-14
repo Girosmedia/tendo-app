@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import { 
   LayoutDashboard, 
   Settings, 
@@ -29,6 +30,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import {
   DropdownMenu,
@@ -107,6 +109,14 @@ const navigationItems = [
 
 export function AppSidebar({ user, organizationName, organizationLogo }: AppSidebarProps) {
   const pathname = usePathname();
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  // Auto-cerrar sidebar en móvil al cambiar de ruta
+  React.useEffect(() => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  }, [pathname, isMobile, setOpenMobile]);
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: '/login' });

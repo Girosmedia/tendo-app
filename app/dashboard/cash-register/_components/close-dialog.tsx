@@ -5,13 +5,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog';
 import {
   Form,
   FormControl,
@@ -21,6 +21,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { CurrencyInput } from '@/components/ui/numeric-input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -118,15 +119,15 @@ export function CloseDialog({ cashRegister, open, onOpenChange, onSuccess }: Clo
   if (!cashRegister) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Cerrar Caja - Arqueo de Efectivo</DialogTitle>
-          <DialogDescription>
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
+      <ResponsiveDialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>Cerrar Caja - Arqueo de Efectivo</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             Al cerrar la caja, debes contar <strong>solo el efectivo físico</strong> (billetes y monedas). 
             Los vouchers de tarjeta y comprobantes de transferencia se verifican contra los registros del banco.
-          </DialogDescription>
-        </DialogHeader>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
 
         {/* Resumen Completo de la Caja */}
         <div className="space-y-4">
@@ -205,15 +206,13 @@ export function CloseDialog({ cashRegister, open, onOpenChange, onSuccess }: Clo
                     💵 Efectivo Real Contado (solo billetes y monedas)
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
+                    <CurrencyInput
+                      value={field.value ?? 0}
+                      onChange={field.onChange}
+                      min={0}
                       placeholder="0"
-                      min="0"
-                      step="100"
                       autoFocus
-                      className="text-lg"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                      className="h-14 text-lg"
                     />
                   </FormControl>
                   <p className="text-xs text-muted-foreground mt-1">
@@ -283,7 +282,7 @@ export function CloseDialog({ cashRegister, open, onOpenChange, onSuccess }: Clo
               )}
             />
 
-            <DialogFooter>
+            <ResponsiveDialogFooter>
               <Button
                 type="button"
                 variant="outline"
@@ -296,10 +295,10 @@ export function CloseDialog({ cashRegister, open, onOpenChange, onSuccess }: Clo
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Cerrar Caja
               </Button>
-            </DialogFooter>
+            </ResponsiveDialogFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 }

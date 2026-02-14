@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { CurrencyInput } from '@/components/ui/numeric-input';
 import { Label } from '@/components/ui/label';
 import {
   CreditCard,
@@ -23,6 +24,7 @@ import {
   CheckCircle2,
   Loader2,
   AlertTriangle,
+  DollarSign,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -257,13 +259,19 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
           </div>
 
           <DialogFooter className="sm:flex-col gap-2">
-            <Button onClick={handleNewSale} className="w-full h-12 text-base">
+            <Button 
+              variant="success"
+              size="lg"
+              onClick={handleNewSale} 
+              className="w-full"
+            >
               Nueva Venta
             </Button>
             <Button
               variant="outline"
+              size="lg"
               onClick={handleClose}
-              className="w-full h-12 text-base"
+              className="w-full"
             >
               Cerrar
             </Button>
@@ -304,7 +312,7 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
               )}
               <div className="border-t pt-2 flex justify-between items-center">
                 <span className="text-lg font-semibold">Total a Pagar:</span>
-                <span className="text-3xl font-bold text-primary">
+                <span className="text-3xl font-bold text-success">
                   ${finalTotal.toLocaleString('es-CL')}
                 </span>
               </div>
@@ -380,16 +388,15 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
           {selectedMethod === 'CASH' && (
             <div className="space-y-2">
               <Label htmlFor="cashReceived">Efectivo Recibido</Label>
-              <Input
+              <CurrencyInput
                 id="cashReceived"
-                type="number"
-                placeholder="0"
-                value={cashReceived}
-                onChange={(e) => setCashReceived(e.target.value)}
-                className="h-14 text-2xl text-right"
+                value={cashReceived ? parseFloat(cashReceived) : 0}
+                onChange={(value) => setCashReceived(value.toString())}
+                className="h-14"
                 autoFocus
+                placeholder="$ 0"
               />
-              {cashReceived && parseFloat(cashReceived) >= totals.total && (
+              {cashReceived && parseFloat(cashReceived) >= finalTotal && (
                 <div className="flex justify-between items-center p-3 bg-success/5 dark:bg-success/10 rounded-lg">
                   <span className="text-success">Vuelto:</span>
                   <span className="text-xl font-bold text-success">
@@ -473,9 +480,11 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
           </Button>
           <Button
             type="button"
+            variant="success"
+            size="lg"
             onClick={handleConfirm}
             disabled={!canConfirm || isSubmitting}
-            className="min-w-[150px]"
+            className="min-w-[180px]"
           >
             {isSubmitting ? (
               <>
@@ -483,7 +492,10 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
                 Procesando...
               </>
             ) : (
-              'Confirmar Venta'
+              <>
+                <DollarSign className="mr-2 h-5 w-5" strokeWidth={2} />
+                Confirmar Venta
+              </>
             )}
           </Button>
         </DialogFooter>

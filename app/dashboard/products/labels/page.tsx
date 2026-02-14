@@ -55,9 +55,14 @@ export default function ProductLabelsPage() {
 
   async function handleGenerateSKU() {
     try {
-      const res = await fetch('/api/products/generate-sku');
+      const res = await fetch('/api/products/generate-sku', {
+        credentials: 'include'  // Incluye cookies de sesión de NextAuth
+      });
       
       if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');
+        }
         throw new Error('Error al generar SKU');
       }
 
@@ -66,7 +71,7 @@ export default function ProductLabelsPage() {
       toast.success('SKU generado');
     } catch (error) {
       console.error('Error:', error);
-      toast.error('Error al generar SKU');
+      toast.error(error instanceof Error ? error.message : 'Error al generar SKU');
     }
   }
 

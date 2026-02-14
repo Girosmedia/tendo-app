@@ -140,30 +140,34 @@ export function CreditsPageClient({
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 md:gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Fiados</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl md:text-3xl font-bold">Fiados</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
             Gestión de créditos y cuentas por cobrar
           </p>
         </div>
-        <Button onClick={() => setCreateDialogOpen(true)}>
-          <Plus className="h-4 w-4 mr-2" />
+        <Button 
+          size="default"
+          className="w-full md:w-auto md:size-lg" 
+          onClick={() => setCreateDialogOpen(true)}
+        >
+          <Plus className="h-4 w-4 mr-2" strokeWidth={1.75} />
           Nuevo Crédito
         </Button>
       </div>
 
       {/* Estadísticas */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Total por Cobrar
             </CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <DollarSign className="h-5 w-5 text-warning" strokeWidth={1.75} />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-warning">
               ${stats.totalPending.toLocaleString("es-CL")}
             </div>
             <p className="text-xs text-muted-foreground">
@@ -175,7 +179,7 @@ export function CreditsPageClient({
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Vencidos</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-destructive" />
+            <AlertTriangle className="h-5 w-5 text-destructive" strokeWidth={1.75} />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-destructive">
@@ -190,7 +194,7 @@ export function CreditsPageClient({
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Pagados</CardTitle>
-            <CheckCircle className="h-4 w-4 text-success" />
+            <CheckCircle className="h-5 w-5 text-success" strokeWidth={1.75} />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-success">
@@ -205,7 +209,7 @@ export function CreditsPageClient({
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Clientes</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <TrendingUp className="h-5 w-5 text-muted-foreground" strokeWidth={1.75} />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -221,7 +225,7 @@ export function CreditsPageClient({
       {/* Filtros y búsqueda */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" strokeWidth={1.75} />
           <Input
             placeholder="Buscar por cliente..."
             value={searchQuery}

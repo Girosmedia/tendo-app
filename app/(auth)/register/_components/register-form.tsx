@@ -60,7 +60,13 @@ export function RegisterForm() {
       const registerData = await registerResponse.json();
 
       if (!registerResponse.ok) {
-        setError(registerData.error || 'Error al registrar usuario');
+        // Mostrar detalles de validación si están disponibles
+        if (registerData.details) {
+          const errors = Object.values(registerData.details).flat();
+          setError(errors.join(', ') || 'Error de validación');
+        } else {
+          setError(registerData.error || 'Error al registrar usuario');
+        }
         return;
       }
 

@@ -20,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { ResponsiveTable, ResponsiveTableMinWidth } from '@/components/ui/responsive-table'
 import { Badge } from '@/components/ui/badge'
 import { Search, Package, Briefcase, AlertTriangle } from 'lucide-react'
 import { formatPrice, isLowStock } from '@/lib/products'
@@ -151,20 +152,106 @@ export function ProductList({ products: initialProducts, categories }: ProductLi
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Producto</TableHead>
-                  <TableHead>SKU</TableHead>
-                  <TableHead>Tipo</TableHead>
-                  <TableHead>Categoría</TableHead>
-                  <TableHead className="text-right">Precio</TableHead>
-                  <TableHead className="text-right">Stock</TableHead>
-                  <TableHead>Estado</TableHead>
-                  <TableHead className="text-right">Acciones</TableHead>
-                </TableRow>
-              </TableHeader>
+          {/* Mobile View - Cards */}
+          <div className="md:hidden space-y-4 p-4">
+            {filteredProducts.length === 0 ? (
+              <div className="flex flex-col items-center gap-4 py-12 text-muted-foreground">
+                <Package className="size-12" />
+                <p>No se encontraron productos</p>
+              </div>
+            ) : (
+              filteredProducts.map((product) => (
+                <Card key={product.id} className="overflow-hidden">
+                  <CardContent className="p-4">
+                    <div className="space-y-3">
+                      {/* Header with icon and name */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-muted">
+                            {product.type === 'PRODUCT' ? (
+                              <Package className="size-6 text-muted-foreground" strokeWidth={1.75} />
+                            ) : (
+                              <Briefcase className="size-6 text-muted-foreground" strokeWidth={1.75} />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold truncate">{product.name}</h3>
+                            <p className="text-sm text-muted-foreground font-mono">{product.sku}</p>
+                          </div>
+                        </div>
+                        <Badge variant={product.isActive ? 'success' : 'secondary'}>
+                          {product.isActive ? 'Activo' : 'Inactivo'}
+                        </Badge>
+                      </div>
+
+                      {/* Info Grid */}
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <p className="text-muted-foreground text-xs">Tipo</p>
+                          <Badge variant={product.type === 'PRODUCT' ? 'default' : 'secondary'} className="mt-1">
+                            {product.type === 'PRODUCT' ? 'Producto' : 'Servicio'}
+                          </Badge>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground text-xs">Categoría</p>
+                          <p className="font-medium mt-1">{product.category?.name || '-'}</p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground text-xs">Precio</p>
+                          <p className="font-bold text-lg text-brand-success mt-1">
+                            {formatPrice(Number(product.price))}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground text-xs">Stock</p>
+                          {product.trackInventory ? (
+                            <div className="flex items-center gap-1 mt-1">
+                              {isLowStock(product.currentStock, product.minStock, product.trackInventory) && (
+                                <AlertTriangle className="size-4 text-destructive" strokeWidth={2} />
+                              )}
+                              <span className={`font-semibold ${isLowStock(product.currentStock, product.minStock, product.trackInventory) ? 'text-destructive' : ''}`}>
+                                {product.currentStock}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground mt-1 block">-</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Action Button */}
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="w-full h-11"
+                        onClick={() => setEditingProductId(product.id)}
+                      >
+                        Editar Producto
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+
+          {/* Desktop View - Table */}
+          <div className="hidden md:block">
+            <ResponsiveTable>
+              <ResponsiveTableMinWidth minWidth="800px">
+                <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Producto</TableHead>
+                    <TableHead>SKU</TableHead>
+                    <TableHead>Tipo</TableHead>
+                    <TableHead>Categoría</TableHead>
+                    <TableHead className="text-right">Precio</TableHead>
+                    <TableHead className="text-right">Stock</TableHead>
+                    <TableHead>Estado</TableHead>
+                    <TableHead className="text-right">Acciones</TableHead>
+                  </TableRow>
+                </TableHeader>
               <TableBody>
                 {filteredProducts.length === 0 ? (
                   <TableRow>
@@ -231,8 +318,10 @@ export function ProductList({ products: initialProducts, categories }: ProductLi
                     </TableRow>
                   ))
                 )}
-              </TableBody>
-            </Table>
+                </TableBody>
+              </Table>
+              </ResponsiveTableMinWidth>
+            </ResponsiveTable>
           </div>
         </CardContent>
       </Card>

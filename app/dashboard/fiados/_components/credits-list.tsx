@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -13,7 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Eye, DollarSign, AlertTriangle } from "lucide-react";
+import { ResponsiveTable } from "@/components/ui/responsive-table";
+import { Eye, DollarSign, AlertTriangle, Calendar } from "lucide-react";
 
 type Credit = {
   id: string;
@@ -77,19 +79,121 @@ export function CreditsList({
   }
 
   return (
-    <div className="border rounded-lg">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Cliente</TableHead>
-            <TableHead>Monto Original</TableHead>
-            <TableHead>Saldo Pendiente</TableHead>
-            <TableHead>Vencimiento</TableHead>
-            <TableHead>Estado</TableHead>
-            <TableHead>Pagos</TableHead>
-            <TableHead className="text-right">Acciones</TableHead>
-          </TableRow>
-        </TableHeader>
+    <>
+      {/* Vista Móvil - Cards */}
+      <div className="md:hidden space-y-3">
+        {credits.map((credit) => {
+          const isOverdue =
+            credit.status === "ACTIVE" &&
+            new Date(credit.dueDate) < new Date();
+          const statusKey = isOverdue
+            ? "OVERDUE"
+            : (credit.status as keyof typeof statusConfig);
+
+          return (
+            <Card key={credit.id}>
+              <CardContent className="p-4 space-y-4">
+                {/* Header: Cliente + Estado */}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold text-base truncate">
+                      {credit.customer.name}
+                    </h4>
+                    {credit.customer.rut && (
+                      <p className="text-sm text-muted-foreground">
+                        {credit.customer.rut}
+                      </p>
+                    )}
+                  </div>
+                  <Badge variant={statusConfig[statusKey].variant}>
+                    {statusConfig[statusKey].label}
+                  </Badge>
+                </div>
+
+                {/* Grid de Información 2x2 */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-xs text-muted-foreground">Monto Original</p>
+                    <p className="font-medium mt-0.5">
+                      ${Number(credit.amount).toLocaleString("es-CL")}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Saldo Pendiente</p>
+                    <p className="font-semibold mt-0.5 text-warning">
+                      ${Number(credit.balance).toLocaleString("es-CL")}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      Vencimiento
+                    </p>
+                    <p
+                      className={`font-medium mt-0.5 flex items-center gap-1 ${
+                        isOverdue ? "text-destructive" : ""
+                      }`}
+                    >
+                      {isOverdue && (
+                        <AlertTriangle className="h-4 w-4" strokeWidth={1.75} />
+                      )}
+                      {format(new Date(credit.dueDate), "dd MMM yyyy", {
+                        locale: es,
+                      })}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Pagos</p>
+                    <p className="font-medium mt-0.5">
+                      {credit.payments.length} pago(s)
+                    </p>
+                  </div>
+                </div>
+
+                {/* Botones de Acción */}
+                <div className="flex gap-2 pt-2">
+                  <Button
+                    variant="outline"
+                    className="flex-1 h-11"
+                    onClick={() => onViewDetails(credit.id)}
+                  >
+                    <Eye className="h-4 w-4 mr-2" strokeWidth={1.75} />
+                    Ver Detalles
+                  </Button>
+                  {(credit.status === "ACTIVE" ||
+                    credit.status === "OVERDUE") &&
+                    credit.balance > 0 && (
+                      <Button
+                        variant="default"
+                        className="flex-1 h-11"
+                        onClick={() => onRegisterPayment(credit.id)}
+                      >
+                        <DollarSign className="h-4 w-4 mr-2" strokeWidth={1.75} />
+                        Pagar
+                      </Button>
+                    )}
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* Vista Desktop - Tabla */}
+      <ResponsiveTable className="hidden md:block border rounded-lg">
+      <div style={{ minWidth: '900px' }}>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Cliente</TableHead>
+              <TableHead>Monto Original</TableHead>
+              <TableHead>Saldo Pendiente</TableHead>
+              <TableHead>Vencimiento</TableHead>
+              <TableHead>Estado</TableHead>
+              <TableHead>Pagos</TableHead>
+              <TableHead className="text-right">Acciones</TableHead>
+            </TableRow>
+          </TableHeader>
         <TableBody>
           {credits.map((credit) => {
             const isOverdue =
@@ -169,6 +273,8 @@ export function CreditsList({
           })}
         </TableBody>
       </Table>
-    </div>
+      </div>
+    </ResponsiveTable>
+    </>
   );
 }

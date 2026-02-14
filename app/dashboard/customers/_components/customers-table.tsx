@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { ResponsiveTable } from '@/components/ui/responsive-table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -125,7 +126,8 @@ export function CustomersTable({ customers }: CustomersTableProps) {
           </div>
         </CardHeader>
         <CardContent>
-          {filteredCustomers.length === 0 ? (
+          {/* Empty State */}
+          {filteredCustomers.length === 0 && (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <p className="text-muted-foreground">
                 {search ? 'No se encontraron clientes' : 'No hay clientes registrados'}
@@ -136,19 +138,122 @@ export function CustomersTable({ customers }: CustomersTableProps) {
                 </p>
               )}
             </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Cliente</TableHead>
-                  <TableHead>RUT</TableHead>
-                  <TableHead>Contacto</TableHead>
-                  <TableHead>Crédito</TableHead>
-                  <TableHead>Deuda</TableHead>
-                  <TableHead>Estado</TableHead>
-                  <TableHead className="text-right">Acciones</TableHead>
-                </TableRow>
-              </TableHeader>
+          )}
+
+          {/* Mobile View - Cards */}
+          {filteredCustomers.length > 0 && (
+            <div className="md:hidden space-y-4 p-4">
+              {filteredCustomers.map((customer) => (
+                <Card key={customer.id} className="overflow-hidden">
+                  <CardContent className="p-4">
+                    <div className="space-y-3">
+                      {/* Header: Nombre + Estado */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-lg truncate">{customer.name}</h3>
+                          {customer.company && (
+                            <p className="text-sm text-muted-foreground truncate">{customer.company}</p>
+                          )}
+                          <p className="text-xs text-muted-foreground font-mono mt-1">
+                            {customer.rut || 'Sin RUT'}
+                          </p>
+                        </div>
+                        <Badge variant={customer.isActive ? 'default' : 'secondary'}>
+                          {customer.isActive ? 'Activo' : 'Inactivo'}
+                        </Badge>
+                      </div>
+
+                      {/* Contacto */}
+                      {(customer.email || customer.phone) && (
+                        <div className="space-y-1 text-sm">
+                          {customer.email && (
+                            <div className="flex items-center gap-2">
+                              <Mail className="size-4 text-muted-foreground shrink-0" strokeWidth={1.75} />
+                              <span className="text-muted-foreground truncate">{customer.email}</span>
+                            </div>
+                          )}
+                          {customer.phone && (
+                            <div className="flex items-center gap-2">
+                              <Phone className="size-4 text-muted-foreground shrink-0" strokeWidth={1.75} />
+                              <span className="text-muted-foreground">{customer.phone}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Grid: Crédito y Deuda */}
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <p className="text-muted-foreground text-xs">Límite Crédito</p>
+                          <p className="font-semibold mt-1">
+                            {customer.creditLimit ? formatCurrency(customer.creditLimit) : '-'}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground text-xs">Deuda Actual</p>
+                          <p className={`font-semibold mt-1 ${customer.currentDebt > 0 ? 'text-destructive' : ''}`}>
+                            {customer.currentDebt > 0 ? formatCurrency(customer.currentDebt) : '-'}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Tags */}
+                      {customer.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {customer.tags.map((tag) => (
+                            <Badge key={tag} variant="secondary" className="text-xs">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Acciones */}
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="flex-1 h-11"
+                          onClick={() => handleEdit(customer)}
+                          disabled={loadingId === customer.id}
+                        >
+                          <Edit className="mr-2 h-4 w-4" />
+                          Editar
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          className="h-11 w-11 p-0"
+                          onClick={() => handleDelete(customer.id)}
+                          disabled={loadingId === customer.id}
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+
+          {/* Desktop View - Table */}
+          {filteredCustomers.length > 0 && (
+            <div className="hidden md:block">
+              <ResponsiveTable>
+                <div style={{ minWidth: '900px' }}>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Cliente</TableHead>
+                      <TableHead>RUT</TableHead>
+                      <TableHead>Contacto</TableHead>
+                      <TableHead>Crédito</TableHead>
+                      <TableHead>Deuda</TableHead>
+                      <TableHead>Estado</TableHead>
+                      <TableHead className="text-right">Acciones</TableHead>
+                    </TableRow>
+                  </TableHeader>
               <TableBody>
                 {filteredCustomers.map((customer) => (
                   <TableRow key={customer.id}>
@@ -237,6 +342,9 @@ export function CustomersTable({ customers }: CustomersTableProps) {
                 ))}
               </TableBody>
             </Table>
+            </div>
+          </ResponsiveTable>
+            </div>
           )}
         </CardContent>
       </Card>

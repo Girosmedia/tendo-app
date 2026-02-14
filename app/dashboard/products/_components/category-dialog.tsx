@@ -57,7 +57,7 @@ export function CategoryDialog({ open, onOpenChange, categories = [] }: Category
     defaultValues: {
       name: '',
       description: '',
-      parentId: '',
+      parentId: '__none__',
     },
   })
 
@@ -65,10 +65,16 @@ export function CategoryDialog({ open, onOpenChange, categories = [] }: Category
     setIsSubmitting(true)
     
     try {
+      // Mapear __none__ a undefined para el backend
+      const payload = {
+        ...data,
+        parentId: data.parentId === '__none__' ? undefined : data.parentId,
+      };
+      
       const response = await fetch('/api/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
       })
 
       if (!response.ok) {
@@ -140,7 +146,7 @@ export function CategoryDialog({ open, onOpenChange, categories = [] }: Category
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="">Sin categoría padre</SelectItem>
+                      <SelectItem value="__none__">Sin categoría padre</SelectItem>
                       {categories.map((cat: { id: string; name: string }) => (
                         <SelectItem key={cat.id} value={cat.id}>
                           {cat.name}

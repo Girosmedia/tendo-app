@@ -72,7 +72,7 @@ export function ShoppingCart() {
               <Button
                 variant="outline"
                 size="icon"
-                className="h-10 w-10 shrink-0"
+                className="shrink-0"
                 onClick={() => setDiscountingItemId(item.id)}
                 title="Aplicar descuento"
               >
@@ -83,7 +83,7 @@ export function ShoppingCart() {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-10 w-10 shrink-0"
+                  className="shrink-0"
                   onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                 >
                   <Minus className="h-4 w-4" />
@@ -96,7 +96,7 @@ export function ShoppingCart() {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-10 w-10 shrink-0"
+                  className="shrink-0"
                   onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                   disabled={item.quantity >= item.stock}
                   title={item.quantity >= item.stock ? 'Stock máximo alcanzado' : ''}
@@ -114,7 +114,7 @@ export function ShoppingCart() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 shrink-0 text-destructive hover:text-destructive"
+                className="shrink-0 text-destructive hover:text-destructive"
                 onClick={() => removeItem(item.productId)}
               >
                 <Trash2 className="h-4 w-4" />

@@ -124,18 +124,18 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {/* KPI Cards - Bento Grid Layout */}
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         {/* Ventas Hoy */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Ventas Hoy
             </CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <DollarSign className="h-5 w-5 text-success" strokeWidth={1.75} />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-success">
               {formatCurrency(sales.today.total)}
             </div>
             <p className="text-xs text-muted-foreground flex items-center gap-1">
@@ -170,10 +170,10 @@ export default async function DashboardPage() {
             <CardTitle className="text-sm font-medium">
               Ventas del Mes
             </CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <TrendingUp className="h-5 w-5 text-success" strokeWidth={1.75} />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-success">
               {formatCurrency(sales.thisMonth.total)}
             </div>
             <p className="text-xs text-muted-foreground flex items-center gap-1">
@@ -208,7 +208,7 @@ export default async function DashboardPage() {
             <CardTitle className="text-sm font-medium">
               Clientes
             </CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <Users className="h-5 w-5 text-muted-foreground" strokeWidth={1.75} />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -231,7 +231,7 @@ export default async function DashboardPage() {
             <CardTitle className="text-sm font-medium">
               Productos
             </CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
+            <Package className="h-5 w-5 text-muted-foreground" strokeWidth={1.75} />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -273,10 +273,10 @@ export default async function DashboardPage() {
         </Card>
       )}
 
-      {/* Sección de Datos */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+      {/* Sección de Datos - Bento Grid */}
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-7">
         {/* Actividad Reciente */}
-        <Card className="col-span-4">
+        <Card className="lg:col-span-4">
           <CardHeader>
             <CardTitle>Actividad Reciente</CardTitle>
             <CardDescription>
@@ -316,7 +316,7 @@ export default async function DashboardPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm font-bold">{formatCurrency(sale.total)}</p>
+                        <p className="text-sm font-bold text-success">{formatCurrency(sale.total)}</p>
                         <p className="text-xs text-muted-foreground">
                           {isValidDate 
                             ? formatDistanceToNow(saleDate, { addSuffix: true, locale: es })
@@ -333,7 +333,7 @@ export default async function DashboardPage() {
         </Card>
 
         {/* Top Productos */}
-        <Card className="col-span-3">
+        <Card className="lg:col-span-3">
           <CardHeader>
             <CardTitle>Productos Más Vendidos</CardTitle>
             <CardDescription>
@@ -363,7 +363,7 @@ export default async function DashboardPage() {
                       </div>
                       <div className="h-2 bg-muted rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-primary transition-all"
+                          className="h-full bg-success transition-all"
                           style={{ width: `${percentage}%` }}
                         />
                       </div>

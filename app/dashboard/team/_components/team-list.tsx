@@ -18,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { ResponsiveTable } from '@/components/ui/responsive-table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -212,16 +213,112 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Usuario</TableHead>
-                <TableHead>Rol</TableHead>
-                <TableHead>Estado</TableHead>
-                <TableHead>Fecha de Ingreso</TableHead>
-                <TableHead className="text-right">Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
+          {/* Mobile View - Cards */}
+          <div className="md:hidden space-y-4 p-4">
+            {members.map((member) => (
+              <Card key={member.id} className="overflow-hidden">
+                <CardContent className="p-4">
+                  <div className="space-y-3">
+                    {/* Avatar + Nombre + Rol Icon */}
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-12 w-12 shrink-0">
+                        <AvatarImage src={member.image || undefined} alt={member.name || ''} />
+                        <AvatarFallback>{getInitials(member.name)}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold truncate">{member.name || 'Sin nombre'}</h3>
+                        <p className="text-sm text-muted-foreground truncate">{member.email}</p>
+                      </div>
+                      {getRoleIcon(member.role)}
+                    </div>
+
+                    {/* Grid: Rol + Estado */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <p className="text-muted-foreground text-xs">Rol</p>
+                        <Badge variant={getRoleBadge(member.role)} className="mt-1">
+                          {getRoleLabel(member.role)}
+                        </Badge>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground text-xs">Estado</p>
+                        <Badge variant={member.isActive ? 'default' : 'secondary'} className="mt-1">
+                          {member.isActive ? 'Activo' : 'Inactivo'}
+                        </Badge>
+                      </div>
+                    </div>
+
+                    {/* Fecha Ingreso */}
+                    <p className="text-xs text-muted-foreground">
+                      Ingresó {format(new Date(member.joinedAt), "d 'de' MMMM, yyyy", { locale: es })}
+                    </p>
+
+                    {/* Acciones */}
+                    {member.userId !== currentUserId && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="w-full h-11"
+                            disabled={loadingMemberId === member.id}
+                          >
+                            Opciones
+                            <MoreHorizontal className="ml-2 h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="center" className="w-56">
+                          {member.role !== 'OWNER' && (
+                            <>
+                              <DropdownMenuItem
+                                onClick={() => handleUpdateRole(member.id, 'ADMIN')}
+                              >
+                                Hacer Administrador
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleUpdateRole(member.id, 'MEMBER')}
+                              >
+                                Hacer Miembro
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => handleToggleActive(member.id, member.isActive)}
+                              >
+                                {member.isActive ? 'Desactivar' : 'Activar'}
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                            </>
+                          )}
+                          <DropdownMenuItem
+                            onClick={() => handleRemoveMember(member.id)}
+                            className="text-destructive"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Eliminar
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Desktop View - Table */}
+          <div className="hidden md:block">
+            <ResponsiveTable>
+              <div style={{ minWidth: '800px' }}>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Usuario</TableHead>
+                    <TableHead>Rol</TableHead>
+                    <TableHead>Estado</TableHead>
+                    <TableHead>Fecha de Ingreso</TableHead>
+                    <TableHead className="text-right">Acciones</TableHead>
+                  </TableRow>
+                </TableHeader>
             <TableBody>
               {members.map((member) => (
                 <TableRow key={member.id}>
@@ -302,6 +399,9 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
               ))}
             </TableBody>
           </Table>
+          </div>
+        </ResponsiveTable>
+          </div>
         </CardContent>
       </Card>
 
@@ -318,15 +418,66 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Rol</TableHead>
-                  <TableHead>Expira</TableHead>
-                  <TableHead className="text-right">Acciones</TableHead>
-                </TableRow>
-              </TableHeader>
+            {/* Mobile View - Cards */}
+            <div className="md:hidden space-y-4 p-4">
+              {invitations.map((invitation) => (
+                <Card key={invitation.id} className="overflow-hidden">
+                  <CardContent className="p-4">
+                    <div className="space-y-3">
+                      {/* Email Principal */}
+                      <div>
+                        <h3 className="font-semibold text-lg truncate">{invitation.email}</h3>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Enviada {format(new Date(invitation.createdAt), "d 'de' MMMM", { locale: es })}
+                        </p>
+                      </div>
+
+                      {/* Grid: Rol + Expiración */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <p className="text-muted-foreground text-xs">Rol</p>
+                          <Badge variant={getRoleBadge(invitation.role)} className="mt-1">
+                            {getRoleLabel(invitation.role)}
+                          </Badge>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground text-xs">Expira</p>
+                          <p className="font-medium text-sm mt-1">
+                            {format(new Date(invitation.expiresAt), "d 'de' MMM", { locale: es })}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Botón Revocar */}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full h-11"
+                        onClick={() => handleRevokeInvitation(invitation.id)}
+                        disabled={loadingInvitationId === invitation.id}
+                      >
+                        <XCircle className="mr-2 h-4 w-4" />
+                        Revocar Invitación
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Desktop View - Table */}
+            <div className="hidden md:block">
+              <ResponsiveTable>
+                <div style={{ minWidth: '700px' }}>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Rol</TableHead>
+                      <TableHead>Expira</TableHead>
+                      <TableHead className="text-right">Acciones</TableHead>
+                    </TableRow>
+                  </TableHeader>
               <TableBody>
                 {invitations.map((invitation) => (
                   <TableRow key={invitation.id}>
@@ -354,6 +505,9 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
                 ))}
               </TableBody>
             </Table>
+            </div>
+          </ResponsiveTable>
+            </div>
           </CardContent>
         </Card>
       )}

@@ -4,12 +4,12 @@ import * as React from "react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from "@/components/ui/responsive-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -20,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ResponsiveTable } from "@/components/ui/responsive-table";
 import { Calendar, DollarSign, FileText } from "lucide-react";
 
 type CreditDetails = {
@@ -90,14 +91,14 @@ export function CreditDetailsDialog({
   );
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Detalles del Crédito</DialogTitle>
-          <DialogDescription>
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
+      <ResponsiveDialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>Detalles del Crédito</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             Información completa y historial de pagos
-          </DialogDescription>
-        </DialogHeader>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
 
         <div className="space-y-6">
           {/* Información del cliente */}
@@ -207,16 +208,17 @@ export function CreditDetailsDialog({
                 No hay pagos registrados
               </div>
             ) : (
-              <div className="border rounded-lg">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Fecha</TableHead>
-                      <TableHead>Monto</TableHead>
-                      <TableHead>Método</TableHead>
-                      <TableHead>Referencia</TableHead>
-                    </TableRow>
-                  </TableHeader>
+              <ResponsiveTable className="border rounded-lg">
+                <div style={{ minWidth: '600px' }}>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Fecha</TableHead>
+                        <TableHead>Monto</TableHead>
+                        <TableHead>Método</TableHead>
+                        <TableHead>Referencia</TableHead>
+                      </TableRow>
+                    </TableHeader>
                   <TableBody>
                     {credit.payments.map((payment) => (
                       <TableRow key={payment.id}>
@@ -241,7 +243,8 @@ export function CreditDetailsDialog({
                     ))}
                   </TableBody>
                 </Table>
-              </div>
+                </div>
+              </ResponsiveTable>
             )}
           </div>
 
@@ -256,7 +259,7 @@ export function CreditDetailsDialog({
             </>
           )}
         </div>
-      </DialogContent>
-    </Dialog>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 }

@@ -50,7 +50,7 @@ export function TotalsPanel({ onCheckout, disabled = false }: TotalsPanelProps) 
         <div className="border-t pt-3">
           <div className="flex justify-between items-center">
             <span className="font-semibold">Total:</span>
-            <span className="text-3xl font-bold text-primary">
+            <span className="text-3xl font-bold text-success">
               ${totals.total.toLocaleString('es-CL')}
             </span>
           </div>
@@ -60,11 +60,13 @@ export function TotalsPanel({ onCheckout, disabled = false }: TotalsPanelProps) 
         </div>
 
         <Button
-          className="w-full h-14 text-lg font-semibold"
+          variant="success"
+          size="lg"
+          className="w-full"
           disabled={isDisabled}
           onClick={onCheckout}
         >
-          <DollarSign className="mr-2 h-5 w-5" />
+          <DollarSign className="mr-2 h-5 w-5" strokeWidth={2} />
           {disabled && !isEmpty ? 'Abre una caja para cobrar' : 'Cobrar (F2)'}
         </Button>
 

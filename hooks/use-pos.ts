@@ -57,12 +57,15 @@ export const usePosStore = create<PosStore>((set, get) => ({
   refreshKey: 0,
   
   addItem: (product) => {
+    console.log('[POS Store] addItem called:', { productId: product.id, name: product.name, currentStock: product.currentStock });
+    
     const items = get().items;
     const existingItem = items.find(item => item.productId === product.id);
     
     if (existingItem) {
       // Incrementar cantidad si ya existe (validar stock)
       if (existingItem.quantity < existingItem.stock) {
+        console.log('[POS Store] Incrementing existing item quantity');
         set({
           items: items.map(item =>
             item.productId === product.id
@@ -70,6 +73,8 @@ export const usePosStore = create<PosStore>((set, get) => ({
               : item
           )
         });
+      } else {
+        console.warn('[POS Store] Cannot add more - stock limit reached');
       }
     } else {
       // Agregar nuevo item
@@ -86,8 +91,11 @@ export const usePosStore = create<PosStore>((set, get) => ({
         discountPercent: 0,
       };
       
+      console.log('[POS Store] Adding new item to cart:', newItem);
       set({ items: [...items, newItem] });
     }
+    
+    console.log('[POS Store] Current cart items count:', get().items.length);
   },
   
   removeItem: (productId) => {

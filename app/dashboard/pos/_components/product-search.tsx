@@ -129,20 +129,28 @@ export function ProductSearch() {
   };
 
   const handleAddToCart = (product: Product) => {
+    console.log('[POS] handleAddToCart called:', { productId: product.id, name: product.name, stock: product.currentStock });
+    
     if (product.currentStock <= 0) {
       toast.error('Producto sin stock');
       return;
     }
     
-    addItem({
-      id: product.id,
-      sku: product.sku,
-      name: product.name,
-      price: Number(product.price),
-      currentStock: product.currentStock,
-      taxRate: Number(product.taxRate),
-    });
-    toast.success(`${product.name} agregado al carrito`);
+    try {
+      addItem({
+        id: product.id,
+        sku: product.sku,
+        name: product.name,
+        price: Number(product.price),
+        currentStock: product.currentStock,
+        taxRate: Number(product.taxRate),
+      });
+      console.log('[POS] Item added successfully');
+      toast.success(`${product.name} agregado al carrito`);
+    } catch (error) {
+      console.error('[POS] Error adding item:', error);
+      toast.error('Error al agregar producto');
+    }
   };
 
   const filteredProducts = products || [];
@@ -188,8 +196,15 @@ export function ProductSearch() {
               <Button
                 key={product.id}
                 variant="outline"
-                className="h-auto p-3 justify-start hover:bg-primary/10 hover:border-primary transition-colors min-h-[48px]"
+                className="h-auto p-3 justify-start hover:bg-primary/10 hover:border-primary active:scale-[0.98] transition-all min-h-[48px] cursor-pointer touch-manipulation"
                 onClick={() => handleAddToCart(product)}
+                onTouchEnd={(e) => {
+                  // Prevenir el click duplicado en dispositivos táctiles
+                  e.preventDefault();
+                  if (product.currentStock > 0) {
+                    handleAddToCart(product);
+                  }
+                }}
                 disabled={product.currentStock <= 0}
               >
                 <div className="flex items-center gap-3 w-full">

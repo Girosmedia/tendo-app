@@ -13,7 +13,7 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:-translate-y-[1px] hover:shadow-md active:translate-y-0 active:shadow-sm focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
         success:
-          "bg-success text-success-foreground hover:bg-success/90 hover:-translate-y-[1px] hover:shadow-md active:translate-y-0 active:shadow-sm",
+          "bg-success text-success-foreground hover:bg-success/90 hover:scale-[1.02] active:scale-100 transition-all",
         warning:
           "bg-warning text-warning-foreground hover:bg-warning/90 hover:-translate-y-[1px] hover:shadow-md active:translate-y-0 active:shadow-sm",
         info:
@@ -27,14 +27,15 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
+        default: "h-11 px-4 py-2 has-[>svg]:px-3",
         xs: "h-6 gap-1 rounded-md px-2 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        icon: "size-9",
+        sm: "h-9 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
+        lg: "h-14 rounded-md px-6 text-lg has-[>svg]:px-4",
+        xl: "h-16 rounded-lg px-8 text-xl font-semibold has-[>svg]:px-6",
+        icon: "size-11",
         "icon-xs": "size-6 rounded-md [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm": "size-8",
-        "icon-lg": "size-10",
+        "icon-sm": "size-9",
+        "icon-lg": "size-14",
       },
     },
     defaultVariants: {

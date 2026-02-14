@@ -16,29 +16,29 @@ export function ProductsHeader({ categories }: ProductsHeaderProps) {
 
   return (
     <>
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-3 md:gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Productos y Servicios</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Productos y Servicios</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
             Gestiona tu catálogo completo de productos físicos y servicios
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 md:flex-row">
           <Button 
             variant="outline" 
-            size="lg" 
-            className="w-full md:w-auto" 
+            size="default"
+            className="w-full md:w-auto md:size-lg" 
             onClick={() => setCategoryDialogOpen(true)}
           >
-            <FolderTree className="mr-2 size-4" />
+            <FolderTree className="mr-2 h-4 w-4" strokeWidth={1.75} />
             Nueva Categoría
           </Button>
           <Button 
-            size="lg" 
-            className="w-full md:w-auto" 
+            size="default"
+            className="w-full md:w-auto md:size-lg" 
             onClick={() => setProductDialogOpen(true)}
           >
-            <Plus className="mr-2 size-4" />
+            <Plus className="mr-2 h-4 w-4" strokeWidth={1.75} />
             Nuevo Producto
           </Button>
         </div>
