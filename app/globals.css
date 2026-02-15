@@ -214,6 +214,46 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Performance Optimizations */
+@layer utilities {
+  /* GPU Acceleration for animations */
+  .will-change-transform {
+    will-change: transform;
+  }
+  
+  .will-change-opacity {
+    will-change: opacity;
+  }
+  
+  .gpu-accelerate {
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  /* Reduce motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  
+  /* Optimize rendering for sections */
+  .section-contain {
+    contain: layout style;
+  }
+  
+  .section-contain-strict {
+    contain: strict;
+  }
+}
+
 /* Animaciones personalizadas Tendo - Zimple Style */
 @keyframes bounce-horizontal {
   0%, 100% {

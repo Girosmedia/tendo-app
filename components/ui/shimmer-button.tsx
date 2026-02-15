@@ -37,6 +37,7 @@ export function ShimmerButton({
         style={{
           background: `linear-gradient(90deg, transparent, ${shimmerColor} 50%, transparent)`,
           opacity: 0.3,
+          willChange: 'transform',
         }}
         animate={{
           translateX: ['200%', '-200%'],
@@ -45,6 +46,7 @@ export function ShimmerButton({
           repeat: Infinity,
           duration: parseFloat(shimmerDuration),
           ease: 'linear',
+          repeatType: 'loop',
         }}
       />
     </Button>
