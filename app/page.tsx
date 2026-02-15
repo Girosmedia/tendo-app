@@ -26,18 +26,23 @@ import { ShimmerButton } from '@/components/ui/shimmer-button';
 import { BorderBeam } from '@/components/ui/border-beam';
 import { AmbientGradient } from '@/components/ui/ambient-gradient';
 
+// Optimized animation variants with reduced motion and better performance
 const fadeInUp = {
   initial: { opacity: 0, y: 40 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-100px' },
-  transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as any }
+  viewport: { once: true, margin: '-50px', amount: 0.3 },
+  transition: { 
+    duration: 0.5, 
+    ease: [0.22, 1, 0.36, 1] as any,
+  }
 };
 
 const staggerContainer = {
   initial: {},
   whileInView: {
     transition: {
-      staggerChildren: 0.1
+      staggerChildren: 0.08,
+      delayChildren: 0.05
     }
   }
 };
@@ -88,7 +93,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section - Split Layout 60/40 */}
-      <section className="relative py-20 sm:py-32 lg:py-40">
+      <section className="relative py-20 sm:py-32 lg:py-40" style={{ contain: 'layout' }}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-[60%_40%] gap-12 lg:gap-16 items-center">
             {/* Left: Copy */}
@@ -168,19 +173,22 @@ export default function LandingPage() {
               className="relative hidden lg:block"
               initial={{ opacity: 0, x: 40, rotateY: -15 }}
               animate={{ opacity: 1, x: 0, rotateY: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+              style={{ perspective: '1000px' }}
             >
               <div className="relative">
                 {/* Main Preview Card with Glassmorphism */}
                 <motion.div 
                   className="relative rounded-[2rem] border border-border/50 bg-card/40 backdrop-blur-2xl p-8 shadow-2xl"
+                  style={{ willChange: 'transform' }}
                   animate={{ 
                     y: [0, -10, 0],
                   }}
                   transition={{
                     duration: 6,
                     repeat: Infinity,
-                    ease: "easeInOut"
+                    ease: "easeInOut",
+                    repeatType: 'loop',
                   }}
                 >
                   <div className="space-y-6">
@@ -235,6 +243,7 @@ export default function LandingPage() {
                   {/* Floating Elements */}
                   <motion.div
                     className="absolute -top-4 -right-4 h-16 w-16 rounded-2xl bg-gradient-to-br from-success to-success/80 shadow-lg shadow-success/50 flex items-center justify-center text-success-foreground"
+                    style={{ willChange: 'transform' }}
                     animate={{ 
                       y: [0, -8, 0],
                       rotate: [0, 5, 0]
@@ -243,7 +252,8 @@ export default function LandingPage() {
                       duration: 4,
                       repeat: Infinity,
                       ease: "easeInOut",
-                      delay: 0.5
+                      delay: 0.5,
+                      repeatType: 'loop',
                     }}
                   >
                     <TrendingUp className="h-8 w-8" />
@@ -251,6 +261,7 @@ export default function LandingPage() {
 
                   <motion.div
                     className="absolute -bottom-6 -left-6 h-20 w-20 rounded-2xl bg-gradient-to-br from-primary to-primary/80 shadow-lg shadow-primary/50 flex items-center justify-center text-primary-foreground"
+                    style={{ willChange: 'transform' }}
                     animate={{ 
                       y: [0, 8, 0],
                       rotate: [0, -5, 0]
@@ -259,7 +270,8 @@ export default function LandingPage() {
                       duration: 5,
                       repeat: Infinity,
                       ease: "easeInOut",
-                      delay: 1
+                      delay: 1,
+                      repeatType: 'loop',
                     }}
                   >
                     <Receipt className="h-10 w-10" />
@@ -274,6 +286,7 @@ export default function LandingPage() {
       {/* Trust Badge */}
       <motion.section 
         className="relative py-12 border-y border-border/40 backdrop-blur-sm bg-muted/10"
+        style={{ contain: 'layout style' }}
         {...fadeInUp}
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -302,7 +315,7 @@ export default function LandingPage() {
       </motion.section>
 
       {/* Problem Section - Premium Redesign */}
-      <motion.section className="relative py-20 sm:py-32" {...fadeInUp}>
+      <motion.section className="relative py-20 sm:py-32" style={{ contain: 'layout' }} {...fadeInUp}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <motion.h2 
@@ -384,7 +397,7 @@ export default function LandingPage() {
       </motion.section>
 
       {/* Bento Grid Features Section */}
-      <section id="features" className="relative py-20 sm:py-32 bg-muted/30 backdrop-blur-sm">
+      <section id="features" className="relative py-20 sm:py-32 bg-muted/30 backdrop-blur-sm" style={{ contain: 'layout' }}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             className="mx-auto max-w-3xl text-center mb-16"
@@ -408,7 +421,7 @@ export default function LandingPage() {
             variants={staggerContainer}
             initial="initial"
             whileInView="whileInView"
-            viewport={{ once: true, margin: '-50px' }}
+            viewport={{ once: true, margin: '-20px', amount: 0.2 }}
           >
             {/* POS - Large Card (2 columns on lg) */}
             <motion.div 
@@ -444,8 +457,9 @@ export default function LandingPage() {
               {/* Floating mockup elements */}
               <motion.div
                 className="absolute -right-8 -bottom-8 h-32 w-32 rounded-2xl bg-gradient-to-br from-success/30 to-primary/30 backdrop-blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ willChange: 'transform' }}
                 animate={{ rotate: [0, 5, 0] }}
-                transition={{ duration: 6, repeat: Infinity }}
+                transition={{ duration: 6, repeat: Infinity, repeatType: 'loop' }}
               />
             </motion.div>
 
@@ -577,7 +591,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="relative py-20 sm:py-32">
+      <section id="pricing" className="relative py-20 sm:py-32" style={{ contain: 'layout' }}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             className="mx-auto max-w-3xl text-center mb-16"
@@ -599,7 +613,7 @@ export default function LandingPage() {
             variants={staggerContainer}
             initial="initial"
             whileInView="whileInView"
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.2 }}
           >
             {/* Plan Gratis */}
             <motion.div 
@@ -748,14 +762,14 @@ export default function LandingPage() {
       </motion.section>
 
       {/* Footer */}
-      <footer className="relative py-12 border-t border-border/40 backdrop-blur-sm">
+      <footer className="relative py-12 border-t border-border/40 backdrop-blur-sm" style={{ contain: 'layout' }}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             className="grid md:grid-cols-4 gap-8 mb-8"
             variants={staggerContainer}
             initial="initial"
             whileInView="whileInView"
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.3 }}
           >
             <motion.div variants={fadeInUp}>
               <div className="flex items-center gap-2 mb-4">
