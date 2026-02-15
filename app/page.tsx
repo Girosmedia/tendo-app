@@ -174,7 +174,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, x: 40, rotateY: -15 }}
               animate={{ opacity: 1, x: 0, rotateY: 0 }}
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-              style={{ perspective: 1000 }}
+              style={{ perspective: '1000px' }}
             >
               <div className="relative">
                 {/* Main Preview Card with Glassmorphism */}
