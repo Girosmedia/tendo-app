@@ -43,6 +43,16 @@ export type VerificationToken = Prisma.VerificationTokenModel
  */
 export type Organization = Prisma.OrganizationModel
 /**
+ * Model Supplier
+ * 
+ */
+export type Supplier = Prisma.SupplierModel
+/**
+ * Model AccountPayable
+ * 
+ */
+export type AccountPayable = Prisma.AccountPayableModel
+/**
  * Model Member
  * 
  */
@@ -93,10 +103,35 @@ export type Document = Prisma.DocumentModel
  */
 export type DocumentItem = Prisma.DocumentItemModel
 /**
+ * Model Project
+ * 
+ */
+export type Project = Prisma.ProjectModel
+/**
+ * Model ProjectResource
+ * 
+ */
+export type ProjectResource = Prisma.ProjectResourceModel
+/**
+ * Model ProjectMilestone
+ * 
+ */
+export type ProjectMilestone = Prisma.ProjectMilestoneModel
+/**
+ * Model ProjectExpense
+ * 
+ */
+export type ProjectExpense = Prisma.ProjectExpenseModel
+/**
  * Model CashRegister
  * 
  */
 export type CashRegister = Prisma.CashRegisterModel
+/**
+ * Model OperationalExpense
+ * 
+ */
+export type OperationalExpense = Prisma.OperationalExpenseModel
 /**
  * Model Credit
  * 

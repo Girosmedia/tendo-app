@@ -11,22 +11,42 @@ Tendo es un sistema de gestión empresarial moderno, intuitivo y adaptado a la r
 - 💵 **Mi Caja**: Control de gastos y flujo de caja
 - 📊 **Fiados**: Gestión de cuentas por cobrar
 
-## 🚀 Estado del Proyecto
+## 🚀 Estado del Proyecto (Actualizado: 16-02-2026)
 
-### ✅ Fase 1: Núcleo Multi-tenant y Autenticación (Completada)
+### ✅ Núcleo de plataforma
 
-- Sistema de usuarios con Auth.js v5
-- Arquitectura multi-tenant (múltiples organizaciones)
+- Autenticación Auth.js v5
+- Arquitectura multi-tenant (Organization + Member + filtros por `organizationId`)
 - Onboarding con validación de RUT chileno
-- Dashboard base con navegación
+- Configuración de empresa (`/dashboard/settings`)
+- Gestión de equipo (`/dashboard/team`)
 
-📖 **[Ver documentación completa de Fase 1](./FASE_1_README.md)**
+### ✅ Track Retail (MVP operativo)
 
-### 🔄 Próximas Fases
+- Catálogo de productos/categorías
+- Punto de Venta (POS)
+- Cierre de caja
+- Dashboard con KPIs reales
+- Fiados / créditos / pagos
 
-- **Fase 2**: Módulo de Productos e Inventario
-- **Fase 3**: Punto de Venta (POS)
-- **Fase 4**: Módulos Financieros (Mi Caja, Fiados)
+### ✅ Track Servicios (MVP operativo)
+
+- Cotizaciones (`/dashboard/services/quotes`)
+- Conversión Cotización aprobada → Proyecto
+- Gestión de proyectos (`/dashboard/services/projects`)
+- Gastos reales, recursos/materiales y hitos
+- Desvío estimado vs real por hito
+- Alertas operativas (vencimientos/sobrecostos)
+
+### 🟡 Pendientes críticos para “cierre global”
+
+- Fortalecer backoffice super-admin (métricas de negocio SaaS y operación)
+- Consolidar módulo explícito de cuentas por pagar (proveedores)
+- Cerrar checklist operativo de salida
+
+📋 Ver checklist: [docs/GO-LIVE-CHECKLIST.md](./docs/GO-LIVE-CHECKLIST.md)
+🗺️ Ver plan vigente: [docs/PLAN-DE-DESARROLLO.md](./docs/PLAN-DE-DESARROLLO.md)
+🧭 Ver roadmap MVP: [docs/MVP_ROADMAP.md](./docs/MVP_ROADMAP.md)
 
 ## 🛠️ Stack Tecnológico
 

@@ -4,6 +4,8 @@ import { db } from '@/lib/db';
 import { getCurrentOrganization } from '@/lib/organization';
 import { logAuditAction } from '@/lib/audit';
 import { createDocumentSchema } from '@/lib/validators/document';
+import { calculateDocumentTotals } from '@/lib/utils/document-totals';
+import { roundCashPaymentAmount } from '@/lib/utils/cash-rounding';
 
 // GET /api/documents - Listar documentos
 export async function GET(req: NextRequest) {
@@ -115,39 +117,60 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Calcular totales de items
-    // IMPORTANTE: unitPrice es BRUTO (incluye IVA)
-    const itemsWithTotals = validatedData.items.map((item) => {
-      // Total bruto del item (precio final que paga el cliente)
-      const totalBruto = item.quantity * item.unitPrice - item.discount;
-      
-      // Calcular neto e IVA desde el bruto
-      // Si taxRate = 19: neto = bruto / 1.19, iva = bruto - neto
-      const divisor = 1 + (item.taxRate / 100);
-      const subtotal = totalBruto / divisor; // Neto (base imponible)
-      const taxAmount = totalBruto - subtotal; // IVA
-      const total = totalBruto; // Total con IVA
-
-      return {
-        ...item,
-        subtotal,
-        taxAmount,
-        total,
-      };
-    });
-
-    // Calcular totales del documento
-    const subtotal = itemsWithTotals.reduce(
-      (sum, item) => sum + item.subtotal,
-      0
+    const totalsCalculation = calculateDocumentTotals(
+      validatedData.items.map((item) => ({
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        discount: item.discount,
+        taxRate: item.taxRate,
+      })),
+      validatedData.discount
     );
-    const taxAmount = itemsWithTotals.reduce((sum, item) => sum + item.taxAmount, 0);
-    const total = subtotal + taxAmount - validatedData.discount;
+
+    if (validatedData.discount > totalsCalculation.grossBeforeGlobalDiscount) {
+      return NextResponse.json(
+        {
+          error: 'El descuento global no puede superar el total bruto de los ítems',
+        },
+        { status: 400 }
+      );
+    }
+
+    const itemsWithTotals = validatedData.items.map((item, index) => ({
+      ...item,
+      subtotal: totalsCalculation.items[index].subtotal,
+      taxAmount: totalsCalculation.items[index].taxAmount,
+      total: totalsCalculation.items[index].total,
+    }));
+
+    const subtotal = totalsCalculation.subtotal;
+    const taxAmount = totalsCalculation.taxAmount;
+    const total = totalsCalculation.total;
+    const roundedCashTotal = roundCashPaymentAmount(total);
+
+    if (
+      validatedData.paymentMethod === 'CASH' &&
+      validatedData.cashReceived !== undefined &&
+      validatedData.cashReceived !== null &&
+      validatedData.cashReceived < roundedCashTotal
+    ) {
+      return NextResponse.json(
+        {
+          error: 'El efectivo recibido no alcanza el total a pagar con redondeo legal',
+          code: 'INSUFFICIENT_CASH',
+          details: {
+            roundedCashTotal,
+            cashReceived: validatedData.cashReceived,
+          },
+        },
+        { status: 400 }
+      );
+    }
 
     // Calcular vuelto si es pago en efectivo
     const cashChange =
       validatedData.paymentMethod === 'CASH' && validatedData.cashReceived
-        ? validatedData.cashReceived - total
+        ? validatedData.cashReceived - roundedCashTotal
         : null;
 
     // Obtener el siguiente número de documento para este tipo
@@ -227,7 +250,7 @@ export async function POST(req: NextRequest) {
           subtotal: subtotal,
           taxRate: validatedData.taxRate,
           taxAmount: taxAmount,
-          discount: validatedData.discount,
+          discount: totalsCalculation.globalDiscountApplied,
           total: total,
           cashReceived: validatedData.cashReceived
             ? validatedData.cashReceived

@@ -4,6 +4,8 @@ import { db } from '@/lib/db';
 import { getCurrentOrganization } from '@/lib/organization';
 import { logAuditAction } from '@/lib/audit';
 import { updateDocumentSchema } from '@/lib/validators/document';
+import { calculateDocumentTotals } from '@/lib/utils/document-totals';
+import { roundCashPaymentAmount } from '@/lib/utils/cash-rounding';
 
 // GET /api/documents/[id] - Obtener documento por ID
 export async function GET(
@@ -104,6 +106,16 @@ export async function PATCH(
         id,
         organizationId: organization.id,
       },
+      include: {
+        items: {
+          select: {
+            quantity: true,
+            unitPrice: true,
+            discount: true,
+            taxRate: true,
+          },
+        },
+      },
     });
 
     if (!existingDocument) {
@@ -141,21 +153,43 @@ export async function PATCH(
 
     // Convertir a Decimal si existen
     if (validatedData.discount !== undefined) {
-      updateData.discount = validatedData.discount;
-      
-      // Recalcular total si cambia el descuento
-      const newTotal = Number(existingDocument.subtotal) +
-        Number(existingDocument.taxAmount) -
-        updateData.discount;
-      updateData.total = newTotal;
+      const totalsCalculation = calculateDocumentTotals(
+        existingDocument.items.map((item) => ({
+          quantity: Number(item.quantity),
+          unitPrice: Number(item.unitPrice),
+          discount: Number(item.discount),
+          taxRate: Number(item.taxRate),
+        })),
+        validatedData.discount
+      );
+
+      if (validatedData.discount > totalsCalculation.grossBeforeGlobalDiscount) {
+        return NextResponse.json(
+          {
+            error: 'El descuento global no puede superar el total bruto de los ítems',
+          },
+          { status: 400 }
+        );
+      }
+
+      updateData.discount = totalsCalculation.globalDiscountApplied;
+      updateData.subtotal = totalsCalculation.subtotal;
+      updateData.taxAmount = totalsCalculation.taxAmount;
+      updateData.total = totalsCalculation.total;
     }
 
     if (validatedData.cashReceived !== undefined && validatedData.cashReceived !== null) {
       updateData.cashReceived = validatedData.cashReceived;
-      
-      // Recalcular vuelto
-      const total = updateData.total || Number(existingDocument.total);
-      updateData.cashChange = validatedData.cashReceived - total;
+
+      const effectivePaymentMethod =
+        validatedData.paymentMethod || existingDocument.paymentMethod;
+      const total = Number(updateData.total ?? existingDocument.total);
+      const payableTotal =
+        effectivePaymentMethod === 'CASH'
+          ? roundCashPaymentAmount(total)
+          : total;
+
+      updateData.cashChange = validatedData.cashReceived - payableTotal;
     }
 
     // Actualizar documento

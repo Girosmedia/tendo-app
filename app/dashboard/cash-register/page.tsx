@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calculator, Plus, RefreshCw } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Calculator, Download, Plus, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import { OpenDialog } from './_components/open-dialog';
 import { CloseDialog } from './_components/close-dialog';
@@ -25,9 +26,63 @@ interface CashRegister {
   salesCount: number;
 }
 
+interface MonthlySale {
+  id: string;
+  documentNumber: number;
+  issuedAt: string;
+  paymentMethod: string;
+  customerName: string;
+  customerRut: string;
+  subtotal: number;
+  taxAmount: number;
+  discount: number;
+  total: number;
+}
+
+function getCurrentMonthValue() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function getMonthDateRange(monthValue: string) {
+  const [yearStr, monthStr] = monthValue.split('-');
+  const year = Number(yearStr);
+  const month = Number(monthStr);
+
+  const startDate = new Date(year, month - 1, 1, 0, 0, 0, 0);
+  const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+
+  return {
+    startDate: startDate.toISOString(),
+    endDate: endDate.toISOString(),
+    label: startDate.toLocaleDateString('es-CL', {
+      month: 'long',
+      year: 'numeric',
+    }),
+  };
+}
+
+function toCsvValue(value: string | number) {
+  return `"${String(value).replaceAll('"', '""')}"`;
+}
+
+function getPaymentMethodLabel(method: string) {
+  const labels: Record<string, string> = {
+    CASH: 'Efectivo',
+    CARD: 'Tarjeta',
+    TRANSFER: 'Transferencia',
+    CHECK: 'Cheque',
+    CREDIT: 'Crédito',
+    MULTI: 'Mixto',
+  };
+  return labels[method] || method;
+}
+
 export default function CashRegisterPage() {
   const [registers, setRegisters] = useState<CashRegister[]>([]);
   const [activeCashRegister, setActiveCashRegister] = useState<CashRegister | null>(null);
+  const [monthlySales, setMonthlySales] = useState<MonthlySale[]>([]);
+  const [selectedMonth, setSelectedMonth] = useState(getCurrentMonthValue());
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [openDialogOpen, setOpenDialogOpen] = useState(false);
@@ -35,22 +90,54 @@ export default function CashRegisterPage() {
   const [reportViewerOpen, setReportViewerOpen] = useState(false);
   const [selectedCashRegisterId, setSelectedCashRegisterId] = useState<string | null>(null);
 
+  const closedRegisters = registers.filter((register) => register.status === 'CLOSED');
+  const monthSummary = closedRegisters.reduce(
+    (acc, register) => {
+      acc.totalSales += register.totalSales;
+      acc.salesCount += register.salesCount;
+      acc.closuresCount += 1;
+      acc.totalDifference += register.difference || 0;
+      return acc;
+    },
+    {
+      totalSales: 0,
+      salesCount: 0,
+      closuresCount: 0,
+      totalDifference: 0,
+    }
+  );
+
   const loadCashRegisters = useCallback(async (silent = false) => {
     if (!silent) setIsLoading(true);
     setIsRefreshing(true);
     
     try {
-      const res = await fetch('/api/cash-register');
-      if (!res.ok) throw new Error('Error al cargar cajas');
-      
-      const data = await res.json();
-      setRegisters(data.cashRegisters || []);
-      
-      // Buscar caja activa del usuario
-      const active = data.cashRegisters?.find(
-        (r: CashRegister) => r.status === 'OPEN'
-      );
-      setActiveCashRegister(active || null);
+      const { startDate, endDate } = getMonthDateRange(selectedMonth);
+      const searchParams = new URLSearchParams({
+        startDate,
+        endDate,
+        page: '1',
+        limit: '100',
+      });
+
+      const [listRes, activeRes, monthlySalesRes] = await Promise.all([
+        fetch(`/api/cash-register?${searchParams.toString()}`),
+        fetch('/api/cash-register/active'),
+        fetch(`/api/cash-register/monthly-sales?${searchParams.toString()}`),
+      ]);
+
+      if (!listRes.ok) throw new Error('Error al cargar cajas');
+      if (!activeRes.ok) throw new Error('Error al cargar caja activa');
+      if (!monthlySalesRes.ok) throw new Error('Error al cargar ventas del mes');
+
+      const [listData, activeData, monthlySalesData] = await Promise.all([
+        listRes.json(),
+        activeRes.json(),
+        monthlySalesRes.json(),
+      ]);
+      setRegisters(listData.cashRegisters || []);
+      setActiveCashRegister(activeData.cashRegister || null);
+      setMonthlySales(monthlySalesData.sales || []);
     } catch (error) {
       console.error('Error:', error);
       if (!silent) toast.error('Error al cargar historial de cajas');
@@ -58,7 +145,7 @@ export default function CashRegisterPage() {
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, []);
+  }, [selectedMonth]);
 
   // Auto-refresh cada 30 segundos si hay caja activa
   useEffect(() => {
@@ -75,7 +162,7 @@ export default function CashRegisterPage() {
   useEffect(() => {
     loadCashRegisters();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectedMonth]);
 
   function handleOpenSuccess() {
     loadCashRegisters();
@@ -89,6 +176,94 @@ export default function CashRegisterPage() {
   function handleViewReport(id: string) {
     setSelectedCashRegisterId(id);
     setReportViewerOpen(true);
+  }
+
+  function handleDownloadMonthlyCsv() {
+    const { label } = getMonthDateRange(selectedMonth);
+
+    const headers = [
+      'ID Caja',
+      'Apertura',
+      'Cierre',
+      'Estado',
+      'Cantidad Ventas',
+      'Total Ventas',
+      'Efectivo Esperado',
+      'Efectivo Contado',
+      'Diferencia',
+    ];
+
+    const salesHeaders = [
+      'Documento',
+      'Fecha',
+      'Cliente',
+      'RUT',
+      'Método Pago',
+      'Neto',
+      'IVA',
+      'Descuento',
+      'Total',
+    ];
+
+    const rows = closedRegisters.map((register) => [
+      register.id,
+      new Date(register.openedAt).toLocaleString('es-CL'),
+      register.closedAt ? new Date(register.closedAt).toLocaleString('es-CL') : '',
+      register.status,
+      register.salesCount,
+      Math.round(register.totalSales),
+      Math.round(register.expectedCash),
+      register.actualCash ? Math.round(register.actualCash) : 0,
+      register.difference ? Math.round(register.difference) : 0,
+    ]);
+
+    const summaryRows = [
+      ['Periodo', label],
+      ['Total cierres', monthSummary.closuresCount],
+      ['Total ventas', monthSummary.salesCount],
+      ['Monto total ventas', Math.round(monthSummary.totalSales)],
+      ['Diferencia acumulada', Math.round(monthSummary.totalDifference)],
+      ['Documentos vendidos del mes', monthlySales.length],
+      ['Neto ventas del mes', Math.round(monthlySales.reduce((acc, sale) => acc + sale.subtotal, 0))],
+      ['IVA ventas del mes', Math.round(monthlySales.reduce((acc, sale) => acc + sale.taxAmount, 0))],
+      ['Descuento ventas del mes', Math.round(monthlySales.reduce((acc, sale) => acc + sale.discount, 0))],
+      ['Total documentos del mes', Math.round(monthlySales.reduce((acc, sale) => acc + sale.total, 0))],
+    ];
+
+    const salesRows = monthlySales.map((sale) => [
+      sale.documentNumber,
+      new Date(sale.issuedAt).toLocaleString('es-CL'),
+      sale.customerName,
+      sale.customerRut,
+      getPaymentMethodLabel(sale.paymentMethod),
+      Math.round(sale.subtotal),
+      Math.round(sale.taxAmount),
+      Math.round(sale.discount),
+      Math.round(sale.total),
+    ]);
+
+    const csv = [
+      [toCsvValue('Consolidado Mensual de Cierre de Caja')].join(','),
+      ...summaryRows.map((row) => row.map((value) => toCsvValue(value)).join(',')),
+      '',
+      [toCsvValue('Detalle de Cierres de Caja')].join(','),
+      headers.map((value) => toCsvValue(value)).join(','),
+      ...rows.map((row) => row.map((value) => toCsvValue(value)).join(',')),
+      '',
+      [toCsvValue('Detalle de Ventas del Mes')].join(','),
+      salesHeaders.map((value) => toCsvValue(value)).join(','),
+      ...salesRows.map((row) => row.map((value) => toCsvValue(value)).join(',')),
+    ].join('\n');
+
+    const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `cierre-caja-${selectedMonth}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   }
 
   if (isLoading) {
@@ -195,6 +370,14 @@ export default function CashRegisterPage() {
                 </p>
               </div>
             </div>
+            <div className="mt-4 flex justify-end">
+              <Button
+                variant="outline"
+                onClick={() => handleViewReport(activeCashRegister.id)}
+              >
+                Ver detalle de ventas
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}
@@ -202,14 +385,62 @@ export default function CashRegisterPage() {
       {/* Historial */}
       <Card>
         <CardHeader>
-          <CardTitle>Historial de Cierres</CardTitle>
-          <CardDescription>
-            Últimos cierres de caja registrados
-          </CardDescription>
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <CardTitle>Historial de Cierres</CardTitle>
+              <CardDescription>
+                Cierres y consolidado según el mes seleccionado
+              </CardDescription>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Input
+                type="month"
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+                className="w-full sm:w-44"
+              />
+              <Button
+                variant="outline"
+                onClick={handleDownloadMonthlyCsv}
+                disabled={closedRegisters.length === 0}
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Descargar CSV
+              </Button>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
+            <div className="rounded-lg border p-3">
+              <p className="text-xs text-muted-foreground">Cierres del mes</p>
+              <p className="text-xl font-bold">{monthSummary.closuresCount}</p>
+            </div>
+            <div className="rounded-lg border p-3">
+              <p className="text-xs text-muted-foreground">Ventas del mes</p>
+              <p className="text-xl font-bold">{monthSummary.salesCount}</p>
+            </div>
+            <div className="rounded-lg border p-3">
+              <p className="text-xs text-muted-foreground">Total ventas del mes</p>
+              <p className="text-xl font-bold">
+                {new Intl.NumberFormat('es-CL', {
+                  style: 'currency',
+                  currency: 'CLP',
+                }).format(monthSummary.totalSales)}
+              </p>
+            </div>
+            <div className="rounded-lg border p-3">
+              <p className="text-xs text-muted-foreground">Diferencia acumulada</p>
+              <p className="text-xl font-bold">
+                {new Intl.NumberFormat('es-CL', {
+                  style: 'currency',
+                  currency: 'CLP',
+                }).format(monthSummary.totalDifference)}
+              </p>
+            </div>
+          </div>
           <CashRegisterTable
-            registers={registers}
+            registers={closedRegisters}
             onViewReport={handleViewReport}
           />
         </CardContent>

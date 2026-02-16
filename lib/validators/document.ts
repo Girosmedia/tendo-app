@@ -98,10 +98,27 @@ export const updateDocumentSchema = z.object({
   notes: z.string().max(5000).optional().nullable(),
 });
 
+// Schema para crear cotizaciones (Track Servicios)
+export const createQuoteSchema = createDocumentSchema.extend({
+  type: z.literal('QUOTE').optional().default('QUOTE'),
+  status: DocumentStatusEnum.optional().default('DRAFT'),
+  paymentMethod: PaymentMethodEnum.optional().default('TRANSFER'),
+});
+
+// Schema para actualizar cotizaciones
+export const updateQuoteSchema = z.object({
+  customerId: z.string().optional().nullable(),
+  status: DocumentStatusEnum.optional(),
+  dueAt: z.string().datetime().optional().nullable(),
+  notes: z.string().max(5000).optional().nullable(),
+});
+
 // Tipos TypeScript derivados
 export type DocumentItemInput = z.infer<typeof documentItemSchema>;
 export type CreateDocumentInput = z.infer<typeof createDocumentSchema>;
 export type UpdateDocumentInput = z.infer<typeof updateDocumentSchema>;
+export type CreateQuoteInput = z.infer<typeof createQuoteSchema>;
+export type UpdateQuoteInput = z.infer<typeof updateQuoteSchema>;
 export type DocumentType = z.infer<typeof DocumentTypeEnum>;
 export type DocumentStatus = z.infer<typeof DocumentStatusEnum>;
 export type PaymentMethod = z.infer<typeof PaymentMethodEnum>;

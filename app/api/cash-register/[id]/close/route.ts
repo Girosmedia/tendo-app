@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { getCurrentOrganization } from '@/lib/organization';
 import { logAuditAction, AUDIT_ACTIONS } from '@/lib/audit';
 import { closeCashRegisterSchema, type CloseCashRegisterInput } from '@/lib/validators/cash-register';
+import { sumRoundedCashTotals } from '@/lib/utils/cash-rounding';
 
 /**
  * POST /api/cash-register/[id]/close
@@ -57,7 +58,7 @@ export async function POST(
     const now = new Date();
 
     // Calcular ventas en efectivo del turno
-    const cashSalesData = await db.document.aggregate({
+    const cashSales = await db.document.findMany({
       where: {
         organizationId: organization.id,
         createdBy: cashRegister.openedBy,
@@ -68,14 +69,19 @@ export async function POST(
           lte: now,
         },
       },
-      _sum: { total: true },
-      _count: true,
+      select: {
+        total: true,
+      },
     });
 
-    const totalCashSales = cashSalesData._sum.total
-      ? Number(cashSalesData._sum.total)
-      : 0;
-    const cashSalesCount = cashSalesData._count;
+    const totalCashSales = sumRoundedCashTotals(
+      cashSales.map((sale) => Number(sale.total))
+    );
+    const totalCashSalesExact = cashSales.reduce(
+      (acc, sale) => acc + Number(sale.total),
+      0
+    );
+    const cashSalesCount = cashSales.length;
 
     // Calcular todas las ventas del turno (para estadísticas)
     const allSalesData = await db.document.aggregate({
@@ -136,6 +142,7 @@ export async function POST(
         salesCount,
         cashSalesCount,
         totalCashSales,
+        totalCashSalesExact,
       },
     });
 
@@ -151,7 +158,7 @@ export async function POST(
       summary: {
         cashSalesCount,
         totalCashSales,
-        otherMethodsSales: totalSales - totalCashSales,
+        otherMethodsSales: totalSales - totalCashSalesExact,
       },
     });
   } catch (error) {

@@ -2,6 +2,30 @@
 
 > **Estrategia MVP:** Implementación completa del módulo **Track Retail** (gestión de almacenes/botiLlerías) antes de expandir a otros módulos.
 
+---
+
+## 🔄 Actualización de alcance (16 de Febrero de 2026)
+
+El alcance de MVP evolucionó desde “solo Track Retail” a un enfoque operativo dual:
+
+- ✅ **Track Retail** operativo
+- ✅ **Track Servicios** operativo
+- ✅ **Core tenant** operativo
+- 🟡 **Super-admin** operativo base (faltan métricas SaaS avanzadas)
+
+### Roadmap corto vigente
+
+1. **Go-Live controlado**
+  - Checklist operacional y técnico de salida
+  - Monitoreo, respaldo y procedimiento de soporte
+2. **Super-admin v2**
+  - Métricas globales (tenants activos, growth, churn operativo)
+  - Mejor visibilidad de salud por tenant
+3. **Satélites financieros**
+  - Flujo dedicado de cuentas por pagar/proveedores
+
+> Nota: el resto del documento se conserva como historial técnico de implementación detallada del Track Retail.
+
 ## Target User
 - **Perfil:** Dueño de almacén/botillería en Chile
 - **Necesidades:** Vender productos, controlar stock, gestionar clientes, cerrar caja diaria

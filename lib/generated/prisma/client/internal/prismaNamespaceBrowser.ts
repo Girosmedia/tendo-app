@@ -56,6 +56,8 @@ export const ModelName = {
   User: 'User',
   VerificationToken: 'VerificationToken',
   Organization: 'Organization',
+  Supplier: 'Supplier',
+  AccountPayable: 'AccountPayable',
   Member: 'Member',
   TeamInvitation: 'TeamInvitation',
   OrganizationSettings: 'OrganizationSettings',
@@ -66,7 +68,12 @@ export const ModelName = {
   Customer: 'Customer',
   Document: 'Document',
   DocumentItem: 'DocumentItem',
+  Project: 'Project',
+  ProjectResource: 'ProjectResource',
+  ProjectMilestone: 'ProjectMilestone',
+  ProjectExpense: 'ProjectExpense',
   CashRegister: 'CashRegister',
+  OperationalExpense: 'OperationalExpense',
   Credit: 'Credit',
   Payment: 'Payment'
 } as const
@@ -156,12 +163,53 @@ export const OrganizationScalarFieldEnum = {
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
 
 
+export const SupplierScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  name: 'name',
+  rut: 'rut',
+  contactName: 'contactName',
+  email: 'email',
+  phone: 'phone',
+  address: 'address',
+  status: 'status',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SupplierScalarFieldEnum = (typeof SupplierScalarFieldEnum)[keyof typeof SupplierScalarFieldEnum]
+
+
+export const AccountPayableScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  supplierId: 'supplierId',
+  documentType: 'documentType',
+  documentNumber: 'documentNumber',
+  issueDate: 'issueDate',
+  dueDate: 'dueDate',
+  amount: 'amount',
+  balance: 'balance',
+  status: 'status',
+  description: 'description',
+  notes: 'notes',
+  createdBy: 'createdBy',
+  paidAt: 'paidAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AccountPayableScalarFieldEnum = (typeof AccountPayableScalarFieldEnum)[keyof typeof AccountPayableScalarFieldEnum]
+
+
 export const MemberScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   organizationId: 'organizationId',
   role: 'role',
   isActive: 'isActive',
+  estimatedCost: 'estimatedCost',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -354,6 +402,85 @@ export const DocumentItemScalarFieldEnum = {
 export type DocumentItemScalarFieldEnum = (typeof DocumentItemScalarFieldEnum)[keyof typeof DocumentItemScalarFieldEnum]
 
 
+export const ProjectScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  quoteId: 'quoteId',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  budget: 'budget',
+  actualCost: 'actualCost',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  notes: 'notes',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+export const ProjectResourceScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  projectId: 'projectId',
+  milestoneId: 'milestoneId',
+  productId: 'productId',
+  sku: 'sku',
+  name: 'name',
+  unit: 'unit',
+  quantity: 'quantity',
+  consumedQuantity: 'consumedQuantity',
+  unitCost: 'unitCost',
+  totalCost: 'totalCost',
+  notes: 'notes',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectResourceScalarFieldEnum = (typeof ProjectResourceScalarFieldEnum)[keyof typeof ProjectResourceScalarFieldEnum]
+
+
+export const ProjectMilestoneScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  projectId: 'projectId',
+  title: 'title',
+  description: 'description',
+  dueDate: 'dueDate',
+  estimatedCost: 'estimatedCost',
+  isCompleted: 'isCompleted',
+  completedAt: 'completedAt',
+  position: 'position',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectMilestoneScalarFieldEnum = (typeof ProjectMilestoneScalarFieldEnum)[keyof typeof ProjectMilestoneScalarFieldEnum]
+
+
+export const ProjectExpenseScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  projectId: 'projectId',
+  milestoneId: 'milestoneId',
+  description: 'description',
+  category: 'category',
+  amount: 'amount',
+  expenseDate: 'expenseDate',
+  notes: 'notes',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectExpenseScalarFieldEnum = (typeof ProjectExpenseScalarFieldEnum)[keyof typeof ProjectExpenseScalarFieldEnum]
+
+
 export const CashRegisterScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
@@ -374,6 +501,24 @@ export const CashRegisterScalarFieldEnum = {
 } as const
 
 export type CashRegisterScalarFieldEnum = (typeof CashRegisterScalarFieldEnum)[keyof typeof CashRegisterScalarFieldEnum]
+
+
+export const OperationalExpenseScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  cashRegisterId: 'cashRegisterId',
+  title: 'title',
+  description: 'description',
+  category: 'category',
+  amount: 'amount',
+  paymentMethod: 'paymentMethod',
+  expenseDate: 'expenseDate',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OperationalExpenseScalarFieldEnum = (typeof OperationalExpenseScalarFieldEnum)[keyof typeof OperationalExpenseScalarFieldEnum]
 
 
 export const CreditScalarFieldEnum = {

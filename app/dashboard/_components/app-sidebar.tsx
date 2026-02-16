@@ -14,7 +14,9 @@ import {
   ShoppingCart,
   Calculator,
   Tag,
-  HandCoins
+  HandCoins,
+  Coins,
+  WalletCards
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -70,6 +72,11 @@ const navigationItems = [
     icon: Calculator,
   },
   {
+    title: 'Mi Caja',
+    href: '/dashboard/mi-caja',
+    icon: Coins,
+  },
+  {
     title: 'Productos',
     href: '/dashboard/products',
     icon: Package,
@@ -88,6 +95,21 @@ const navigationItems = [
     title: 'Fiados',
     href: '/dashboard/fiados',
     icon: HandCoins,
+  },
+  {
+    title: 'Por Pagar',
+    href: '/dashboard/por-pagar',
+    icon: WalletCards,
+  },
+  {
+    title: 'Cotizaciones',
+    href: '/dashboard/services/quotes',
+    icon: FileText,
+  },
+  {
+    title: 'Proyectos',
+    href: '/dashboard/services/projects',
+    icon: Building2,
   },
   {
     title: 'Equipo',

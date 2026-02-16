@@ -20,8 +20,18 @@ export type MemberModel = runtime.Types.Result.DefaultSelection<Prisma.$MemberPa
 
 export type AggregateMember = {
   _count: MemberCountAggregateOutputType | null
+  _avg: MemberAvgAggregateOutputType | null
+  _sum: MemberSumAggregateOutputType | null
   _min: MemberMinAggregateOutputType | null
   _max: MemberMaxAggregateOutputType | null
+}
+
+export type MemberAvgAggregateOutputType = {
+  estimatedCost: runtime.Decimal | null
+}
+
+export type MemberSumAggregateOutputType = {
+  estimatedCost: runtime.Decimal | null
 }
 
 export type MemberMinAggregateOutputType = {
@@ -30,6 +40,7 @@ export type MemberMinAggregateOutputType = {
   organizationId: string | null
   role: $Enums.MemberRole | null
   isActive: boolean | null
+  estimatedCost: runtime.Decimal | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -40,6 +51,7 @@ export type MemberMaxAggregateOutputType = {
   organizationId: string | null
   role: $Enums.MemberRole | null
   isActive: boolean | null
+  estimatedCost: runtime.Decimal | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,11 +62,20 @@ export type MemberCountAggregateOutputType = {
   organizationId: number
   role: number
   isActive: number
+  estimatedCost: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type MemberAvgAggregateInputType = {
+  estimatedCost?: true
+}
+
+export type MemberSumAggregateInputType = {
+  estimatedCost?: true
+}
 
 export type MemberMinAggregateInputType = {
   id?: true
@@ -62,6 +83,7 @@ export type MemberMinAggregateInputType = {
   organizationId?: true
   role?: true
   isActive?: true
+  estimatedCost?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -72,6 +94,7 @@ export type MemberMaxAggregateInputType = {
   organizationId?: true
   role?: true
   isActive?: true
+  estimatedCost?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -82,6 +105,7 @@ export type MemberCountAggregateInputType = {
   organizationId?: true
   role?: true
   isActive?: true
+  estimatedCost?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -125,6 +149,18 @@ export type MemberAggregateArgs<ExtArgs extends runtime.Types.Extensions.Interna
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: MemberAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: MemberSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: MemberMinAggregateInputType
@@ -155,6 +191,8 @@ export type MemberGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   _count?: MemberCountAggregateInputType | true
+  _avg?: MemberAvgAggregateInputType
+  _sum?: MemberSumAggregateInputType
   _min?: MemberMinAggregateInputType
   _max?: MemberMaxAggregateInputType
 }
@@ -165,9 +203,12 @@ export type MemberGroupByOutputType = {
   organizationId: string
   role: $Enums.MemberRole
   isActive: boolean
+  estimatedCost: runtime.Decimal | null
   createdAt: Date
   updatedAt: Date
   _count: MemberCountAggregateOutputType | null
+  _avg: MemberAvgAggregateOutputType | null
+  _sum: MemberSumAggregateOutputType | null
   _min: MemberMinAggregateOutputType | null
   _max: MemberMaxAggregateOutputType | null
 }
@@ -196,6 +237,7 @@ export type MemberWhereInput = {
   organizationId?: Prisma.StringFilter<"Member"> | string
   role?: Prisma.EnumMemberRoleFilter<"Member"> | $Enums.MemberRole
   isActive?: Prisma.BoolFilter<"Member"> | boolean
+  estimatedCost?: Prisma.DecimalNullableFilter<"Member"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -208,6 +250,7 @@ export type MemberOrderByWithRelationInput = {
   organizationId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  estimatedCost?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -224,6 +267,7 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   organizationId?: Prisma.StringFilter<"Member"> | string
   role?: Prisma.EnumMemberRoleFilter<"Member"> | $Enums.MemberRole
   isActive?: Prisma.BoolFilter<"Member"> | boolean
+  estimatedCost?: Prisma.DecimalNullableFilter<"Member"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -236,11 +280,14 @@ export type MemberOrderByWithAggregationInput = {
   organizationId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  estimatedCost?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.MemberCountOrderByAggregateInput
+  _avg?: Prisma.MemberAvgOrderByAggregateInput
   _max?: Prisma.MemberMaxOrderByAggregateInput
   _min?: Prisma.MemberMinOrderByAggregateInput
+  _sum?: Prisma.MemberSumOrderByAggregateInput
 }
 
 export type MemberScalarWhereWithAggregatesInput = {
@@ -252,6 +299,7 @@ export type MemberScalarWhereWithAggregatesInput = {
   organizationId?: Prisma.StringWithAggregatesFilter<"Member"> | string
   role?: Prisma.EnumMemberRoleWithAggregatesFilter<"Member"> | $Enums.MemberRole
   isActive?: Prisma.BoolWithAggregatesFilter<"Member"> | boolean
+  estimatedCost?: Prisma.DecimalNullableWithAggregatesFilter<"Member"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
 }
@@ -260,6 +308,7 @@ export type MemberCreateInput = {
   id?: string
   role?: $Enums.MemberRole
   isActive?: boolean
+  estimatedCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMembershipsInput
@@ -272,6 +321,7 @@ export type MemberUncheckedCreateInput = {
   organizationId: string
   role?: $Enums.MemberRole
   isActive?: boolean
+  estimatedCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -280,6 +330,7 @@ export type MemberUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
@@ -292,6 +343,7 @@ export type MemberUncheckedUpdateInput = {
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -302,6 +354,7 @@ export type MemberCreateManyInput = {
   organizationId: string
   role?: $Enums.MemberRole
   isActive?: boolean
+  estimatedCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -310,6 +363,7 @@ export type MemberUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -320,6 +374,7 @@ export type MemberUncheckedUpdateManyInput = {
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -345,8 +400,13 @@ export type MemberCountOrderByAggregateInput = {
   organizationId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  estimatedCost?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type MemberAvgOrderByAggregateInput = {
+  estimatedCost?: Prisma.SortOrder
 }
 
 export type MemberMaxOrderByAggregateInput = {
@@ -355,6 +415,7 @@ export type MemberMaxOrderByAggregateInput = {
   organizationId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  estimatedCost?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -365,8 +426,13 @@ export type MemberMinOrderByAggregateInput = {
   organizationId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  estimatedCost?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type MemberSumOrderByAggregateInput = {
+  estimatedCost?: Prisma.SortOrder
 }
 
 export type MemberCreateNestedManyWithoutUserInput = {
@@ -457,10 +523,19 @@ export type EnumMemberRoleFieldUpdateOperationsInput = {
   set?: $Enums.MemberRole
 }
 
+export type NullableDecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
 export type MemberCreateWithoutUserInput = {
   id?: string
   role?: $Enums.MemberRole
   isActive?: boolean
+  estimatedCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutMembersInput
@@ -471,6 +546,7 @@ export type MemberUncheckedCreateWithoutUserInput = {
   organizationId: string
   role?: $Enums.MemberRole
   isActive?: boolean
+  estimatedCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -510,6 +586,7 @@ export type MemberScalarWhereInput = {
   organizationId?: Prisma.StringFilter<"Member"> | string
   role?: Prisma.EnumMemberRoleFilter<"Member"> | $Enums.MemberRole
   isActive?: Prisma.BoolFilter<"Member"> | boolean
+  estimatedCost?: Prisma.DecimalNullableFilter<"Member"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
 }
@@ -518,6 +595,7 @@ export type MemberCreateWithoutOrganizationInput = {
   id?: string
   role?: $Enums.MemberRole
   isActive?: boolean
+  estimatedCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMembershipsInput
@@ -528,6 +606,7 @@ export type MemberUncheckedCreateWithoutOrganizationInput = {
   userId: string
   role?: $Enums.MemberRole
   isActive?: boolean
+  estimatedCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -563,6 +642,7 @@ export type MemberCreateManyUserInput = {
   organizationId: string
   role?: $Enums.MemberRole
   isActive?: boolean
+  estimatedCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -571,6 +651,7 @@ export type MemberUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutMembersNestedInput
@@ -581,6 +662,7 @@ export type MemberUncheckedUpdateWithoutUserInput = {
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -590,6 +672,7 @@ export type MemberUncheckedUpdateManyWithoutUserInput = {
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -599,6 +682,7 @@ export type MemberCreateManyOrganizationInput = {
   userId: string
   role?: $Enums.MemberRole
   isActive?: boolean
+  estimatedCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -607,6 +691,7 @@ export type MemberUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
@@ -617,6 +702,7 @@ export type MemberUncheckedUpdateWithoutOrganizationInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -626,6 +712,7 @@ export type MemberUncheckedUpdateManyWithoutOrganizationInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -638,6 +725,7 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   organizationId?: boolean
   role?: boolean
   isActive?: boolean
+  estimatedCost?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -650,6 +738,7 @@ export type MemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   organizationId?: boolean
   role?: boolean
   isActive?: boolean
+  estimatedCost?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -662,6 +751,7 @@ export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   organizationId?: boolean
   role?: boolean
   isActive?: boolean
+  estimatedCost?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -674,11 +764,12 @@ export type MemberSelectScalar = {
   organizationId?: boolean
   role?: boolean
   isActive?: boolean
+  estimatedCost?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "organizationId" | "role" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["member"]>
+export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "organizationId" | "role" | "isActive" | "estimatedCost" | "createdAt" | "updatedAt", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -704,6 +795,7 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     organizationId: string
     role: $Enums.MemberRole
     isActive: boolean
+    estimatedCost: runtime.Decimal | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["member"]>
@@ -1136,6 +1228,7 @@ export interface MemberFieldRefs {
   readonly organizationId: Prisma.FieldRef<"Member", 'String'>
   readonly role: Prisma.FieldRef<"Member", 'MemberRole'>
   readonly isActive: Prisma.FieldRef<"Member", 'Boolean'>
+  readonly estimatedCost: Prisma.FieldRef<"Member", 'Decimal'>
   readonly createdAt: Prisma.FieldRef<"Member", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Member", 'DateTime'>
 }

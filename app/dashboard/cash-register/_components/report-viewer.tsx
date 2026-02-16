@@ -17,12 +17,13 @@ import { ZReportDocument } from '@/lib/utils/generate-z-report';
 interface ReportData {
   cashRegister: {
     id: string;
+    status: 'OPEN' | 'CLOSED';
     openedAt: string;
     closedAt: string;
     openingCash: number;
     expectedCash: number;
-    actualCash: number;
-    difference: number;
+    actualCash: number | null;
+    difference: number | null;
     totalSales: number;
     salesCount: number;
     notes: string | null;
@@ -33,6 +34,9 @@ interface ReportData {
     customerName: string;
     customerRut: string;
     paymentMethod: string;
+    subtotal: number;
+    taxAmount: number;
+    discount: number;
     total: number;
     issuedAt: string;
     items: Array<{
@@ -44,6 +48,12 @@ interface ReportData {
     }>;
   }>;
   paymentSummary: Record<string, { count: number; total: number }>;
+  taxSummary: {
+    subtotal: number;
+    taxAmount: number;
+    discount: number;
+    total: number;
+  };
   topProducts: Array<{
     productId: string | null;
     productName: string;
@@ -115,13 +125,61 @@ export function ReportViewer({ cashRegisterId, open, onOpenChange }: ReportViewe
     });
   };
 
+  const downloadSalesCsv = () => {
+    if (!reportData) return;
+
+    const headers = [
+      'Documento',
+      'Fecha',
+      'Cliente',
+      'RUT',
+      'Método Pago',
+      'Neto',
+      'IVA',
+      'Descuento',
+      'Total',
+    ];
+
+    const rows = reportData.sales.map((sale) => [
+      String(sale.documentNumber),
+      formatDate(sale.issuedAt),
+      sale.customerName,
+      sale.customerRut,
+      sale.paymentMethod,
+      String(Math.round(sale.subtotal)),
+      String(Math.round(sale.taxAmount)),
+      String(Math.round(sale.discount)),
+      String(Math.round(sale.total)),
+    ]);
+
+    const csv = [headers, ...rows]
+      .map((row) => row.map((value) => `"${String(value).replaceAll('"', '""')}"`).join(','))
+      .join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `reporte-ventas-caja-${reportData.cashRegister.id}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const isClosedCashRegister = reportData?.cashRegister.status === 'CLOSED';
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Reporte Z - Cierre de Caja</DialogTitle>
+          <DialogTitle>
+            {isClosedCashRegister ? 'Reporte Z - Cierre de Caja' : 'Detalle de Ventas - Caja Activa'}
+          </DialogTitle>
           <DialogDescription>
-            Resumen completo del turno de caja
+            {isClosedCashRegister
+              ? 'Resumen completo del turno de caja'
+              : 'Resumen parcial del turno en curso'}
           </DialogDescription>
         </DialogHeader>
 
@@ -162,13 +220,21 @@ export function ReportViewer({ cashRegisterId, open, onOpenChange }: ReportViewe
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Efectivo Contado:</span>
-                  <span className="font-medium">{formatCurrency(reportData.cashRegister.actualCash)}</span>
+                  <span className="font-medium">
+                    {isClosedCashRegister && reportData.cashRegister.actualCash !== null
+                      ? formatCurrency(reportData.cashRegister.actualCash)
+                      : 'Turno abierto'}
+                  </span>
                 </div>
                 <div className="flex justify-between pt-2 border-t">
                   <span className="font-semibold">Diferencia:</span>
-                  <span className={`font-bold ${reportData.cashRegister.difference >= 0 ? 'text-success' : 'text-destructive'}`}>
-                    {formatCurrency(reportData.cashRegister.difference)}
-                  </span>
+                  {isClosedCashRegister && reportData.cashRegister.difference !== null ? (
+                    <span className={`font-bold ${reportData.cashRegister.difference >= 0 ? 'text-success' : 'text-destructive'}`}>
+                      {formatCurrency(reportData.cashRegister.difference)}
+                    </span>
+                  ) : (
+                    <span className="font-medium text-muted-foreground">Se calcula al cierre</span>
+                  )}
                 </div>
               </div>
               <p className="text-xs text-muted-foreground mt-3 pt-3 border-t">
@@ -187,6 +253,28 @@ export function ReportViewer({ cashRegisterId, open, onOpenChange }: ReportViewe
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Monto Total:</span>
                   <span className="font-bold text-lg">{formatCurrency(reportData.cashRegister.totalSales)}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="border rounded-lg p-4">
+              <h3 className="font-semibold mb-3">Resumen Tributario</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Neto:</span>
+                  <span className="font-medium">{formatCurrency(reportData.taxSummary.subtotal)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">IVA:</span>
+                  <span className="font-medium">{formatCurrency(reportData.taxSummary.taxAmount)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Descuento Global:</span>
+                  <span className="font-medium">-{formatCurrency(reportData.taxSummary.discount)}</span>
+                </div>
+                <div className="flex justify-between pt-2 border-t">
+                  <span className="font-semibold">Total Final:</span>
+                  <span className="font-bold">{formatCurrency(reportData.taxSummary.total)}</span>
                 </div>
               </div>
             </div>
@@ -227,6 +315,34 @@ export function ReportViewer({ cashRegisterId, open, onOpenChange }: ReportViewe
               </div>
             )}
 
+            {reportData.sales.length > 0 && (
+              <div className="border rounded-lg p-4">
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <h3 className="font-semibold">Detalle de Ventas del Turno</h3>
+                  <Button variant="outline" size="sm" onClick={downloadSalesCsv}>
+                    <Download className="mr-2 h-4 w-4" />
+                    Descargar CSV
+                  </Button>
+                </div>
+                <div className="max-h-56 overflow-y-auto space-y-2">
+                    {reportData.sales.map((sale) => (
+                      <div key={sale.id} className="rounded border p-3 text-xs md:text-sm">
+                        <div className="flex justify-between gap-2">
+                          <span className="font-medium">Venta #{sale.documentNumber}</span>
+                          <span className="text-muted-foreground">{formatDate(sale.issuedAt)}</span>
+                        </div>
+                        <div className="mt-1 grid grid-cols-2 md:grid-cols-4 gap-2">
+                          <span className="text-muted-foreground">Neto: {formatCurrency(sale.subtotal)}</span>
+                          <span className="text-muted-foreground">IVA: {formatCurrency(sale.taxAmount)}</span>
+                          <span className="text-muted-foreground">Desc: -{formatCurrency(sale.discount)}</span>
+                          <span className="font-semibold">Total: {formatCurrency(sale.total)}</span>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+
             {/* Notas */}
             {reportData.cashRegister.notes && (
               <div className="border rounded-lg p-4 bg-yellow-50 dark:bg-yellow-950">
@@ -243,9 +359,20 @@ export function ReportViewer({ cashRegisterId, open, onOpenChange }: ReportViewe
               <Button variant="outline" onClick={() => onOpenChange(false)}>
                 Cerrar
               </Button>
-              {isClient && (
+              {isClient && isClosedCashRegister && (
                 <PDFDownloadLink
-                  document={<ZReportDocument data={reportData} />}
+                  document={
+                    <ZReportDocument
+                      data={{
+                        ...reportData,
+                        cashRegister: {
+                          ...reportData.cashRegister,
+                          actualCash: reportData.cashRegister.actualCash ?? 0,
+                          difference: reportData.cashRegister.difference ?? 0,
+                        },
+                      }}
+                    />
+                  }
                   fileName={`reporte-z-${reportData.cashRegister.id}.pdf`}
                 >
                   {({ loading }) => (

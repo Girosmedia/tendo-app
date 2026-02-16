@@ -106,11 +106,102 @@ model Organization {
   products      Product[]
   customers     Customer[]
   documents     Document[]
+  projects      Project[]
+  projectExpenses ProjectExpense[]
+  projectMilestones ProjectMilestone[]
+  projectResources ProjectResource[]
   cashRegisters CashRegister[]
+  operationalExpenses OperationalExpense[]
   credits       Credit[]
   payments      Payment[]
+  suppliers     Supplier[]
+  accountsPayable AccountPayable[]
 
   @@map("organizations")
+}
+
+enum SupplierStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Supplier {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+
+  // Identificación
+  name           String
+  rut            String?
+  contactName    String?  @map("contact_name")
+
+  // Contacto
+  email          String?
+  phone          String?
+  address        String?
+
+  // Estado y metadata
+  status         SupplierStatus @default(ACTIVE)
+  notes          String?  @db.Text
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  payables       AccountPayable[]
+
+  @@index([organizationId])
+  @@index([status])
+  @@index([name])
+  @@map("suppliers")
+}
+
+enum AccountPayableStatus {
+  PENDING
+  PARTIAL
+  PAID
+  OVERDUE
+  CANCELED
+}
+
+enum AccountPayableDocumentType {
+  INVOICE
+  RECEIPT
+  OTHER
+}
+
+model AccountPayable {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  supplierId     String   @map("supplier_id")
+
+  // Documento y control
+  documentType   AccountPayableDocumentType @default(INVOICE) @map("document_type")
+  documentNumber String?  @map("document_number")
+  issueDate      DateTime @map("issue_date")
+  dueDate        DateTime @map("due_date")
+
+  // Montos
+  amount         Decimal  @db.Decimal(12, 2)
+  balance        Decimal  @db.Decimal(12, 2)
+
+  // Estado
+  status         AccountPayableStatus @default(PENDING)
+
+  // Metadata
+  description    String?
+  notes          String?  @db.Text
+  createdBy      String   @map("created_by")
+  paidAt         DateTime? @map("paid_at")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  supplier       Supplier     @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+
+  @@index([organizationId])
+  @@index([supplierId])
+  @@index([status])
+  @@index([dueDate])
+  @@map("accounts_payable")
 }
 
 model Member {
@@ -119,6 +210,7 @@ model Member {
   organizationId String     @map("organization_id")
   role           MemberRole @default(MEMBER)
   isActive       Boolean    @default(true) @map("is_active")
+  estimatedCost  Decimal?     @db.Decimal(12, 2) @map("estimated_cost")
   createdAt      DateTime   @default(now()) @map("created_at")
   updatedAt      DateTime   @updatedAt @map("updated_at")
 
@@ -282,7 +374,7 @@ model Product {
   organizationId String      @map("organization_id")
   categoryId     String?     @map("category_id")
   type           ProductType @default(PRODUCT)
-  
+
   // Identificación
   sku            String      // Puede ser código de barras comercial o SKU generado
   name           String
@@ -312,6 +404,7 @@ model Product {
   organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   category       Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   documentItems  DocumentItem[]
+  projectResources ProjectResource[]
 
   @@unique([organizationId, sku])
   @@index([organizationId])
@@ -399,6 +492,13 @@ enum CashRegisterStatus {
   CLOSED        // Caja cerrada (turno finalizado)
 }
 
+enum ProjectStatus {
+  ACTIVE      // Proyecto en ejecución
+  ON_HOLD     // Proyecto pausado
+  COMPLETED   // Proyecto completado
+  CANCELLED   // Proyecto cancelado
+}
+
 model Document {
   id             String         @id @default(cuid())
   organizationId String         @map("organization_id")
@@ -444,6 +544,7 @@ model Document {
   customer       Customer?      @relation(fields: [customerId], references: [id], onDelete: SetNull)
   items          DocumentItem[]
   credits        Credit[]
+  project        Project?       @relation("QuoteToProject")
 
   @@unique([organizationId, type, docNumber])
   @@index([organizationId])
@@ -494,6 +595,136 @@ model DocumentItem {
   @@map("document_items")
 }
 
+model Project {
+  id             String        @id @default(cuid())
+  organizationId String        @map("organization_id")
+  quoteId        String?       @unique @map("quote_id")
+
+  // Identificación
+  name           String
+  description    String?
+
+  // Estado y control
+  status         ProjectStatus @default(ACTIVE)
+  budget         Decimal?      @db.Decimal(12, 2) // Presupuesto inicial
+  actualCost     Decimal       @default(0) @db.Decimal(12, 2) @map("actual_cost")
+  startDate      DateTime      @default(now()) @map("start_date")
+  endDate        DateTime?     @map("end_date")
+
+  // Metadata
+  notes          String?       @db.Text
+  createdBy      String        @map("created_by")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  quote          Document?     @relation("QuoteToProject", fields: [quoteId], references: [id], onDelete: SetNull)
+  expenses       ProjectExpense[]
+  milestones     ProjectMilestone[]
+  resources      ProjectResource[]
+
+  @@index([organizationId])
+  @@index([status])
+  @@index([startDate])
+  @@map("projects")
+}
+
+model ProjectResource {
+  id               String       @id @default(cuid())
+  organizationId   String       @map("organization_id")
+  projectId        String       @map("project_id")
+  milestoneId      String?      @map("milestone_id")
+  productId        String?      @map("product_id")
+
+  // Snapshot del recurso/material
+  sku              String?
+  name             String
+  unit             String       @default("unidad")
+
+  // Control de consumo y costo
+  quantity         Decimal      @db.Decimal(10, 3) // Cantidad planificada
+  consumedQuantity Decimal      @default(0) @db.Decimal(10, 3) @map("consumed_quantity")
+  unitCost         Decimal      @db.Decimal(12, 2) @map("unit_cost")
+  totalCost        Decimal      @db.Decimal(12, 2) @default(0) @map("total_cost")
+
+  // Metadata
+  notes            String?      @db.Text
+  createdBy        String       @map("created_by")
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  project          Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  milestone        ProjectMilestone? @relation(fields: [milestoneId], references: [id], onDelete: SetNull)
+  product          Product?     @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([projectId])
+  @@index([milestoneId])
+  @@index([productId])
+  @@map("project_resources")
+}
+
+model ProjectMilestone {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  projectId      String       @map("project_id")
+
+  // Información del hito
+  title          String
+  description    String?
+  dueDate        DateTime?    @map("due_date")
+  estimatedCost  Decimal?     @db.Decimal(12, 2) @map("estimated_cost")
+  isCompleted    Boolean      @default(false) @map("is_completed")
+  completedAt    DateTime?    @map("completed_at")
+  position       Int          @default(0)
+
+  // Metadata
+  createdBy      String       @map("created_by")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  project        Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  expenses       ProjectExpense[]
+  resources      ProjectResource[]
+
+  @@index([organizationId])
+  @@index([projectId])
+  @@index([isCompleted])
+  @@index([dueDate])
+  @@map("project_milestones")
+}
+
+model ProjectExpense {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  projectId      String       @map("project_id")
+  milestoneId    String?      @map("milestone_id")
+
+  // Información del gasto
+  description    String
+  category       String?      // Materiales, Mano de obra, Transporte, etc.
+  amount         Decimal      @db.Decimal(12, 2)
+  expenseDate    DateTime     @default(now()) @map("expense_date")
+
+  // Metadata
+  notes          String?      @db.Text
+  createdBy      String       @map("created_by")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  project        Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  milestone      ProjectMilestone? @relation(fields: [milestoneId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([projectId])
+  @@index([milestoneId])
+  @@index([expenseDate])
+  @@map("project_expenses")
+}
+
 // ============================================
 // CASH REGISTER (CIERRE DE CAJA)
 // ============================================
@@ -528,12 +759,48 @@ model CashRegister {
   updatedAt      DateTime           @updatedAt @map("updated_at")
   
   organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  operationalExpenses OperationalExpense[]
   
   @@index([organizationId])
   @@index([openedBy])
   @@index([status])
   @@index([openedAt])
   @@map("cash_registers")
+}
+
+enum OperationalExpensePaymentMethod {
+  CASH
+  CARD
+  TRANSFER
+  OTHER
+}
+
+model OperationalExpense {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  cashRegisterId String?  @map("cash_register_id")
+
+  // Información del egreso
+  title          String
+  description    String?  @db.Text
+  category       String?
+  amount         Decimal  @db.Decimal(12, 2)
+  paymentMethod  OperationalExpensePaymentMethod @default(CASH) @map("payment_method")
+  expenseDate    DateTime @default(now()) @map("expense_date")
+
+  // Metadata
+  createdBy      String   @map("created_by")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  cashRegister   CashRegister? @relation(fields: [cashRegisterId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([cashRegisterId])
+  @@index([expenseDate])
+  @@index([category])
+  @@map("operational_expenses")
 }
 
 // ============================================

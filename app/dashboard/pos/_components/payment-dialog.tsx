@@ -28,6 +28,8 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { calculateDocumentTotals } from '@/lib/utils/document-totals';
+import { roundCashPaymentAmount } from '@/lib/utils/cash-rounding';
 
 interface PaymentDialogProps {
   isOpen: boolean;
@@ -71,13 +73,27 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
   
   const totals = getTotals();
   
-  // Calcular descuento global en monto
-  const discountAmount = globalDiscountType === 'percent' 
+  const requestedDiscountAmount = globalDiscountType === 'percent'
     ? Math.round((totals.total * globalDiscount) / 100)
     : globalDiscount;
-  
-  // Total final con descuento global aplicado
-  const finalTotal = Math.max(0, totals.total - discountAmount);
+
+  const totalsWithGlobalDiscount = calculateDocumentTotals(
+    items.map((item) => ({
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      discount: item.discount,
+      taxRate: item.taxRate,
+    })),
+    requestedDiscountAmount
+  );
+
+  const discountAmount = Math.round(totalsWithGlobalDiscount.globalDiscountApplied);
+  const subtotalWithGlobalDiscount = Math.round(totalsWithGlobalDiscount.subtotal);
+  const taxAmountWithGlobalDiscount = Math.round(totalsWithGlobalDiscount.taxAmount);
+  const exactFinalTotal = Math.max(0, Math.round(totalsWithGlobalDiscount.total));
+  const roundedCashTotal = roundCashPaymentAmount(exactFinalTotal);
+  const paymentTotal = selectedMethod === 'CASH' ? roundedCashTotal : exactFinalTotal;
+  const cashRoundingAdjustment = roundedCashTotal - exactFinalTotal;
 
   // Fetch customers cuando se abre el diálogo
   useEffect(() => {
@@ -103,12 +119,12 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
 
   // Calcular vuelto en tiempo real
   const cashChange = cashReceived
-    ? Math.max(0, parseFloat(cashReceived) - finalTotal)
+    ? Math.max(0, parseFloat(cashReceived) - paymentTotal)
     : 0;
 
   const canConfirm =
     selectedMethod &&
-    (selectedMethod !== 'CASH' || parseFloat(cashReceived || '0') >= finalTotal) &&
+    (selectedMethod !== 'CASH' || parseFloat(cashReceived || '0') >= paymentTotal) &&
     (selectedMethod !== 'CREDIT' || (selectedCustomerId && !isCreditExceeded()));
 
   // Verificar si se excede el límite de crédito
@@ -117,7 +133,7 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
     const customer = customers.find(c => c.id === selectedCustomerId);
     if (!customer) return false;
     const availableCredit = customer.creditLimit - customer.currentDebt;
-    return finalTotal > availableCredit;
+    return paymentTotal > availableCredit;
   }
 
   // Obtener cliente seleccionado
@@ -242,9 +258,18 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
             <div className="flex justify-between items-center p-4 bg-muted rounded-lg">
               <span className="text-muted-foreground">Total:</span>
               <span className="text-3xl font-bold">
-                ${finalTotal.toLocaleString('es-CL')}
+                ${paymentTotal.toLocaleString('es-CL')}
               </span>
             </div>
+
+            {selectedMethod === 'CASH' && cashRoundingAdjustment !== 0 && (
+              <div className="flex justify-between items-center p-3 rounded-lg border text-sm">
+                <span className="text-muted-foreground">Ajuste redondeo efectivo:</span>
+                <span className="font-medium">
+                  {cashRoundingAdjustment > 0 ? '+' : ''}${cashRoundingAdjustment.toLocaleString('es-CL')}
+                </span>
+              </div>
+            )}
 
             {selectedMethod === 'CASH' && cashChange > 0 && (
               <div className="flex justify-between items-center p-4 bg-success/5 dark:bg-success/10 rounded-lg border border-success/20 dark:border-success/30">
@@ -284,7 +309,7 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
   // Vista de pago
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Procesar Pago</DialogTitle>
           <DialogDescription>
@@ -298,11 +323,11 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
             <div className="rounded-lg border p-4 space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal:</span>
-                <span className="font-medium">${totals.subtotal.toLocaleString('es-CL')}</span>
+                <span className="font-medium">${subtotalWithGlobalDiscount.toLocaleString('es-CL')}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">IVA (19%):</span>
-                <span className="font-medium">${totals.taxAmount.toLocaleString('es-CL')}</span>
+                <span className="font-medium">${taxAmountWithGlobalDiscount.toLocaleString('es-CL')}</span>
               </div>
               {discountAmount > 0 && (
                 <div className="flex justify-between text-sm text-success">
@@ -313,9 +338,15 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
               <div className="border-t pt-2 flex justify-between items-center">
                 <span className="text-lg font-semibold">Total a Pagar:</span>
                 <span className="text-3xl font-bold text-success">
-                  ${finalTotal.toLocaleString('es-CL')}
+                  ${paymentTotal.toLocaleString('es-CL')}
                 </span>
               </div>
+              {selectedMethod === 'CASH' && cashRoundingAdjustment !== 0 && (
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>Ajuste redondeo efectivo:</span>
+                  <span>{cashRoundingAdjustment > 0 ? '+' : ''}${cashRoundingAdjustment.toLocaleString('es-CL')}</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -353,7 +384,7 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
                 </Button>
               </div>
             </div>
-            {discountAmount > totals.total && (
+            {requestedDiscountAmount > totals.total && (
               <p className="text-sm text-destructive">
                 El descuento no puede superar el total de la venta
               </p>
@@ -396,7 +427,7 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
                 autoFocus
                 placeholder="$ 0"
               />
-              {cashReceived && parseFloat(cashReceived) >= finalTotal && (
+              {cashReceived && parseFloat(cashReceived) >= paymentTotal && (
                 <div className="flex justify-between items-center p-3 bg-success/5 dark:bg-success/10 rounded-lg">
                   <span className="text-success">Vuelto:</span>
                   <span className="text-xl font-bold text-success">
@@ -450,7 +481,7 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
                     <span className="font-semibold">Crédito disponible:</span>
                     <span className={cn(
                       "text-lg font-bold",
-                      (selectedCustomer.creditLimit - selectedCustomer.currentDebt) >= finalTotal 
+                      (selectedCustomer.creditLimit - selectedCustomer.currentDebt) >= paymentTotal 
                         ? "text-success" 
                         : "text-destructive"
                     )}>

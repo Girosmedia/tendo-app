@@ -27,6 +27,34 @@ export const OrganizationStatus = {
 export type OrganizationStatus = (typeof OrganizationStatus)[keyof typeof OrganizationStatus]
 
 
+export const SupplierStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE'
+} as const
+
+export type SupplierStatus = (typeof SupplierStatus)[keyof typeof SupplierStatus]
+
+
+export const AccountPayableStatus = {
+  PENDING: 'PENDING',
+  PARTIAL: 'PARTIAL',
+  PAID: 'PAID',
+  OVERDUE: 'OVERDUE',
+  CANCELED: 'CANCELED'
+} as const
+
+export type AccountPayableStatus = (typeof AccountPayableStatus)[keyof typeof AccountPayableStatus]
+
+
+export const AccountPayableDocumentType = {
+  INVOICE: 'INVOICE',
+  RECEIPT: 'RECEIPT',
+  OTHER: 'OTHER'
+} as const
+
+export type AccountPayableDocumentType = (typeof AccountPayableDocumentType)[keyof typeof AccountPayableDocumentType]
+
+
 export const InvitationStatus = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
@@ -85,6 +113,26 @@ export const CashRegisterStatus = {
 } as const
 
 export type CashRegisterStatus = (typeof CashRegisterStatus)[keyof typeof CashRegisterStatus]
+
+
+export const ProjectStatus = {
+  ACTIVE: 'ACTIVE',
+  ON_HOLD: 'ON_HOLD',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
+
+
+export const OperationalExpensePaymentMethod = {
+  CASH: 'CASH',
+  CARD: 'CARD',
+  TRANSFER: 'TRANSFER',
+  OTHER: 'OTHER'
+} as const
+
+export type OperationalExpensePaymentMethod = (typeof OperationalExpensePaymentMethod)[keyof typeof OperationalExpensePaymentMethod]
 
 
 export const CreditStatus = {

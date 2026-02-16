@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { getCurrentOrganization } from '@/lib/organization';
+import { sumRoundedCashTotals } from '@/lib/utils/cash-rounding';
 
 /**
  * GET /api/cash-register/[id]/report
@@ -36,13 +37,7 @@ export async function GET(
       return NextResponse.json({ error: 'Caja no encontrada' }, { status: 404 });
     }
 
-    // Solo permitir generar reporte de cajas cerradas
-    if (cashRegister.status !== 'CLOSED') {
-      return NextResponse.json(
-        { error: 'No se puede generar reporte de una caja abierta' },
-        { status: 400 }
-      );
-    }
+      const reportEndDate = cashRegister.closedAt ?? new Date();
 
     // Obtener todas las ventas del turno
     const sales = await db.document.findMany({
@@ -53,7 +48,7 @@ export async function GET(
         type: 'SALE',
         issuedAt: {
           gte: cashRegister.openedAt,
-          lte: cashRegister.closedAt!,
+            lte: reportEndDate,
         },
       },
       include: {
@@ -100,7 +95,7 @@ export async function GET(
           type: 'SALE',
           issuedAt: {
             gte: cashRegister.openedAt,
-            lte: cashRegister.closedAt!,
+              lte: reportEndDate,
           },
         },
         productId: { not: null },
@@ -153,6 +148,9 @@ export async function GET(
       customerName: sale.customer?.name || 'Público general',
       customerRut: sale.customer?.rut || '',
       paymentMethod: sale.paymentMethod,
+      subtotal: Number(sale.subtotal),
+      taxAmount: Number(sale.taxAmount),
+      discount: Number(sale.discount),
       total: Number(sale.total),
       issuedAt: sale.issuedAt.toISOString(),
       items: sale.items.map((item: any) => ({
@@ -164,24 +162,57 @@ export async function GET(
       })),
     }));
 
+    const taxSummary = formattedSales.reduce(
+      (acc, sale) => {
+        acc.subtotal += sale.subtotal;
+        acc.taxAmount += sale.taxAmount;
+        acc.discount += sale.discount;
+        acc.total += sale.total;
+        return acc;
+      },
+      {
+        subtotal: 0,
+        taxAmount: 0,
+        discount: 0,
+        total: 0,
+      }
+    );
+
+      const cashSalesTotals = formattedSales
+        .filter((sale) => sale.paymentMethod === 'CASH')
+        .map((sale) => sale.total);
+
+      const expectedCashCalculated =
+        Number(cashRegister.openingCash) + sumRoundedCashTotals(cashSalesTotals);
+
+      const isClosed = cashRegister.status === 'CLOSED';
+
     // Preparar respuesta
     return NextResponse.json({
       cashRegister: {
         id: cashRegister.id,
+          status: cashRegister.status,
         openedAt: cashRegister.openedAt.toISOString(),
-        closedAt: cashRegister.closedAt!.toISOString(),
+          closedAt: reportEndDate.toISOString(),
         openedBy: cashRegister.openedBy,
         closedBy: cashRegister.closedBy,
         openingCash: Number(cashRegister.openingCash),
-        expectedCash: Number(cashRegister.expectedCash),
-        actualCash: Number(cashRegister.actualCash!),
-        difference: Number(cashRegister.difference!),
-        totalSales: Number(cashRegister.totalSales),
-        salesCount: cashRegister.salesCount,
+          expectedCash: isClosed
+            ? Number(cashRegister.expectedCash)
+            : expectedCashCalculated,
+          actualCash: isClosed && cashRegister.actualCash !== null
+            ? Number(cashRegister.actualCash)
+            : null,
+          difference: isClosed && cashRegister.difference !== null
+            ? Number(cashRegister.difference)
+            : null,
+          totalSales: taxSummary.total,
+          salesCount: formattedSales.length,
         notes: cashRegister.notes,
       },
       sales: formattedSales,
       paymentSummary,
+      taxSummary,
       topProducts,
       organization: {
         name: organization.name,

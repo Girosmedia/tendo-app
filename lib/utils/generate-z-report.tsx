@@ -143,6 +143,9 @@ interface ReportData {
     customerName: string;
     customerRut: string;
     paymentMethod: string;
+    subtotal: number;
+    taxAmount: number;
+    discount: number;
     total: number;
     issuedAt: string;
     items: Array<{
@@ -332,19 +335,31 @@ export const ZReportDocument: React.FC<{ data: ReportData }> = ({ data }) => {
 
           <View style={styles.table}>
             <View style={styles.tableHeader}>
-              <Text style={{ flex: 1.5 }}>N° Doc</Text>
-              <Text style={{ flex: 2 }}>Cliente</Text>
-              <Text style={{ flex: 1.2 }}>Método</Text>
-              <Text style={styles.tableCellRight}>Total</Text>
+              <Text style={{ flex: 1.2 }}>N° Doc</Text>
+              <Text style={{ flex: 1.7 }}>Cliente</Text>
+              <Text style={{ flex: 1.1 }}>Método</Text>
+              <Text style={{ flex: 1, textAlign: 'right' }}>Neto</Text>
+              <Text style={{ flex: 0.9, textAlign: 'right' }}>IVA</Text>
+              <Text style={{ flex: 1, textAlign: 'right' }}>Desc.</Text>
+              <Text style={{ flex: 1, textAlign: 'right' }}>Total</Text>
             </View>
             {sales.map((sale) => (
               <View key={sale.id} style={styles.tableRow}>
-                <Text style={{ flex: 1.5, fontSize: 8 }}>{sale.documentNumber}</Text>
-                <Text style={{ flex: 2, fontSize: 8 }}>{sale.customerName}</Text>
-                <Text style={{ flex: 1.2, fontSize: 8 }}>
+                <Text style={{ flex: 1.2, fontSize: 8 }}>{sale.documentNumber}</Text>
+                <Text style={{ flex: 1.7, fontSize: 8 }}>{sale.customerName}</Text>
+                <Text style={{ flex: 1.1, fontSize: 8 }}>
                   {getPaymentMethodLabel(sale.paymentMethod)}
                 </Text>
-                <Text style={[styles.tableCellRight, { fontSize: 8 }]}>
+                <Text style={{ flex: 1, textAlign: 'right', fontSize: 8 }}>
+                  {formatCurrency(sale.subtotal)}
+                </Text>
+                <Text style={{ flex: 0.9, textAlign: 'right', fontSize: 8 }}>
+                  {formatCurrency(sale.taxAmount)}
+                </Text>
+                <Text style={{ flex: 1, textAlign: 'right', fontSize: 8 }}>
+                  -{formatCurrency(sale.discount)}
+                </Text>
+                <Text style={{ flex: 1, textAlign: 'right', fontSize: 8 }}>
                   {formatCurrency(sale.total)}
                 </Text>
               </View>

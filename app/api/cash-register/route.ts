@@ -8,6 +8,7 @@ import {
   listCashRegistersSchema,
   type OpenCashRegisterInput,
 } from '@/lib/validators/cash-register';
+import { sumRoundedCashTotals } from '@/lib/utils/cash-rounding';
 
 /**
  * GET /api/cash-register
@@ -92,7 +93,7 @@ export async function GET(request: Request) {
           const now = new Date();
           
           // Calcular ventas totales y por método de pago
-          const [allSalesData, cashSalesData, cardSalesData, transferSalesData, multiSalesData] = await Promise.all([
+          const [allSalesData, cashSales, cardSalesData, transferSalesData, multiSalesData] = await Promise.all([
             db.document.aggregate({
               where: {
                 organizationId: organization.id,
@@ -108,7 +109,7 @@ export async function GET(request: Request) {
               },
               _count: true,
             }),
-            db.document.aggregate({
+            db.document.findMany({
               where: {
                 organizationId: organization.id,
                 createdBy: register.openedBy,
@@ -119,7 +120,7 @@ export async function GET(request: Request) {
                   lte: now,
                 },
               },
-              _sum: {
+              select: {
                 total: true,
               },
             }),
@@ -172,7 +173,9 @@ export async function GET(request: Request) {
 
           salesCount = allSalesData._count || 0;
           totalSales = Number(allSalesData._sum.total || 0);
-          const totalCashSales = Number(cashSalesData._sum.total || 0);
+          const totalCashSales = sumRoundedCashTotals(
+            cashSales.map((sale) => Number(sale.total))
+          );
           expectedCash = Number(register.openingCash) + totalCashSales;
 
           // Agregar totales por método de pago
