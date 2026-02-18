@@ -29,6 +29,7 @@ interface CashRegister {
   difference: number | null;
   totalSales: number;
   salesCount: number;
+  totalCardCommissions?: number;
 }
 
 interface CashRegisterTableProps {

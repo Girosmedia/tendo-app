@@ -3,6 +3,7 @@ import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { getCurrentOrganization, isAdmin } from '@/lib/organization';
 import { logAuditAction } from '@/lib/audit';
+import { sendTeamInvitationEmail } from '@/lib/email';
 import { z } from 'zod';
 import { randomBytes } from 'crypto';
 
@@ -118,24 +119,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // Verificar si ya existe una invitación pendiente
-    const existingInvitation = await db.teamInvitation.findFirst({
+    const previousInvitation = await db.teamInvitation.findUnique({
       where: {
-        organizationId: organization.id,
-        email,
-        status: 'PENDING',
-        expiresAt: {
-          gte: new Date(),
+        organizationId_email: {
+          organizationId: organization.id,
+          email,
         },
       },
+      select: {
+        id: true,
+        status: true,
+      },
     });
-
-    if (existingInvitation) {
-      return NextResponse.json(
-        { error: 'Ya existe una invitación pendiente para este email' },
-        { status: 400 }
-      );
-    }
 
     // Generar token único
     const token = randomBytes(32).toString('hex');
@@ -144,8 +139,14 @@ export async function POST(request: Request) {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
 
-    const invitation = await db.teamInvitation.create({
-      data: {
+    const invitation = await db.teamInvitation.upsert({
+      where: {
+        organizationId_email: {
+          organizationId: organization.id,
+          email,
+        },
+      },
+      create: {
         organizationId: organization.id,
         email,
         role,
@@ -153,7 +154,32 @@ export async function POST(request: Request) {
         invitedBy: session.user.id,
         expiresAt,
       },
+      update: {
+        role,
+        token,
+        invitedBy: session.user.id,
+        status: 'PENDING',
+        acceptedAt: null,
+        expiresAt,
+      },
     });
+
+    try {
+      await sendTeamInvitationEmail({
+        toEmail: email,
+        organizationName: organization.name,
+        role,
+        invitationToken: token,
+        expiresAt,
+      });
+    } catch (emailError) {
+      console.error('Error enviando invitación por email:', emailError);
+
+      return NextResponse.json(
+        { error: 'No se pudo enviar la invitación por correo. Intenta nuevamente.' },
+        { status: 500 }
+      );
+    }
 
     await logAuditAction({
       userId: session.user.id,
@@ -166,12 +192,8 @@ export async function POST(request: Request) {
       } as any,
     });
 
-    // TODO: Enviar email con la invitación
-    // const invitationUrl = `${process.env.NEXTAUTH_URL}/invite/${token}`;
-    // await sendInvitationEmail(email, invitationUrl, organization.name);
-
     return NextResponse.json({
-      message: 'Invitación enviada exitosamente',
+      message: previousInvitation ? 'Invitación reenviada exitosamente' : 'Invitación enviada exitosamente',
       invitation: {
         id: invitation.id,
         email: invitation.email,

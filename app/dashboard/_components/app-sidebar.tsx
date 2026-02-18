@@ -32,6 +32,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   useSidebar,
 } from '@/components/ui/sidebar';
 import {
@@ -55,78 +58,140 @@ interface AppSidebarProps {
   organizationLogo?: string | null;
 }
 
-const navigationItems = [
+interface NavigationSubItem {
+  title: string;
+  href: string;
+  match: (path: string) => boolean;
+}
+
+interface NavigationItem {
+  title: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  match: (path: string) => boolean;
+  subItems?: NavigationSubItem[];
+}
+
+interface NavigationSection {
+  label: string;
+  items: NavigationItem[];
+}
+
+const navigationSections: NavigationSection[] = [
   {
-    title: 'Dashboard',
-    href: '/dashboard',
-    icon: LayoutDashboard,
+    label: 'Inicio',
+    items: [
+      {
+        title: 'Dashboard',
+        href: '/dashboard',
+        icon: LayoutDashboard,
+        match: (path) => path === '/dashboard',
+      },
+    ],
   },
   {
-    title: 'Punto de Venta',
-    href: '/dashboard/pos',
-    icon: ShoppingCart,
+    label: 'Ventas y Caja',
+    items: [
+      {
+        title: 'Punto de Venta',
+        href: '/dashboard/pos',
+        icon: ShoppingCart,
+        match: (path) => path.startsWith('/dashboard/pos'),
+        subItems: [
+          {
+            title: 'Mi Caja',
+            href: '/dashboard/mi-caja',
+            match: (path) => path.startsWith('/dashboard/mi-caja'),
+          },
+          {
+            title: 'Cierre de Caja',
+            href: '/dashboard/cash-register',
+            match: (path) => path.startsWith('/dashboard/cash-register'),
+          },
+          {
+            title: 'Documentos',
+            href: '/dashboard/documents',
+            match: (path) => path.startsWith('/dashboard/documents'),
+          },
+        ],
+      },
+    ],
   },
   {
-    title: 'Cierre de Caja',
-    href: '/dashboard/cash-register',
-    icon: Calculator,
+    label: 'Catálogo',
+    items: [
+      {
+        title: 'Productos',
+        href: '/dashboard/products',
+        icon: Package,
+        match: (path) => path.startsWith('/dashboard/products') && !path.startsWith('/dashboard/products/labels'),
+        subItems: [
+          {
+            title: 'Etiquetas',
+            href: '/dashboard/products/labels',
+            match: (path) => path.startsWith('/dashboard/products/labels'),
+          },
+        ],
+      },
+    ],
   },
   {
-    title: 'Mi Caja',
-    href: '/dashboard/mi-caja',
-    icon: Coins,
+    label: 'Clientes y Crédito',
+    items: [
+      {
+        title: 'Clientes',
+        href: '/dashboard/customers',
+        icon: UsersRound,
+        match: (path) => path.startsWith('/dashboard/customers'),
+      },
+      {
+        title: 'Fiados',
+        href: '/dashboard/fiados',
+        icon: HandCoins,
+        match: (path) => path.startsWith('/dashboard/fiados'),
+      },
+      {
+        title: 'Por Pagar',
+        href: '/dashboard/por-pagar',
+        icon: WalletCards,
+        match: (path) => path.startsWith('/dashboard/por-pagar'),
+      },
+    ],
   },
   {
-    title: 'Productos',
-    href: '/dashboard/products',
-    icon: Package,
+    label: 'Servicios',
+    items: [
+      {
+        title: 'Cotizaciones',
+        href: '/dashboard/services/quotes',
+        icon: FileText,
+        match: (path) => path.startsWith('/dashboard/services/quotes'),
+      },
+      {
+        title: 'Proyectos',
+        href: '/dashboard/services/projects',
+        icon: Building2,
+        match: (path) => path.startsWith('/dashboard/services/projects'),
+      },
+    ],
   },
   {
-    title: 'Etiquetas',
-    href: '/dashboard/products/labels',
-    icon: Tag,
+    label: 'Organización',
+    items: [
+      {
+        title: 'Equipo',
+        href: '/dashboard/team',
+        icon: Users,
+        match: (path) => path.startsWith('/dashboard/team'),
+      },
+      {
+        title: 'Configuración',
+        href: '/dashboard/settings',
+        icon: Settings,
+        match: (path) => path.startsWith('/dashboard/settings'),
+      },
+    ],
   },
-  {
-    title: 'Clientes',
-    href: '/dashboard/customers',
-    icon: UsersRound,
-  },
-  {
-    title: 'Fiados',
-    href: '/dashboard/fiados',
-    icon: HandCoins,
-  },
-  {
-    title: 'Por Pagar',
-    href: '/dashboard/por-pagar',
-    icon: WalletCards,
-  },
-  {
-    title: 'Cotizaciones',
-    href: '/dashboard/services/quotes',
-    icon: FileText,
-  },
-  {
-    title: 'Proyectos',
-    href: '/dashboard/services/projects',
-    icon: Building2,
-  },
-  {
-    title: 'Equipo',
-    href: '/dashboard/team',
-    icon: Users,
-  },
-  {
-    title: 'Configuración',
-    href: '/dashboard/settings',
-    icon: Settings,
-  },
-  // Próximos módulos (comentados hasta implementar)
-  // {
-  //   title: 'Documentos',
-  //   href: '/dashboard/documents',
-  //   icon: FileText,
-  // },
 ];
 
 export function AppSidebar({ user, organizationName, organizationLogo }: AppSidebarProps) {
@@ -160,47 +225,79 @@ export function AppSidebar({ user, organizationName, organizationLogo }: AppSide
       <SidebarHeader className="border-b border-sidebar-border bg-primary/5 p-4">
         <div className="flex items-center gap-3">
           {organizationLogo ? (
-            <Avatar className="h-10 w-10 rounded-lg">
-              <AvatarImage src={organizationLogo} alt={organizationName || 'Logo'} />
-              <AvatarFallback className="rounded-lg bg-primary text-primary-foreground">
-                <Building2 className="h-5 w-5" />
-              </AvatarFallback>
-            </Avatar>
+            <div className="flex h-10 max-w-[140px] items-center">
+              <img
+                src={organizationLogo}
+                alt={organizationName || 'Logo'}
+                className="h-9 w-auto max-w-[140px] object-contain"
+              />
+            </div>
           ) : (
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Building2 className="h-5 w-5" />
+            <div className="flex h-8 items-center">
+              <img
+                src="/tendo_sin_fondo/logo.svg"
+                alt="Tendo"
+                className="h-7 w-auto dark:hidden"
+              />
+              <img
+                src="/tendo_sin_fondo/logo_negativo.svg"
+                alt="Tendo"
+                className="hidden h-7 w-auto dark:block"
+              />
             </div>
           )}
-          <div className="flex-1 overflow-hidden">
-            <h2 className="truncate text-sm font-semibold">
-              {organizationName || 'Mi Empresa'}
-            </h2>
-            <p className="text-xs text-muted-foreground">Tendo</p>
-          </div>
+          {!organizationLogo && (
+            <div className="flex-1 overflow-hidden">
+              <h2 className="truncate text-sm font-semibold">
+                {organizationName || 'Mi Empresa'}
+              </h2>
+              <p className="text-xs text-muted-foreground">Tendo</p>
+            </div>
+          )}
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Menú Principal</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navigationItems.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton asChild isActive={isActive}>
-                      <Link href={item.href}>
-                        <item.icon className="h-4 w-4" />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+      <SidebarContent className="gap-1 py-1">
+        {navigationSections.map((section) => (
+          <SidebarGroup key={section.label} className="px-2 py-1">
+            <SidebarGroupLabel className="h-6 px-2 text-[11px] uppercase tracking-wide text-sidebar-foreground/60">
+              {section.label}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="gap-0.5">
+                {section.items.map((item) => {
+                  const isCurrentItemActive = item.match(pathname);
+                  const isSubItemActive = item.subItems?.some((subItem) => subItem.match(pathname)) ?? false;
+                  const isActive = isCurrentItemActive || isSubItemActive;
+
+                  return (
+                    <SidebarMenuItem key={item.href}>
+                      <SidebarMenuButton asChild isActive={isActive} size="sm">
+                        <Link href={item.href}>
+                          <item.icon className="h-4 w-4" />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                      {isActive && item.subItems && item.subItems.length > 0 && (
+                        <SidebarMenuSub>
+                          {item.subItems.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.href}>
+                              <SidebarMenuSubButton asChild isActive={subItem.match(pathname)}>
+                                <Link href={subItem.href}>
+                                  <span>{subItem.title}</span>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      )}
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border p-4">

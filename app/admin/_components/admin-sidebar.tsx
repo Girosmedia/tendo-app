@@ -1,6 +1,7 @@
 'use client';
 
-import { LayoutDashboard, Building2, Users, LogOut, ChevronDown, ShieldCheck, FileText } from 'lucide-react';
+import * as React from 'react';
+import { LayoutDashboard, Building2, Users, LogOut, ChevronDown, FileText, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
@@ -15,6 +16,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import {
   DropdownMenu,
@@ -51,6 +53,11 @@ const navigationItems = [
     icon: Users,
   },
   {
+    title: 'Campañas',
+    href: '/admin/campaigns',
+    icon: Mail,
+  },
+  {
     title: 'Registro de Auditoría',
     href: '/admin/logs',
     icon: FileText,
@@ -59,6 +66,13 @@ const navigationItems = [
 
 export function AdminSidebar({ user }: AdminSidebarProps) {
   const pathname = usePathname();
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  React.useEffect(() => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  }, [pathname, isMobile, setOpenMobile]);
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: '/login' });
@@ -78,14 +92,20 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader className="border-b border-sidebar-border bg-primary/5 p-4 dark:bg-primary/10">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <ShieldCheck className="h-5 w-5" />
+        <div className="space-y-1">
+          <div className="flex h-12 items-center">
+            <img
+              src="/tendo_sin_fondo/logo.svg"
+              alt="Logo-Tendo"
+              className="h-12 w-auto dark:hidden"
+            />
+            <img
+              src="/tendo_sin_fondo/logo_negativo.svg"
+              alt="Logo-Tendo"
+              className="hidden h-12 w-auto dark:block"
+            />
           </div>
-          <div className="flex-1 overflow-hidden">
-            <h2 className="truncate text-sm font-semibold">Tendo Admin</h2>
-            <p className="text-xs text-muted-foreground">Panel de Control</p>
-          </div>
+          <p className="text-xs text-muted-foreground">Panel de Control</p>
         </div>
       </SidebarHeader>
 
@@ -95,7 +115,9 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
           <SidebarGroupContent>
             <SidebarMenu>
               {navigationItems.map((item) => {
-                const isActive = pathname === item.href;
+                const isActive = item.href === '/admin'
+                  ? pathname === '/admin'
+                  : pathname.startsWith(item.href);
                 return (
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton asChild isActive={isActive}>

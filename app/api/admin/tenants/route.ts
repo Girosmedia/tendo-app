@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 import { cleanRUT } from '@/lib/utils/rut-validator';
 import { generateUniqueSlug } from '@/lib/utils/slugify';
 import { logAuditAction, AUDIT_ACTIONS } from '@/lib/audit';
+import { sendTenantWelcomeEmail } from '@/lib/email';
 
 const createTenantSchema = z.object({
   name: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
@@ -155,12 +156,13 @@ export async function POST(request: Request) {
     let owner = await db.user.findUnique({
       where: { email: ownerEmail },
     });
+    let temporaryPassword: string | null = null;
 
     // Crear organización con owner en una transacción
     const result = await db.$transaction(async (tx: any) => {
       // Si el usuario no existe, crearlo con password temporal
       if (!owner) {
-        const temporaryPassword = Math.random().toString(36).slice(-10); // Password temporal random
+        temporaryPassword = Math.random().toString(36).slice(-10); // Password temporal random
         const hashedPassword = await bcrypt.hash(temporaryPassword, 10);
 
         owner = await tx.user.create({
@@ -172,7 +174,6 @@ export async function POST(request: Request) {
         });
 
         console.log(`Usuario creado: ${ownerEmail} con password temporal: ${temporaryPassword}`);
-        // TODO: En producción, enviar email con el password temporal
       }
 
       // Crear la organización
@@ -222,6 +223,18 @@ export async function POST(request: Request) {
         ownerEmail: result.owner.email,
       },
     });
+
+    if (temporaryPassword) {
+      try {
+        await sendTenantWelcomeEmail({
+          toEmail: ownerEmail,
+          organizationName: result.organization.name,
+          temporaryPassword,
+        });
+      } catch (emailError) {
+        console.error('Error enviando email de bienvenida al owner:', emailError);
+      }
+    }
 
     return NextResponse.json(
       {

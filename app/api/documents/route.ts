@@ -173,6 +173,24 @@ export async function POST(req: NextRequest) {
         ? validatedData.cashReceived - roundedCashTotal
         : null;
 
+    let cardCommissionRate: number | null = null;
+    let cardCommissionAmount: number | null = null;
+
+    if (validatedData.paymentMethod === 'CARD' && validatedData.cardProvider && validatedData.cardType) {
+      const settings = await db.organizationSettings.findUnique({
+        where: { organizationId: organization.id },
+        select: {
+          cardDebitCommissionRate: true,
+          cardCreditCommissionRate: true,
+        },
+      });
+
+      cardCommissionRate = validatedData.cardType === 'DEBIT'
+        ? Number(settings?.cardDebitCommissionRate ?? 0)
+        : Number(settings?.cardCreditCommissionRate ?? 0);
+      cardCommissionAmount = Math.round((total * cardCommissionRate) / 100);
+    }
+
     // Obtener el siguiente número de documento para este tipo
     const lastDoc = await db.document.findFirst({
       where: {
@@ -247,6 +265,10 @@ export async function POST(req: NextRequest) {
           dueAt: validatedData.dueAt ? new Date(validatedData.dueAt) : null,
           paidAt,
           paymentMethod: validatedData.paymentMethod,
+          cardType: validatedData.paymentMethod === 'CARD' ? validatedData.cardType : null,
+          cardProvider: validatedData.paymentMethod === 'CARD' ? validatedData.cardProvider : null,
+          cardCommissionRate,
+          cardCommissionAmount,
           subtotal: subtotal,
           taxRate: validatedData.taxRate,
           taxAmount: taxAmount,

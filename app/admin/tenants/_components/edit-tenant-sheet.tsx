@@ -5,12 +5,12 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet'
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
 import {
   Select,
   SelectContent,
@@ -93,14 +93,14 @@ export function EditTenantSheet({ tenant, open, onOpenChange }: EditTenantSheetP
   }
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-[540px]">
-        <SheetHeader>
-          <SheetTitle>Editar Tenant</SheetTitle>
-          <SheetDescription>
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
+      <ResponsiveDialogContent className="sm:max-w-[540px] overflow-y-auto">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>Editar Tenant</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             Modificar la configuración de <strong>{tenant.name}</strong>
-          </SheetDescription>
-        </SheetHeader>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
           {/* Información básica (solo lectura) */}
@@ -177,7 +177,7 @@ export function EditTenantSheet({ tenant, open, onOpenChange }: EditTenantSheetP
           </div>
 
           {/* Botones */}
-          <div className="flex justify-end gap-3 pt-4 border-t">
+          <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end">
             <Button
               type="button"
               variant="outline"
@@ -191,7 +191,7 @@ export function EditTenantSheet({ tenant, open, onOpenChange }: EditTenantSheetP
             </Button>
           </div>
         </form>
-      </SheetContent>
-    </Sheet>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

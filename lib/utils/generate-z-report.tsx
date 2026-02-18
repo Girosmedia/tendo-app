@@ -143,7 +143,12 @@ interface ReportData {
     customerName: string;
     customerRut: string;
     paymentMethod: string;
+    cardType: 'DEBIT' | 'CREDIT' | null;
+    cardCommissionAmount: number;
     subtotal: number;
+    costOfSales: number;
+    finalProfit: number;
+    finalMarginPercent: number;
     taxAmount: number;
     discount: number;
     total: number;
@@ -157,6 +162,16 @@ interface ReportData {
     }>;
   }>;
   paymentSummary: Record<string, { count: number; total: number }>;
+  taxSummary: {
+    subtotal: number;
+    taxAmount: number;
+    discount: number;
+    costOfSalesTotal: number;
+    cardCommissionTotal: number;
+    finalProfitTotal: number;
+    finalMarginPercent: number;
+    total: number;
+  };
   topProducts: Array<{
     productId: string | null;
     productName: string;
@@ -192,7 +207,7 @@ const getPaymentMethodLabel = (method: string) => {
 };
 
 export const ZReportDocument: React.FC<{ data: ReportData }> = ({ data }) => {
-  const { cashRegister, sales, paymentSummary, topProducts, organization } = data;
+  const { cashRegister, sales, paymentSummary, taxSummary, topProducts, organization } = data;
 
   return (
     <Document>
@@ -268,6 +283,35 @@ export const ZReportDocument: React.FC<{ data: ReportData }> = ({ data }) => {
           </View>
         </View>
 
+        {/* Rentabilidad Final */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>MARGEN FINAL DE GANANCIA</Text>
+          <View style={styles.row}>
+            <Text style={styles.label}>Neto Ventas:</Text>
+            <Text style={styles.value}>{formatCurrency(taxSummary.subtotal)}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Costo de Venta:</Text>
+            <Text style={styles.value}>-{formatCurrency(taxSummary.costOfSalesTotal)}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Comisiones Tarjeta:</Text>
+            <Text style={styles.value}>-{formatCurrency(taxSummary.cardCommissionTotal)}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Utilidad Final:</Text>
+            <Text style={[styles.value, taxSummary.finalProfitTotal >= 0 ? styles.positive : styles.negative]}>
+              {formatCurrency(taxSummary.finalProfitTotal)}
+            </Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Margen Final %:</Text>
+            <Text style={[styles.value, taxSummary.finalMarginPercent >= 0 ? styles.positive : styles.negative]}>
+              {taxSummary.finalMarginPercent.toFixed(1)}%
+            </Text>
+          </View>
+        </View>
+
         {/* Detalle por Método de Pago */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>DETALLE POR MÉTODO DE PAGO</Text>
@@ -335,32 +379,38 @@ export const ZReportDocument: React.FC<{ data: ReportData }> = ({ data }) => {
 
           <View style={styles.table}>
             <View style={styles.tableHeader}>
-              <Text style={{ flex: 1.2 }}>N° Doc</Text>
-              <Text style={{ flex: 1.7 }}>Cliente</Text>
-              <Text style={{ flex: 1.1 }}>Método</Text>
+              <Text style={{ flex: 1.1 }}>N° Doc</Text>
+              <Text style={{ flex: 1.5 }}>Cliente</Text>
+              <Text style={{ flex: 1 }}>Método</Text>
               <Text style={{ flex: 1, textAlign: 'right' }}>Neto</Text>
-              <Text style={{ flex: 0.9, textAlign: 'right' }}>IVA</Text>
-              <Text style={{ flex: 1, textAlign: 'right' }}>Desc.</Text>
-              <Text style={{ flex: 1, textAlign: 'right' }}>Total</Text>
+              <Text style={{ flex: 1, textAlign: 'right' }}>Costo</Text>
+              <Text style={{ flex: 1, textAlign: 'right' }}>Comis.</Text>
+              <Text style={{ flex: 1, textAlign: 'right' }}>Utilidad</Text>
+              <Text style={{ flex: 0.8, textAlign: 'right' }}>Margen%</Text>
             </View>
             {sales.map((sale) => (
               <View key={sale.id} style={styles.tableRow}>
-                <Text style={{ flex: 1.2, fontSize: 8 }}>{sale.documentNumber}</Text>
-                <Text style={{ flex: 1.7, fontSize: 8 }}>{sale.customerName}</Text>
-                <Text style={{ flex: 1.1, fontSize: 8 }}>
-                  {getPaymentMethodLabel(sale.paymentMethod)}
+                <Text style={{ flex: 1.1, fontSize: 8 }}>{sale.documentNumber}</Text>
+                <Text style={{ flex: 1.5, fontSize: 8 }}>{sale.customerName}</Text>
+                <Text style={{ flex: 1, fontSize: 8 }}>
+                  {sale.paymentMethod === 'CARD' && sale.cardType
+                    ? `${getPaymentMethodLabel(sale.paymentMethod)} ${sale.cardType === 'DEBIT' ? 'D' : 'C'}`
+                    : getPaymentMethodLabel(sale.paymentMethod)}
                 </Text>
                 <Text style={{ flex: 1, textAlign: 'right', fontSize: 8 }}>
                   {formatCurrency(sale.subtotal)}
                 </Text>
-                <Text style={{ flex: 0.9, textAlign: 'right', fontSize: 8 }}>
-                  {formatCurrency(sale.taxAmount)}
+                <Text style={{ flex: 1, textAlign: 'right', fontSize: 8 }}>
+                  {formatCurrency(sale.costOfSales)}
                 </Text>
                 <Text style={{ flex: 1, textAlign: 'right', fontSize: 8 }}>
-                  -{formatCurrency(sale.discount)}
+                  -{formatCurrency(sale.cardCommissionAmount || 0)}
                 </Text>
                 <Text style={{ flex: 1, textAlign: 'right', fontSize: 8 }}>
-                  {formatCurrency(sale.total)}
+                  {formatCurrency(sale.finalProfit)}
+                </Text>
+                <Text style={{ flex: 0.8, textAlign: 'right', fontSize: 8 }}>
+                  {sale.finalMarginPercent.toFixed(1)}%
                 </Text>
               </View>
             ))}
@@ -368,9 +418,21 @@ export const ZReportDocument: React.FC<{ data: ReportData }> = ({ data }) => {
 
           <View style={[styles.summaryBox, { marginTop: 20 }]}>
             <View style={styles.summaryRow}>
-              <Text style={styles.summaryTotal}>TOTAL:</Text>
-              <Text style={styles.summaryTotal}>
-                {formatCurrency(cashRegister.totalSales)}
+              <Text>Total Neto:</Text>
+              <Text>{formatCurrency(taxSummary.subtotal)}</Text>
+            </View>
+            <View style={styles.summaryRow}>
+              <Text>Total Costo:</Text>
+              <Text>{formatCurrency(taxSummary.costOfSalesTotal)}</Text>
+            </View>
+            <View style={styles.summaryRow}>
+              <Text>Total Comisión:</Text>
+              <Text>{formatCurrency(taxSummary.cardCommissionTotal)}</Text>
+            </View>
+            <View style={[styles.summaryRow, styles.summaryTotal]}>
+              <Text>UTILIDAD FINAL:</Text>
+              <Text style={taxSummary.finalProfitTotal >= 0 ? styles.positive : styles.negative}>
+                {formatCurrency(taxSummary.finalProfitTotal)} ({taxSummary.finalMarginPercent.toFixed(1)}%)
               </Text>
             </View>
           </View>

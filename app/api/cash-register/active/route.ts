@@ -51,7 +51,7 @@ export async function GET() {
     }
 
     const now = new Date();
-    const [allSalesData, cashSales] = await Promise.all([
+    const [allSalesData, cashSales, cardCommissionsData] = await Promise.all([
       db.document.aggregate({
         where: {
           organizationId: organization.id,
@@ -82,6 +82,21 @@ export async function GET() {
           total: true,
         },
       }),
+      db.document.aggregate({
+        where: {
+          organizationId: organization.id,
+          createdBy: activeCashRegister.openedBy,
+          status: 'PAID',
+          paymentMethod: 'CARD',
+          issuedAt: {
+            gte: activeCashRegister.openedAt,
+            lte: now,
+          },
+        },
+        _sum: {
+          cardCommissionAmount: true,
+        },
+      }),
     ]);
 
     const totalSales = Number(allSalesData._sum.total || 0);
@@ -89,6 +104,7 @@ export async function GET() {
     const totalCashSalesRounded = sumRoundedCashTotals(
       cashSales.map((sale) => Number(sale.total))
     );
+    const totalCardCommissions = Number(cardCommissionsData._sum.cardCommissionAmount || 0);
     const expectedCash = Number(activeCashRegister.openingCash) + totalCashSalesRounded;
 
     return NextResponse.json({
@@ -105,6 +121,7 @@ export async function GET() {
         actualCash: activeCashRegister.actualCash ? Number(activeCashRegister.actualCash) : null,
         difference: activeCashRegister.difference ? Number(activeCashRegister.difference) : null,
         totalSales,
+        totalCardCommissions,
         salesCount,
       },
     });

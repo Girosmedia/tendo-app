@@ -253,6 +253,8 @@ export const OrganizationSettingsScalarFieldEnum = {
   timezone: 'timezone',
   currency: 'currency',
   locale: 'locale',
+  cardDebitCommissionRate: 'cardDebitCommissionRate',
+  cardCreditCommissionRate: 'cardCreditCommissionRate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -363,6 +365,10 @@ export const DocumentScalarFieldEnum = {
   dueAt: 'dueAt',
   paidAt: 'paidAt',
   paymentMethod: 'paymentMethod',
+  cardType: 'cardType',
+  cardProvider: 'cardProvider',
+  cardCommissionRate: 'cardCommissionRate',
+  cardCommissionAmount: 'cardCommissionAmount',
   subtotal: 'subtotal',
   taxRate: 'taxRate',
   taxAmount: 'taxAmount',

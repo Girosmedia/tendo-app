@@ -8,9 +8,10 @@
   /* --- Design Tokens Tendo v1.0 (Zimple Style) --- */
   
   /* Paleta Semántica de Negocio */
-  --color-brand-primary: #4F46E5;    /* Indigo: Acciones de crecimiento */
-  --color-brand-success: #10B981;    /* Emerald: Dinero, utilidad, éxito */
+  --color-brand-primary: #221f47;    /* Tendo Navy (logo final) */
+  --color-brand-success: #27b789;    /* Tendo Green (logo final) */
   --color-brand-alert: #F43F5E;      /* Rose: Deudas, stock bajo, alertas */
+  --color-brand-neutral: #f7f7f8;    /* Tendo Light (logo final) */
   
   /* Superficies y Fondos */
   --color-slate-50: #F8FAFC;         /* Fondo App (Light Mode) */
@@ -85,13 +86,13 @@
   --card-foreground: oklch(0.20 0 0);
   --popover-foreground: oklch(0.20 0 0);
   
-  /* Primary - Índigo vibrante profesional */
-  --primary: oklch(0.485 0.14 264);
-  --primary-foreground: oklch(0.985 0 0);
+  /* Primary - Tendo Navy */
+  --primary: #221f47;
+  --primary-foreground: #f7f7f8;
   
-  /* Success - Verde Esmeralda */
-  --success: oklch(0.55 0.13 155);
-  --success-foreground: oklch(1 0 0);
+  /* Success - Tendo Green */
+  --success: #27b789;
+  --success-foreground: #0f172a;
   
   /* Destructive - Rose/Coral */
   --destructive: oklch(0.58 0.15 15);
@@ -105,20 +106,20 @@
   --info: oklch(0.55 0.12 230);
   --info-foreground: oklch(1 0 0);
   
-  /* Superficies secundarias */
-  --secondary: oklch(0.965 0 0);
+  /* Superficies secundarias con tinte de marca */
+  --secondary: #221f470d;
   --secondary-foreground: oklch(0.20 0 0);
-  --muted: oklch(0.965 0 0);
+  --muted: #221f470a;
   --muted-foreground: oklch(0.52 0 0);
-  --accent: oklch(0.965 0 0);
-  --accent-foreground: oklch(0.20 0 0);
+  --accent: #221f4714;
+  --accent-foreground: #221f47;
   
   /* Borders sutiles */
   --border: oklch(0.93 0 0);
   --input: oklch(0.93 0 0);
   
-  /* Ring/Focus con primary */
-  --ring: oklch(0.485 0.14 264);
+  /* Ring/Focus con color de marca */
+  --ring: #27b789;
   --ring-offset: oklch(1 0 0);
   
   /* Charts - Mantener actuales con personalidad */
@@ -131,12 +132,16 @@
   /* Sidebar con primary */
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.20 0 0);
-  --sidebar-primary: oklch(0.485 0.14 264);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.965 0 0);
-  --sidebar-accent-foreground: oklch(0.20 0 0);
+  --sidebar-primary: #221f47;
+  --sidebar-primary-foreground: #f7f7f8;
+  --sidebar-accent: #221f4717;
+  --sidebar-accent-foreground: #221f47;
   --sidebar-border: oklch(0.93 0 0);
-  --sidebar-ring: oklch(0.485 0.14 264);
+  --sidebar-ring: #27b789;
+
+  /* Scrollbar (Light) */
+  --scrollbar-thumb: #221f4770;
+  --scrollbar-thumb-hover: #221f47a6;
 }
 
 .dark {
@@ -150,13 +155,13 @@
   --card-foreground: oklch(0.985 0 0);
   --popover-foreground: oklch(0.985 0 0);
   
-  /* Primary - Más vibrante en dark */
-  --primary: oklch(0.62 0.16 264);
-  --primary-foreground: oklch(0.16 0.01 264);
+  /* Primary - Tendo Green para contraste en dark */
+  --primary: #27b789;
+  --primary-foreground: #221f47;
   
-  /* Success - Verde brillante */
-  --success: oklch(0.65 0.14 155);
-  --success-foreground: oklch(0.16 0.01 264);
+  /* Success */
+  --success: #27b789;
+  --success-foreground: #221f47;
   
   /* Destructive - Rose suave */
   --destructive: oklch(0.68 0.16 15);
@@ -170,20 +175,20 @@
   --info: oklch(0.65 0.13 230);
   --info-foreground: oklch(0.16 0.01 264);
   
-  /* Superficies */
-  --secondary: oklch(0.27 0.01 264);
+  /* Superficies con tinte de marca */
+  --secondary: #27b7891f;
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.27 0.01 264);
+  --muted: #27b78917;
   --muted-foreground: oklch(0.68 0 0);
-  --accent: oklch(0.27 0.01 264);
+  --accent: #27b7892b;
   --accent-foreground: oklch(0.985 0 0);
   
   /* Borders con transparencia */
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 12%);
   
-  /* Ring con primary */
-  --ring: oklch(0.62 0.16 264);
+  /* Ring con color de marca */
+  --ring: #27b789;
   --ring-offset: oklch(0.16 0.01 264);
   
   /* Charts - Mantener vibrantes */
@@ -196,12 +201,46 @@
   /* Sidebar dark */
   --sidebar: oklch(0.20 0.01 264);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.62 0.16 264);
-  --sidebar-primary-foreground: oklch(0.16 0.01 264);
-  --sidebar-accent: oklch(0.27 0.01 264);
+  --sidebar-primary: #27b789;
+  --sidebar-primary-foreground: #221f47;
+  --sidebar-accent: #27b78933;
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.62 0.16 264);
+  --sidebar-ring: #27b789;
+
+  /* Scrollbar (Dark) */
+  --scrollbar-thumb: #27b78966;
+  --scrollbar-thumb-hover: #27b78999;
+}
+
+/* Scrollbars - Estilo refinado y consistente */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 @layer base {

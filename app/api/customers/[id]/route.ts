@@ -195,8 +195,60 @@ export async function DELETE(
       );
     }
 
-    // TODO: Verificar si el cliente tiene ventas asociadas
-    // Si tiene ventas, mejor desactivar en vez de eliminar
+    const [documentsCount, creditsCount, paymentsCount] = await Promise.all([
+      db.document.count({
+        where: {
+          organizationId: organization.id,
+          customerId: id,
+        },
+      }),
+      db.credit.count({
+        where: {
+          organizationId: organization.id,
+          customerId: id,
+        },
+      }),
+      db.payment.count({
+        where: {
+          organizationId: organization.id,
+          customerId: id,
+        },
+      }),
+    ]);
+
+    const hasCommercialHistory = documentsCount > 0 || creditsCount > 0 || paymentsCount > 0;
+
+    if (hasCommercialHistory) {
+      if (!customer.isActive) {
+        return NextResponse.json({
+          message: 'El cliente ya está desactivado y mantiene historial comercial.',
+        });
+      }
+
+      await db.customer.update({
+        where: { id },
+        data: { isActive: false },
+      });
+
+      await logAuditAction({
+        userId: session.user.id,
+        action: 'DEACTIVATE_CUSTOMER',
+        resource: 'Customer',
+        resourceId: id,
+        changes: {
+          customer: customer.name,
+          reason: 'HAS_COMMERCIAL_HISTORY',
+          documentsCount,
+          creditsCount,
+          paymentsCount,
+        } as any,
+      });
+
+      return NextResponse.json({
+        message:
+          'El cliente tiene historial comercial, por seguridad se desactivó en lugar de eliminarse.',
+      });
+    }
 
     await db.customer.delete({
       where: { id },

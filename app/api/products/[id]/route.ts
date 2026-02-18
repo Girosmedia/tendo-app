@@ -241,7 +241,42 @@ export async function DELETE(
       return NextResponse.json({ error: 'Producto no encontrado' }, { status: 404 })
     }
 
-    // TODO: Verificar que no tenga documentos asociados cuando se implemente el módulo de documentos
+    const [documentItemsCount, projectResourcesCount] = await Promise.all([
+      db.documentItem.count({
+        where: {
+          productId: id,
+          document: {
+            organizationId: organization.id,
+          },
+        },
+      }),
+      db.projectResource.count({
+        where: {
+          organizationId: organization.id,
+          productId: id,
+        },
+      }),
+    ]);
+
+    const hasUsageHistory = documentItemsCount > 0 || projectResourcesCount > 0;
+
+    if (hasUsageHistory) {
+      if (!product.isActive) {
+        return NextResponse.json({
+          message: 'El producto ya está desactivado y mantiene historial de uso.',
+        })
+      }
+
+      await db.product.update({
+        where: { id },
+        data: { isActive: false },
+      })
+
+      return NextResponse.json({
+        message:
+          'El producto tiene historial en documentos o proyectos, por seguridad se desactivó en lugar de eliminarse.',
+      })
+    }
 
     await db.product.delete({
       where: { id },

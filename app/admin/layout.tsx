@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AdminSidebar } from './_components/admin-sidebar';
+import { AdminMobileTabBar } from './_components/admin-mobile-tabbar';
 import { Toaster } from '@/components/ui/sonner';
 
 export default async function AdminLayout({
@@ -38,9 +39,10 @@ export default async function AdminLayout({
               </div>
             </div>
           </div>
-          <div className="flex-1 space-y-8 p-4 md:p-8">{children}</div>
+          <div className="flex-1 space-y-6 p-4 pb-20 md:space-y-8 md:p-8 md:pb-8">{children}</div>
         </main>
       </div>
+      <AdminMobileTabBar />
       <Toaster />
     </SidebarProvider>
   );

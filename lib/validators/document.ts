@@ -26,6 +26,9 @@ export const PaymentMethodEnum = z.enum([
   'MULTI',
 ]);
 
+export const CardTypeEnum = z.enum(['DEBIT', 'CREDIT']);
+export const CardProviderEnum = z.enum(['TRANSBANK', 'MERCADO_PAGO', 'GETNET', 'OTHER']);
+
 // Schema para crear/actualizar items de documento
 export const documentItemSchema = z.object({
   productId: z.string().optional().nullable(),
@@ -66,6 +69,8 @@ export const createDocumentSchema = z.object({
   docPrefix: z.string().optional().nullable(),
   dueAt: z.string().datetime().optional().nullable(), // ISO string
   paymentMethod: PaymentMethodEnum.default('CASH'),
+  cardType: CardTypeEnum.optional().nullable(),
+  cardProvider: CardProviderEnum.optional().nullable(),
   taxRate: z
     .number()
     .min(0)
@@ -84,6 +89,40 @@ export const createDocumentSchema = z.object({
   items: z
     .array(documentItemSchema)
     .min(1, 'El documento debe tener al menos un ítem'),
+}).superRefine((data, ctx) => {
+  if (data.paymentMethod === 'CARD') {
+    if (!data.cardType) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['cardType'],
+        message: 'El tipo de tarjeta es requerido para pagos con tarjeta',
+      });
+    }
+
+    if (!data.cardProvider) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['cardProvider'],
+        message: 'El proveedor de tarjeta es requerido para pagos con tarjeta',
+      });
+    }
+  }
+
+  if (data.paymentMethod === 'MULTI' && (data.cardType || data.cardProvider)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['paymentMethod'],
+      message: 'En esta versión, MULTI no soporta desglose de tarjeta para comisión',
+    });
+  }
+
+  if (data.paymentMethod !== 'CARD' && (data.cardType || data.cardProvider)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['paymentMethod'],
+      message: 'cardType y cardProvider solo aplican cuando el método de pago es tarjeta',
+    });
+  }
 });
 
 // Schema para actualizar documento
@@ -92,6 +131,8 @@ export const updateDocumentSchema = z.object({
   status: DocumentStatusEnum.optional(),
   dueAt: z.string().datetime().optional().nullable(),
   paymentMethod: PaymentMethodEnum.optional(),
+  cardType: CardTypeEnum.optional().nullable(),
+  cardProvider: CardProviderEnum.optional().nullable(),
   paidAt: z.string().datetime().optional().nullable(),
   discount: z.number().nonnegative().optional(),
   cashReceived: z.number().nonnegative().optional().nullable(),
@@ -99,7 +140,7 @@ export const updateDocumentSchema = z.object({
 });
 
 // Schema para crear cotizaciones (Track Servicios)
-export const createQuoteSchema = createDocumentSchema.extend({
+export const createQuoteSchema = createDocumentSchema.safeExtend({
   type: z.literal('QUOTE').optional().default('QUOTE'),
   status: DocumentStatusEnum.optional().default('DRAFT'),
   paymentMethod: PaymentMethodEnum.optional().default('TRANSFER'),

@@ -64,6 +64,7 @@ export async function GET(
               select: {
                 name: true,
                 sku: true,
+                cost: true,
               },
             },
           },
@@ -142,25 +143,44 @@ export async function GET(
     });
 
     // Formatear ventas para el reporte
-    const formattedSales = sales.map((sale: any) => ({
-      id: sale.id,
-      documentNumber: sale.docNumber,
-      customerName: sale.customer?.name || 'Público general',
-      customerRut: sale.customer?.rut || '',
-      paymentMethod: sale.paymentMethod,
-      subtotal: Number(sale.subtotal),
-      taxAmount: Number(sale.taxAmount),
-      discount: Number(sale.discount),
-      total: Number(sale.total),
-      issuedAt: sale.issuedAt.toISOString(),
-      items: sale.items.map((item: any) => ({
-        name: item.product?.name || item.name,
-        sku: item.product?.sku || item.sku,
-        quantity: Number(item.quantity),
-        unitPrice: Number(item.unitPrice),
-        total: Number(item.total),
-      })),
-    }));
+    const formattedSales = sales.map((sale: any) => {
+      const subtotal = Number(sale.subtotal);
+      const cardCommissionAmount = Number(sale.cardCommissionAmount || 0);
+      const costOfSales = sale.items.reduce((acc: number, item: any) => {
+        const quantity = Number(item.quantity);
+        const unitCost = Number(item.product?.cost || 0);
+        return acc + (quantity * unitCost);
+      }, 0);
+      const finalProfit = subtotal - costOfSales - cardCommissionAmount;
+      const finalMarginPercent = subtotal > 0 ? (finalProfit / subtotal) * 100 : 0;
+
+      return {
+        id: sale.id,
+        documentNumber: sale.docNumber,
+        customerName: sale.customer?.name || 'Público general',
+        customerRut: sale.customer?.rut || '',
+        paymentMethod: sale.paymentMethod,
+        cardType: sale.cardType,
+        cardProvider: sale.cardProvider,
+        cardCommissionRate: Number(sale.cardCommissionRate || 0),
+        cardCommissionAmount,
+        subtotal,
+        taxAmount: Number(sale.taxAmount),
+        discount: Number(sale.discount),
+        total: Number(sale.total),
+        costOfSales,
+        finalProfit,
+        finalMarginPercent: Math.round(finalMarginPercent * 10) / 10,
+        issuedAt: sale.issuedAt.toISOString(),
+        items: sale.items.map((item: any) => ({
+          name: item.product?.name || item.name,
+          sku: item.product?.sku || item.sku,
+          quantity: Number(item.quantity),
+          unitPrice: Number(item.unitPrice),
+          total: Number(item.total),
+        })),
+      };
+    });
 
     const taxSummary = formattedSales.reduce(
       (acc, sale) => {
@@ -168,6 +188,9 @@ export async function GET(
         acc.taxAmount += sale.taxAmount;
         acc.discount += sale.discount;
         acc.total += sale.total;
+        acc.costOfSalesTotal += sale.costOfSales;
+        acc.cardCommissionTotal += sale.cardCommissionAmount;
+        acc.finalProfitTotal += sale.finalProfit;
         return acc;
       },
       {
@@ -175,8 +198,16 @@ export async function GET(
         taxAmount: 0,
         discount: 0,
         total: 0,
+        costOfSalesTotal: 0,
+        cardCommissionTotal: 0,
+        finalProfitTotal: 0,
+        finalMarginPercent: 0,
       }
     );
+
+    taxSummary.finalMarginPercent = taxSummary.subtotal > 0
+      ? Math.round((taxSummary.finalProfitTotal / taxSummary.subtotal) * 1000) / 10
+      : 0;
 
       const cashSalesTotals = formattedSales
         .filter((sale) => sale.paymentMethod === 'CASH')

@@ -8,12 +8,12 @@ import { z } from 'zod'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet'
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
 import {
   Form,
   FormControl,
@@ -104,15 +104,15 @@ export function CreateTenantSheet({ open, onOpenChange }: CreateTenantSheetProps
   }
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-[540px] overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle>Crear Nuevo Tenant</SheetTitle>
-          <SheetDescription>
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
+      <ResponsiveDialogContent className="sm:max-w-[540px] overflow-y-auto">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>Crear Nuevo Tenant</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             Crear una organización manualmente desde el panel de administración
-          </SheetDescription>
-        </SheetHeader>
-        <div className='p-4'>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-6">
             {/* Nombre */}
@@ -304,7 +304,7 @@ export function CreateTenantSheet({ open, onOpenChange }: CreateTenantSheetProps
             />
 
             {/* Botones */}
-            <div className="flex justify-end gap-3 pt-4 border-t">
+            <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end">
               <Button
                 type="button"
                 variant="outline"
@@ -322,8 +322,7 @@ export function CreateTenantSheet({ open, onOpenChange }: CreateTenantSheetProps
             </div>
           </form>
         </Form>
-        </div>
-      </SheetContent>
-    </Sheet>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

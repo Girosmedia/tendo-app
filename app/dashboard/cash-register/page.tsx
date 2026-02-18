@@ -24,6 +24,7 @@ interface CashRegister {
   difference: number | null;
   totalSales: number;
   salesCount: number;
+  totalCardCommissions?: number;
 }
 
 interface MonthlySale {
@@ -31,12 +32,66 @@ interface MonthlySale {
   documentNumber: number;
   issuedAt: string;
   paymentMethod: string;
+  cardType: 'DEBIT' | 'CREDIT' | null;
+  cardCommissionAmount: number;
   customerName: string;
   customerRut: string;
   subtotal: number;
   taxAmount: number;
   discount: number;
   total: number;
+  costOfSales: number;
+  finalProfit: number;
+  finalMarginPercent: number;
+}
+
+interface MonthlyOperationalExpense {
+  id: string;
+  title: string;
+  category: string;
+  amount: number;
+  paymentMethod: string;
+  expenseDate: string;
+  cashRegisterId: string | null;
+}
+
+interface MonthlyCollection {
+  id: string;
+  creditId: string;
+  amount: number;
+  paymentMethod: string;
+  paidAt: string;
+  customerName: string;
+  customerRut: string;
+}
+
+interface MonthlySalesSummary {
+  salesCount: number;
+  subtotal: number;
+  taxAmount: number;
+  discount: number;
+  cardCommissionAmount: number;
+  costOfSales: number;
+  finalProfit: number;
+  finalMarginPercent: number;
+  total: number;
+  creditSalesCount: number;
+  creditSalesTotal: number;
+  immediateCashSalesTotal: number;
+  operationalExpensesCount: number;
+  operationalExpensesTotal: number;
+  collectionsCount: number;
+  collectionsTotal: number;
+  cashInflowsTotal: number;
+  cashOutflowsTotal: number;
+  operatingResultAfterExpenses: number;
+  consolidatedCashFlow: number;
+}
+
+function getCardTypeLabel(type: string | null) {
+  if (type === 'DEBIT') return 'Débito';
+  if (type === 'CREDIT') return 'Crédito';
+  return '';
 }
 
 function getCurrentMonthValue() {
@@ -82,6 +137,9 @@ export default function CashRegisterPage() {
   const [registers, setRegisters] = useState<CashRegister[]>([]);
   const [activeCashRegister, setActiveCashRegister] = useState<CashRegister | null>(null);
   const [monthlySales, setMonthlySales] = useState<MonthlySale[]>([]);
+  const [monthlyOperationalExpenses, setMonthlyOperationalExpenses] = useState<MonthlyOperationalExpense[]>([]);
+  const [monthlyCollections, setMonthlyCollections] = useState<MonthlyCollection[]>([]);
+  const [monthlySummary, setMonthlySummary] = useState<MonthlySalesSummary | null>(null);
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonthValue());
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -138,6 +196,9 @@ export default function CashRegisterPage() {
       setRegisters(listData.cashRegisters || []);
       setActiveCashRegister(activeData.cashRegister || null);
       setMonthlySales(monthlySalesData.sales || []);
+      setMonthlyOperationalExpenses(monthlySalesData.operationalExpenses || []);
+      setMonthlyCollections(monthlySalesData.collections || []);
+      setMonthlySummary(monthlySalesData.summary || null);
     } catch (error) {
       console.error('Error:', error);
       if (!silent) toast.error('Error al cargar historial de cajas');
@@ -188,6 +249,7 @@ export default function CashRegisterPage() {
       'Estado',
       'Cantidad Ventas',
       'Total Ventas',
+      'Comisiones Tarjeta',
       'Efectivo Esperado',
       'Efectivo Contado',
       'Diferencia',
@@ -199,11 +261,59 @@ export default function CashRegisterPage() {
       'Cliente',
       'RUT',
       'Método Pago',
+      'Tipo Tarjeta',
+      'Comisión Tarjeta',
       'Neto',
+      'Costo Venta',
+      'Utilidad Final',
+      'Margen Final %',
       'IVA',
       'Descuento',
       'Total',
     ];
+
+    const expensesHeaders = [
+      'Fecha',
+      'Concepto',
+      'Categoría',
+      'Método Pago',
+      'Monto',
+      'Caja',
+    ];
+
+    const collectionsHeaders = [
+      'Fecha',
+      'Cliente',
+      'RUT',
+      'Método Pago',
+      'Monto',
+      'Crédito ID',
+    ];
+
+    const salesNetTotal = monthlySales.reduce((acc, sale) => acc + sale.subtotal, 0);
+    const salesCostTotal = monthlySales.reduce((acc, sale) => acc + sale.costOfSales, 0);
+    const salesTaxTotal = monthlySales.reduce((acc, sale) => acc + sale.taxAmount, 0);
+    const salesDiscountTotal = monthlySales.reduce((acc, sale) => acc + sale.discount, 0);
+    const salesCommissionsTotal = monthlySales.reduce((acc, sale) => acc + sale.cardCommissionAmount, 0);
+    const salesFinalProfitTotal = monthlySales.reduce((acc, sale) => acc + sale.finalProfit, 0);
+    const salesDocumentsTotal = monthlySales.reduce((acc, sale) => acc + sale.total, 0);
+
+    const operationalExpensesTotal = monthlySummary?.operationalExpensesTotal
+      ?? monthlyOperationalExpenses.reduce((acc, expense) => acc + expense.amount, 0);
+    const collectionsTotal = monthlySummary?.collectionsTotal
+      ?? monthlyCollections.reduce((acc, collection) => acc + collection.amount, 0);
+    const creditSalesTotal = monthlySummary?.creditSalesTotal
+      ?? monthlySales.filter((sale) => sale.paymentMethod === 'CREDIT').reduce((acc, sale) => acc + sale.total, 0);
+    const immediateCashSalesTotal = monthlySummary?.immediateCashSalesTotal
+      ?? (salesDocumentsTotal - creditSalesTotal);
+    const operatingResultAfterExpenses = monthlySummary?.operatingResultAfterExpenses
+      ?? (salesFinalProfitTotal - operationalExpensesTotal);
+    const cashInflowsTotal = monthlySummary?.cashInflowsTotal
+      ?? (immediateCashSalesTotal + collectionsTotal);
+    const cashOutflowsTotal = monthlySummary?.cashOutflowsTotal
+      ?? operationalExpensesTotal;
+    const consolidatedCashFlow = monthlySummary?.consolidatedCashFlow
+      ?? (cashInflowsTotal - cashOutflowsTotal);
 
     const rows = closedRegisters.map((register) => [
       register.id,
@@ -212,6 +322,7 @@ export default function CashRegisterPage() {
       register.status,
       register.salesCount,
       Math.round(register.totalSales),
+      Math.round(register.totalCardCommissions || 0),
       Math.round(register.expectedCash),
       register.actualCash ? Math.round(register.actualCash) : 0,
       register.difference ? Math.round(register.difference) : 0,
@@ -224,10 +335,29 @@ export default function CashRegisterPage() {
       ['Monto total ventas', Math.round(monthSummary.totalSales)],
       ['Diferencia acumulada', Math.round(monthSummary.totalDifference)],
       ['Documentos vendidos del mes', monthlySales.length],
-      ['Neto ventas del mes', Math.round(monthlySales.reduce((acc, sale) => acc + sale.subtotal, 0))],
-      ['IVA ventas del mes', Math.round(monthlySales.reduce((acc, sale) => acc + sale.taxAmount, 0))],
-      ['Descuento ventas del mes', Math.round(monthlySales.reduce((acc, sale) => acc + sale.discount, 0))],
-      ['Total documentos del mes', Math.round(monthlySales.reduce((acc, sale) => acc + sale.total, 0))],
+      ['Neto ventas del mes', Math.round(salesNetTotal)],
+      ['Costo ventas del mes', Math.round(salesCostTotal)],
+      ['IVA ventas del mes', Math.round(salesTaxTotal)],
+      ['Descuento ventas del mes', Math.round(salesDiscountTotal)],
+      ['Comisiones tarjetas del mes', Math.round(salesCommissionsTotal)],
+      ['Utilidad final de ventas del mes', Math.round(salesFinalProfitTotal)],
+      ['Ventas a crédito emitidas (no cobradas en caja)', Math.round(creditSalesTotal)],
+      ['Ventas cobradas en el acto (caja)', Math.round(immediateCashSalesTotal)],
+      ['Egresos operacionales del mes', Math.round(operationalExpensesTotal)],
+      ['Cobranza de cuentas (recuperación) del mes', Math.round(collectionsTotal)],
+      ['Resultado operativo tras egresos', Math.round(operatingResultAfterExpenses)],
+      ['Ingresos de caja del mes (ventas cobradas + cobranzas)', Math.round(cashInflowsTotal)],
+      ['Egresos de caja del mes', Math.round(cashOutflowsTotal)],
+      ['Flujo de caja neto del mes', Math.round(consolidatedCashFlow)],
+      [
+        'Margen final del mes %',
+        (() => {
+          return salesNetTotal > 0
+            ? Math.round((salesFinalProfitTotal / salesNetTotal) * 1000) / 10
+            : 0;
+        })(),
+      ],
+      ['Total documentos del mes', Math.round(salesDocumentsTotal)],
     ];
 
     const salesRows = monthlySales.map((sale) => [
@@ -236,10 +366,33 @@ export default function CashRegisterPage() {
       sale.customerName,
       sale.customerRut,
       getPaymentMethodLabel(sale.paymentMethod),
+      getCardTypeLabel(sale.cardType),
+      Math.round(sale.cardCommissionAmount),
       Math.round(sale.subtotal),
+      Math.round(sale.costOfSales),
+      Math.round(sale.finalProfit),
+      sale.finalMarginPercent,
       Math.round(sale.taxAmount),
       Math.round(sale.discount),
       Math.round(sale.total),
+    ]);
+
+    const expensesRows = monthlyOperationalExpenses.map((expense) => [
+      new Date(expense.expenseDate).toLocaleString('es-CL'),
+      expense.title,
+      expense.category,
+      getPaymentMethodLabel(expense.paymentMethod),
+      Math.round(expense.amount),
+      expense.cashRegisterId || 'Sin caja',
+    ]);
+
+    const collectionsRows = monthlyCollections.map((collection) => [
+      new Date(collection.paidAt).toLocaleString('es-CL'),
+      collection.customerName,
+      collection.customerRut,
+      getPaymentMethodLabel(collection.paymentMethod),
+      Math.round(collection.amount),
+      collection.creditId,
     ]);
 
     const csv = [
@@ -253,6 +406,14 @@ export default function CashRegisterPage() {
       [toCsvValue('Detalle de Ventas del Mes')].join(','),
       salesHeaders.map((value) => toCsvValue(value)).join(','),
       ...salesRows.map((row) => row.map((value) => toCsvValue(value)).join(',')),
+      '',
+      [toCsvValue('Detalle de Egresos Operacionales del Mes')].join(','),
+      expensesHeaders.map((value) => toCsvValue(value)).join(','),
+      ...expensesRows.map((row) => row.map((value) => toCsvValue(value)).join(',')),
+      '',
+      [toCsvValue('Detalle de Cobranzas / Recuperación de Cuentas')].join(','),
+      collectionsHeaders.map((value) => toCsvValue(value)).join(','),
+      ...collectionsRows.map((row) => row.map((value) => toCsvValue(value)).join(',')),
     ].join('\n');
 
     const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' });

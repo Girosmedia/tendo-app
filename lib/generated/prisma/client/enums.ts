@@ -107,6 +107,24 @@ export const PaymentMethod = {
 export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
 
 
+export const CardType = {
+  DEBIT: 'DEBIT',
+  CREDIT: 'CREDIT'
+} as const
+
+export type CardType = (typeof CardType)[keyof typeof CardType]
+
+
+export const CardProvider = {
+  TRANSBANK: 'TRANSBANK',
+  MERCADO_PAGO: 'MERCADO_PAGO',
+  GETNET: 'GETNET',
+  OTHER: 'OTHER'
+} as const
+
+export type CardProvider = (typeof CardProvider)[keyof typeof CardProvider]
+
+
 export const CashRegisterStatus = {
   OPEN: 'OPEN',
   CLOSED: 'CLOSED'

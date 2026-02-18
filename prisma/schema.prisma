@@ -288,6 +288,10 @@ model OrganizationSettings {
   currency String @default("CLP")
   locale   String @default("es-CL")
 
+  // Comisiones de tarjeta (MVP)
+  cardDebitCommissionRate  Decimal      @default(0) @db.Decimal(5, 2) @map("card_debit_commission_rate")
+  cardCreditCommissionRate Decimal      @default(0) @db.Decimal(5, 2) @map("card_credit_commission_rate")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -487,6 +491,18 @@ enum PaymentMethod {
   MULTI         // Pago mixto (varios métodos)
 }
 
+enum CardType {
+  DEBIT
+  CREDIT
+}
+
+enum CardProvider {
+  TRANSBANK
+  MERCADO_PAGO
+  GETNET
+  OTHER
+}
+
 enum CashRegisterStatus {
   OPEN          // Caja abierta (turno activo)
   CLOSED        // Caja cerrada (turno finalizado)
@@ -519,6 +535,10 @@ model Document {
   
   // Pago
   paymentMethod  PaymentMethod  @default(CASH) @map("payment_method")
+  cardType       CardType?      @map("card_type")
+  cardProvider   CardProvider?  @map("card_provider")
+  cardCommissionRate   Decimal? @db.Decimal(5, 2) @map("card_commission_rate")
+  cardCommissionAmount Decimal? @db.Decimal(10, 2) @map("card_commission_amount")
   
   // Montos (CLP, sin decimales en práctica pero Decimal para precisión)
   subtotal       Decimal        @db.Decimal(10, 2)
@@ -553,6 +573,8 @@ model Document {
   @@index([status])
   @@index([issuedAt])
   @@index([createdBy])
+  @@index([cardType])
+  @@index([cardProvider])
   @@map("documents")
 }
 

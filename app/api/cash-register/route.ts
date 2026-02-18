@@ -87,6 +87,26 @@ export async function GET(request: Request) {
         let salesCount = Number(register.salesCount);
         let totalSales = Number(register.totalSales);
         let expectedCash = Number(register.expectedCash);
+        let totalCardCommissions = 0;
+
+        const registerEndDate = register.closedAt || new Date();
+
+        const cardCommissionsData = await db.document.aggregate({
+          where: {
+            organizationId: organization.id,
+            createdBy: register.openedBy,
+            status: 'PAID',
+            paymentMethod: 'CARD',
+            issuedAt: {
+              gte: register.openedAt,
+              lte: registerEndDate,
+            },
+          },
+          _sum: {
+            cardCommissionAmount: true,
+          },
+        });
+        totalCardCommissions = Number(cardCommissionsData._sum.cardCommissionAmount || 0);
 
         // Si la caja está OPEN, calcular valores en tiempo real
         if (register.status === 'OPEN') {
@@ -195,6 +215,7 @@ export async function GET(request: Request) {
           salesCount,
           totalCashSales: register.totalCashSales || 0,
           totalCardSales: register.totalCardSales || 0,
+          totalCardCommissions,
           totalTransferSales: register.totalTransferSales || 0,
           totalMultiSales: register.totalMultiSales || 0,
         };

@@ -34,7 +34,14 @@ interface ReportData {
     customerName: string;
     customerRut: string;
     paymentMethod: string;
+    cardType: 'DEBIT' | 'CREDIT' | null;
+    cardProvider: 'TRANSBANK' | 'MERCADO_PAGO' | 'GETNET' | 'OTHER' | null;
+    cardCommissionRate: number;
+    cardCommissionAmount: number;
     subtotal: number;
+    costOfSales: number;
+    finalProfit: number;
+    finalMarginPercent: number;
     taxAmount: number;
     discount: number;
     total: number;
@@ -52,6 +59,10 @@ interface ReportData {
     subtotal: number;
     taxAmount: number;
     discount: number;
+    costOfSalesTotal: number;
+    cardCommissionTotal: number;
+    finalProfitTotal: number;
+    finalMarginPercent: number;
     total: number;
   };
   topProducts: Array<{
@@ -134,7 +145,14 @@ export function ReportViewer({ cashRegisterId, open, onOpenChange }: ReportViewe
       'Cliente',
       'RUT',
       'Método Pago',
+      'Tipo Tarjeta',
+      'Proveedor Tarjeta',
+      'Comisión %',
+      'Comisión Monto',
       'Neto',
+      'Costo Venta',
+      'Utilidad Final',
+      'Margen Final %',
       'IVA',
       'Descuento',
       'Total',
@@ -146,7 +164,14 @@ export function ReportViewer({ cashRegisterId, open, onOpenChange }: ReportViewe
       sale.customerName,
       sale.customerRut,
       sale.paymentMethod,
+      sale.cardType === 'DEBIT' ? 'Débito' : sale.cardType === 'CREDIT' ? 'Crédito' : '',
+      sale.cardProvider || '',
+      sale.cardCommissionRate ? sale.cardCommissionRate.toFixed(2) : '',
+      String(Math.round(sale.cardCommissionAmount || 0)),
       String(Math.round(sale.subtotal)),
+      String(Math.round(sale.costOfSales || 0)),
+      String(Math.round(sale.finalProfit || 0)),
+      String(sale.finalMarginPercent || 0),
       String(Math.round(sale.taxAmount)),
       String(Math.round(sale.discount)),
       String(Math.round(sale.total)),
@@ -166,6 +191,27 @@ export function ReportViewer({ cashRegisterId, open, onOpenChange }: ReportViewe
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
+
+  const cardTypeSummary = reportData?.sales.reduce(
+    (acc, sale) => {
+      if (sale.paymentMethod !== 'CARD' || !sale.cardType) {
+        return acc;
+      }
+
+      if (sale.cardType === 'DEBIT') {
+        acc.debitCount += 1;
+        acc.debitTotal += sale.total;
+      }
+
+      if (sale.cardType === 'CREDIT') {
+        acc.creditCount += 1;
+        acc.creditTotal += sale.total;
+      }
+
+      return acc;
+    },
+    { debitCount: 0, debitTotal: 0, creditCount: 0, creditTotal: 0 }
+  );
 
   const isClosedCashRegister = reportData?.cashRegister.status === 'CLOSED';
 
@@ -272,6 +318,26 @@ export function ReportViewer({ cashRegisterId, open, onOpenChange }: ReportViewe
                   <span className="text-muted-foreground">Descuento Global:</span>
                   <span className="font-medium">-{formatCurrency(reportData.taxSummary.discount)}</span>
                 </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Comisiones Tarjeta:</span>
+                  <span className="font-medium">-{formatCurrency(reportData.taxSummary.cardCommissionTotal || 0)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Costo de Venta:</span>
+                  <span className="font-medium">-{formatCurrency(reportData.taxSummary.costOfSalesTotal || 0)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Utilidad Final:</span>
+                  <span className={`font-medium ${(reportData.taxSummary.finalProfitTotal || 0) >= 0 ? 'text-success' : 'text-destructive'}`}>
+                    {formatCurrency(reportData.taxSummary.finalProfitTotal || 0)}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Margen Final %:</span>
+                  <span className={`font-medium ${(reportData.taxSummary.finalMarginPercent || 0) >= 0 ? 'text-success' : 'text-destructive'}`}>
+                    {(reportData.taxSummary.finalMarginPercent || 0).toFixed(1)}%
+                  </span>
+                </div>
                 <div className="flex justify-between pt-2 border-t">
                   <span className="font-semibold">Total Final:</span>
                   <span className="font-bold">{formatCurrency(reportData.taxSummary.total)}</span>
@@ -294,6 +360,28 @@ export function ReportViewer({ cashRegisterId, open, onOpenChange }: ReportViewe
                   </div>
                 ))}
               </div>
+
+              {cardTypeSummary && (cardTypeSummary.debitCount > 0 || cardTypeSummary.creditCount > 0) && (
+                <div className="mt-4 pt-3 border-t space-y-2 text-sm">
+                  <p className="font-medium">Desglose Tarjetas por Tipo</p>
+                  {cardTypeSummary.debitCount > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Débito:</span>
+                      <span className="font-medium">
+                        {cardTypeSummary.debitCount} ventas - {formatCurrency(cardTypeSummary.debitTotal)}
+                      </span>
+                    </div>
+                  )}
+                  {cardTypeSummary.creditCount > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Crédito:</span>
+                      <span className="font-medium">
+                        {cardTypeSummary.creditCount} ventas - {formatCurrency(cardTypeSummary.creditTotal)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Productos Más Vendidos */}
@@ -333,10 +421,22 @@ export function ReportViewer({ cashRegisterId, open, onOpenChange }: ReportViewe
                         </div>
                         <div className="mt-1 grid grid-cols-2 md:grid-cols-4 gap-2">
                           <span className="text-muted-foreground">Neto: {formatCurrency(sale.subtotal)}</span>
+                          <span className="text-muted-foreground">Costo: {formatCurrency(sale.costOfSales || 0)}</span>
+                          <span className="text-muted-foreground">Utilidad: {formatCurrency(sale.finalProfit || 0)}</span>
+                          <span className="text-muted-foreground">Margen: {(sale.finalMarginPercent || 0).toFixed(1)}%</span>
+                        </div>
+                        <div className="mt-1 grid grid-cols-2 md:grid-cols-4 gap-2">
                           <span className="text-muted-foreground">IVA: {formatCurrency(sale.taxAmount)}</span>
                           <span className="text-muted-foreground">Desc: -{formatCurrency(sale.discount)}</span>
                           <span className="font-semibold">Total: {formatCurrency(sale.total)}</span>
                         </div>
+                        {sale.paymentMethod === 'CARD' && (
+                          <div className="mt-1 grid grid-cols-1 md:grid-cols-3 gap-2 text-muted-foreground">
+                            <span>Tipo: {sale.cardType === 'DEBIT' ? 'Débito' : sale.cardType === 'CREDIT' ? 'Crédito' : '—'}</span>
+                            <span>Proveedor: {sale.cardProvider || '—'}</span>
+                            <span>Comisión: -{formatCurrency(sale.cardCommissionAmount || 0)}</span>
+                          </div>
+                        )}
                       </div>
                     ))}
                 </div>

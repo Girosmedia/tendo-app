@@ -2476,6 +2476,8 @@ export const OrganizationSettingsScalarFieldEnum = {
   timezone: 'timezone',
   currency: 'currency',
   locale: 'locale',
+  cardDebitCommissionRate: 'cardDebitCommissionRate',
+  cardCreditCommissionRate: 'cardCreditCommissionRate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2586,6 +2588,10 @@ export const DocumentScalarFieldEnum = {
   dueAt: 'dueAt',
   paidAt: 'paidAt',
   paymentMethod: 'paymentMethod',
+  cardType: 'cardType',
+  cardProvider: 'cardProvider',
+  cardCommissionRate: 'cardCommissionRate',
+  cardCommissionAmount: 'cardCommissionAmount',
   subtotal: 'subtotal',
   taxRate: 'taxRate',
   taxAmount: 'taxAmount',
@@ -3039,6 +3045,34 @@ export type EnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'PaymentMethod[]'
  */
 export type ListEnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethod[]'>
+    
+
+
+/**
+ * Reference to a field of type 'CardType'
+ */
+export type EnumCardTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CardType'>
+    
+
+
+/**
+ * Reference to a field of type 'CardType[]'
+ */
+export type ListEnumCardTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CardType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'CardProvider'
+ */
+export type EnumCardProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CardProvider'>
+    
+
+
+/**
+ * Reference to a field of type 'CardProvider[]'
+ */
+export type ListEnumCardProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CardProvider[]'>
     
 
 

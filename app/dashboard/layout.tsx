@@ -37,8 +37,15 @@ export default async function DashboardLayout({
     select: { 
       name: true,
       logoUrl: true,
+      settings: {
+        select: {
+          logoUrl: true,
+        },
+      },
     },
   });
+
+  const organizationLogo = organization?.settings?.logoUrl || organization?.logoUrl || null;
 
   return (
     <SidebarProvider>
@@ -49,7 +56,7 @@ export default async function DashboardLayout({
         <AppSidebar 
           user={session.user} 
           organizationName={organization?.name}
-          organizationLogo={organization?.logoUrl}
+          organizationLogo={organizationLogo}
         />
         <main className="flex-1">
           <div className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

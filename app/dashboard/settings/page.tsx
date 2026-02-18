@@ -70,6 +70,8 @@ export default async function SettingsPage() {
     timezone: settings.timezone,
     currency: settings.currency,
     locale: settings.locale,
+    cardDebitCommissionRate: Number(settings.cardDebitCommissionRate),
+    cardCreditCommissionRate: Number(settings.cardCreditCommissionRate),
   } : undefined;
 
   return (

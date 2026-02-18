@@ -47,6 +47,7 @@ interface RealResultTrendItem {
   netSales: number;
   costOfSales: number;
   operationalExpenses: number;
+  cardCommissions: number;
   totalCost: number;
   realProfit: number;
   realMarginPercent: number;

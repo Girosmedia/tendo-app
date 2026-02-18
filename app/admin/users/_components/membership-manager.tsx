@@ -3,17 +3,16 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { Plus, Trash2, Edit } from 'lucide-react'
+import { Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
 import {
   Select,
   SelectContent,
@@ -143,20 +142,18 @@ export function MembershipManager({ userId, organizations }: MembershipManagerPr
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <Label>Organizaciones</Label>
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm" variant="outline">
-              <Plus className="h-4 w-4 mr-1" />
-              Agregar
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Agregar a Organización</DialogTitle>
-              <DialogDescription>
+        <Button size="sm" variant="outline" onClick={() => setIsAddDialogOpen(true)}>
+          <Plus className="h-4 w-4 mr-1" />
+          Agregar
+        </Button>
+        <ResponsiveDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+          <ResponsiveDialogContent>
+            <ResponsiveDialogHeader>
+              <ResponsiveDialogTitle>Agregar a Organización</ResponsiveDialogTitle>
+              <ResponsiveDialogDescription>
                 Asigna al usuario a una organización existente
-              </DialogDescription>
-            </DialogHeader>
+              </ResponsiveDialogDescription>
+            </ResponsiveDialogHeader>
 
             <div className="space-y-4 py-4">
               <div className="space-y-2">
@@ -196,7 +193,7 @@ export function MembershipManager({ userId, organizations }: MembershipManagerPr
               </div>
             </div>
 
-            <div className="flex justify-end gap-2">
+            <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
               <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
                 Cancelar
               </Button>
@@ -204,8 +201,8 @@ export function MembershipManager({ userId, organizations }: MembershipManagerPr
                 {isLoading ? 'Agregando...' : 'Agregar'}
               </Button>
             </div>
-          </DialogContent>
-        </Dialog>
+          </ResponsiveDialogContent>
+        </ResponsiveDialog>
       </div>
 
       <div className="rounded-lg border bg-muted/50 p-4 space-y-2">

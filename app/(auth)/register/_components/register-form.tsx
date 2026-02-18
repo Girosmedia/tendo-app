@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { registerSchema, type RegisterInput } from '@/lib/validators/auth';
 import { Button } from '@/components/ui/button';
@@ -28,8 +28,10 @@ import {
 
 export function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
+  const invitationToken = searchParams.get('invitationToken') || undefined;
 
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
@@ -54,6 +56,7 @@ export function RegisterForm() {
           name: data.name,
           email: data.email,
           password: data.password,
+          invitationToken,
         }),
       });
 
@@ -83,8 +86,8 @@ export function RegisterForm() {
         return;
       }
 
-      // 3. Redirigir al onboarding
-      router.push('/onboarding');
+      // 3. Redirigir según contexto
+      router.push(invitationToken ? '/dashboard' : '/onboarding');
       router.refresh();
     } catch (err) {
       console.error('Error en registro:', err);
@@ -99,7 +102,9 @@ export function RegisterForm() {
       <CardHeader>
         <CardTitle className="text-2xl">Crear Cuenta</CardTitle>
         <CardDescription>
-          Registra tu cuenta para comenzar a usar Tendo
+          {invitationToken
+            ? 'Completa tus datos para unirte a tu organización en Tendo'
+            : 'Registra tu cuenta para comenzar a usar Tendo'}
         </CardDescription>
       </CardHeader>
       <CardContent>

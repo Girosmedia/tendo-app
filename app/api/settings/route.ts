@@ -5,6 +5,8 @@ import { z } from 'zod';
 import { getCurrentOrganization, isAdmin } from '@/lib/organization';
 import { logAuditAction, AUDIT_ACTIONS } from '@/lib/audit';
 
+const commissionRateSchema = z.number().min(0, 'La tasa no puede ser negativa').max(100, 'La tasa no puede superar 100%');
+
 const updateSettingsSchema = z.object({
   businessName: z.string().min(1, 'El nombre comercial es requerido').optional(),
   tradeName: z.string().optional().nullable(),
@@ -26,6 +28,9 @@ const updateSettingsSchema = z.object({
   timezone: z.string().optional(),
   currency: z.string().optional(),
   locale: z.string().optional(),
+
+  cardDebitCommissionRate: commissionRateSchema.optional(),
+  cardCreditCommissionRate: commissionRateSchema.optional(),
 });
 
 export async function GET() {

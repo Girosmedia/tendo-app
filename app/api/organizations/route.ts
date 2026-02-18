@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { createOrganizationSchema } from '@/lib/validators/auth';
 import { generateUniqueSlug } from '@/lib/utils/slugify';
 import { cleanRUT } from '@/lib/utils/rut-validator';
+import { sendOrganizationCreatedEmail } from '@/lib/email';
 
 export async function POST(request: Request) {
   try {
@@ -101,6 +102,18 @@ export async function POST(request: Request) {
 
       return organization;
     });
+
+    if (session.user.email) {
+      try {
+        await sendOrganizationCreatedEmail({
+          toEmail: session.user.email,
+          name: session.user.name,
+          organizationName: result.name,
+        });
+      } catch (emailError) {
+        console.error('Error enviando email de organización creada:', emailError);
+      }
+    }
 
     return NextResponse.json(
       {

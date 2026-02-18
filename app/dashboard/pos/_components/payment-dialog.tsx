@@ -38,6 +38,8 @@ interface PaymentDialogProps {
 }
 
 type PaymentMethod = 'CASH' | 'CARD' | 'TRANSFER' | 'CHECK' | 'CREDIT' | 'MULTI';
+type CardType = 'DEBIT' | 'CREDIT';
+type CardProvider = 'TRANSBANK' | 'MERCADO_PAGO' | 'GETNET' | 'OTHER';
 
 const paymentMethods = [
   { value: 'CASH' as const, label: 'Efectivo', icon: Banknote },
@@ -67,6 +69,8 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
   const [isLoadingCustomers, setIsLoadingCustomers] = useState(false);
   const [globalDiscount, setGlobalDiscount] = useState(0);
   const [globalDiscountType, setGlobalDiscountType] = useState<'amount' | 'percent'>('percent');
+  const [cardType, setCardType] = useState<CardType | ''>('');
+  const [cardProvider, setCardProvider] = useState<CardProvider | ''>('TRANSBANK');
 
   const items = usePosStore((state) => state.items);
   const getTotals = usePosStore((state) => state.getTotals);
@@ -113,9 +117,17 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
         setIsLoadingCustomers(false);
       }
     };
-    
+
     fetchCustomers();
   }, [isOpen]);
+
+  useEffect(() => {
+    if (selectedMethod !== 'CARD') {
+      setCardType('');
+      setCardProvider('TRANSBANK');
+      return;
+    }
+  }, [selectedMethod]);
 
   // Calcular vuelto en tiempo real
   const cashChange = cashReceived
@@ -125,7 +137,8 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
   const canConfirm =
     selectedMethod &&
     (selectedMethod !== 'CASH' || parseFloat(cashReceived || '0') >= paymentTotal) &&
-    (selectedMethod !== 'CREDIT' || (selectedCustomerId && !isCreditExceeded()));
+    (selectedMethod !== 'CREDIT' || (selectedCustomerId && !isCreditExceeded())) &&
+    (selectedMethod !== 'CARD' || (cardType && cardProvider));
 
   // Verificar si se excede el límite de crédito
   function isCreditExceeded() {
@@ -152,6 +165,8 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
         type: 'SALE',
         status: 'PAID',
         paymentMethod: selectedMethod,
+        cardType: selectedMethod === 'CARD' ? cardType : undefined,
+        cardProvider: selectedMethod === 'CARD' ? cardProvider : undefined,
         customerId: selectedCustomerId || undefined,
         cashReceived: selectedMethod === 'CASH' ? parseFloat(cashReceived) : undefined,
         discount: discountAmount, // Descuento global sobre el total
@@ -215,6 +230,8 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
     setSelectedCustomerId('');
     setGlobalDiscount(0);
     setGlobalDiscountType('percent');
+    setCardType('');
+    setCardProvider('TRANSBANK');
     setShowSuccess(false);
     setSaleNumber(null);
     onSuccess();
@@ -228,6 +245,8 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
       setSelectedCustomerId('');
       setGlobalDiscount(0);
       setGlobalDiscountType('percent');
+      setCardType('');
+      setCardProvider('TRANSBANK');
       setShowSuccess(false);
       setSaleNumber(null);
       // Llamar a onSuccess para limpiar carrito y refrescar productos
@@ -435,6 +454,40 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
                   </span>
                 </div>
               )}
+            </div>
+          )}
+
+          {selectedMethod === 'CARD' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="cardType">Tipo de Tarjeta</Label>
+                <select
+                  id="cardType"
+                  className="flex h-12 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  value={cardType}
+                  onChange={(e) => setCardType(e.target.value as CardType)}
+                >
+                  <option value="">Seleccionar tipo</option>
+                  <option value="DEBIT">Débito</option>
+                  <option value="CREDIT">Crédito</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="cardProvider">Proveedor de Canal</Label>
+                <select
+                  id="cardProvider"
+                  className="flex h-12 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  value={cardProvider}
+                  onChange={(e) => setCardProvider(e.target.value as CardProvider)}
+                >
+                  <option value="">Seleccionar proveedor</option>
+                  <option value="TRANSBANK">Transbank</option>
+                  <option value="MERCADO_PAGO">Mercado Pago</option>
+                  <option value="GETNET">Getnet</option>
+                  <option value="OTHER">Otro</option>
+                </select>
+              </div>
             </div>
           )}
 

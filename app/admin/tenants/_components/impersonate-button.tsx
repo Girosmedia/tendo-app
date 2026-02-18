@@ -5,13 +5,21 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { UserCog } from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 
 interface ImpersonateButtonProps {
   organizationId: string
   organizationName: string
+  compact?: boolean
+  className?: string
 }
 
-export function ImpersonateButton({ organizationId, organizationName }: ImpersonateButtonProps) {
+export function ImpersonateButton({
+  organizationId,
+  organizationName,
+  compact = false,
+  className,
+}: ImpersonateButtonProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -47,13 +55,14 @@ export function ImpersonateButton({ organizationId, organizationName }: Imperson
   return (
     <Button
       variant="outline"
-      size="sm"
+      size={compact ? 'icon' : 'sm'}
       onClick={handleImpersonate}
       disabled={isLoading}
-      className="gap-2"
+      className={cn(compact ? 'h-8 w-8' : 'gap-2', className)}
+      title={`Acceder a ${organizationName} como admin`}
     >
       <UserCog className="h-4 w-4" />
-      {isLoading ? 'Accediendo...' : 'Acceder como Admin'}
+      {compact ? <span className="sr-only">Acceder como Admin</span> : (isLoading ? 'Accediendo...' : 'Acceder como Admin')}
     </Button>
   )
 }

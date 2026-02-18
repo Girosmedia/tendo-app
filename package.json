@@ -7,6 +7,8 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
+    "smoke:api": "tsx scripts/smoke-api.ts",
+    "smoke:security": "tsx scripts/smoke-security.ts",
     "seed": "tsx prisma/seed.ts",
     "postinstall": "prisma generate"
   },

@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { Building2, MapPin, Phone, FileText, Save } from 'lucide-react';
+import { Building2, MapPin, Phone, FileText, Save, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -63,6 +63,10 @@ const settingsSchema = z.object({
   timezone: z.string().min(1),
   currency: z.string().min(1),
   locale: z.string().min(1),
+
+  // Comisiones tarjeta
+  cardDebitCommissionRate: z.number().min(0).max(100),
+  cardCreditCommissionRate: z.number().min(0).max(100),
 });
 
 type SettingsFormValues = z.infer<typeof settingsSchema>;
@@ -121,6 +125,8 @@ export function SettingsForm({ initialData }: SettingsFormProps) {
       timezone: initialData?.timezone ?? 'America/Santiago',
       currency: initialData?.currency ?? 'CLP',
       locale: initialData?.locale ?? 'es-CL',
+      cardDebitCommissionRate: initialData?.cardDebitCommissionRate ?? 0,
+      cardCreditCommissionRate: initialData?.cardCreditCommissionRate ?? 0,
     },
   });
 
@@ -467,6 +473,52 @@ export function SettingsForm({ initialData }: SettingsFormProps) {
                   </FormItem>
                 )}
               />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Comisiones de Tarjeta */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <CreditCard className="h-5 w-5 text-primary" />
+              <CardTitle>Comisiones de Tarjeta</CardTitle>
+            </div>
+            <CardDescription>
+              Configura proveedor y tasas para débito/crédito por canal
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              {[
+                ['cardDebitCommissionRate', 'Comisión débito (%)'],
+                ['cardCreditCommissionRate', 'Comisión crédito (%)'],
+              ].map(([name, label]) => (
+                <FormField
+                  key={name}
+                  control={form.control}
+                  name={name as keyof SettingsFormValues}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{label}</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min={0}
+                          max={100}
+                          step="0.01"
+                          value={typeof field.value === 'number' ? field.value : 0}
+                          onChange={(e) => {
+                            const raw = e.target.value;
+                            field.onChange(raw === '' ? 0 : Number(raw));
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ))}
             </div>
           </CardContent>
         </Card>

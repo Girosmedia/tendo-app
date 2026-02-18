@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
+import { Prisma } from '@/lib/generated/prisma/client/client';
 import { getCurrentOrganization } from '@/lib/organization';
 import {
   getStartOfToday,
@@ -131,7 +132,7 @@ export async function GET() {
     const salesGrowthVsLastMonth = calculateGrowth(salesThisMonthTotal, salesLastMonthTotal);
 
     // === COSTO DE VENTA Y MARGEN (hoy/mes) ===
-    const [salesTodayItems, salesThisMonthItems] = await Promise.all([
+    const [salesTodayItems, salesThisMonthItems, cardCommissionsTodayData, cardCommissionsThisMonthData] = await Promise.all([
       db.documentItem.findMany({
         where: {
           document: {
@@ -171,7 +172,29 @@ export async function GET() {
           },
         },
       }),
+      db.$queryRaw<Array<{ total: Prisma.Decimal | number | null }>>(Prisma.sql`
+        SELECT COALESCE(SUM(card_commission_amount), 0) AS total
+        FROM documents
+        WHERE organization_id = ${organizationId}
+          AND type = 'SALE'
+          AND status = 'PAID'
+          AND payment_method = 'CARD'
+          AND issued_at >= ${startToday}
+      `),
+      db.$queryRaw<Array<{ total: Prisma.Decimal | number | null }>>(Prisma.sql`
+        SELECT COALESCE(SUM(card_commission_amount), 0) AS total
+        FROM documents
+        WHERE organization_id = ${organizationId}
+          AND type = 'SALE'
+          AND status = 'PAID'
+          AND payment_method = 'CARD'
+          AND issued_at >= ${startThisMonth}
+          AND issued_at <= ${endThisMonth}
+      `),
     ]);
+
+    const cardCommissionsToday = Math.round(decimalToNumber(cardCommissionsTodayData[0]?.total));
+    const cardCommissionsThisMonth = Math.round(decimalToNumber(cardCommissionsThisMonthData[0]?.total));
 
     const salesTodayItemsWithCost = salesTodayItems.filter((item) => item.product?.cost !== null);
     const salesTodayItemsWithoutCost = salesTodayItems.length - salesTodayItemsWithCost.length;
@@ -241,8 +264,12 @@ export async function GET() {
     );
     const operationalExpensesThisMonthCount = operationalExpensesThisMonthData._count;
 
-    const realProfitToday = grossProfitToday - operationalExpensesToday;
-    const realProfitThisMonth = grossProfitThisMonth - operationalExpensesThisMonth;
+    const realProfitToday = grossProfitToday - operationalExpensesToday - cardCommissionsToday;
+    const realProfitThisMonth = grossProfitThisMonth - operationalExpensesThisMonth - cardCommissionsThisMonth;
+    const realMarginTodayPercent = salesTodayNet > 0 ? (realProfitToday / salesTodayNet) * 100 : 0;
+    const realMarginThisMonthPercent = salesThisMonthNet > 0
+      ? (realProfitThisMonth / salesThisMonthNet) * 100
+      : 0;
 
     // === CLIENTES ===
     const totalCustomers = await db.customer.count({
@@ -734,7 +761,7 @@ export async function GET() {
     });
 
     // === RESULTADO REAL (7 DÍAS) ===
-    const [salesDocsLast7Days, salesItemsLast7Days, operationalExpensesLast7Days] = await Promise.all([
+    const [salesDocsLast7Days, salesItemsLast7Days, operationalExpensesLast7Days, cardCommissionsLast7DaysData] = await Promise.all([
       db.document.findMany({
         where: {
           organizationId,
@@ -780,6 +807,16 @@ export async function GET() {
           amount: true,
         },
       }),
+      db.$queryRaw<Array<{ date: Date; total: Prisma.Decimal | number | null }>>(Prisma.sql`
+        SELECT DATE(issued_at) AS date, COALESCE(SUM(card_commission_amount), 0) AS total
+        FROM documents
+        WHERE organization_id = ${organizationId}
+          AND type = 'SALE'
+          AND status = 'PAID'
+          AND payment_method = 'CARD'
+          AND issued_at >= ${last7Days}
+        GROUP BY DATE(issued_at)
+      `),
     ]);
 
     const netSalesByDay: Record<string, number> = {};
@@ -803,12 +840,19 @@ export async function GET() {
         (operationalExpensesByDay[dateKey] || 0) + decimalToNumber(expense.amount);
     }
 
+    const cardCommissionsByDay: Record<string, number> = {};
+    for (const row of cardCommissionsLast7DaysData) {
+      const dateKey = row.date.toISOString().split('T')[0];
+      cardCommissionsByDay[dateKey] = decimalToNumber(row.total);
+    }
+
     const realResultChartData = last7DaysArray.map((date) => {
       const dateKey = date.toISOString().split('T')[0];
       const netSales = Math.round(netSalesByDay[dateKey] || 0);
       const costOfSales = Math.round(costByDay[dateKey] || 0);
       const operationalExpenses = Math.round(operationalExpensesByDay[dateKey] || 0);
-      const totalCost = costOfSales + operationalExpenses;
+      const cardCommissions = Math.round(cardCommissionsByDay[dateKey] || 0);
+      const totalCost = costOfSales + operationalExpenses + cardCommissions;
       const realProfit = netSales - totalCost;
       const realMarginPercent = netSales > 0 ? (realProfit / netSales) * 100 : 0;
 
@@ -817,6 +861,7 @@ export async function GET() {
         netSales,
         costOfSales,
         operationalExpenses,
+        cardCommissions,
         totalCost,
         realProfit,
         realMarginPercent: Math.round(realMarginPercent * 10) / 10,
@@ -872,9 +917,11 @@ export async function GET() {
           costOfSales: costOfSalesToday,
           grossProfit: grossProfitToday,
           operationalExpenses: operationalExpensesToday,
+          cardCommissions: cardCommissionsToday,
           operationalExpensesCount: operationalExpensesTodayCount,
           realProfit: realProfitToday,
           grossMarginPercent: Math.round(grossMarginTodayPercent * 10) / 10,
+          realMarginPercent: Math.round(realMarginTodayPercent * 10) / 10,
           itemsWithoutCost: salesTodayItemsWithoutCost,
           costCoveragePercent: salesTodayItems.length > 0
             ? Math.round((salesTodayItemsWithCost.length / salesTodayItems.length) * 1000) / 10
@@ -889,9 +936,11 @@ export async function GET() {
           costOfSales: costOfSalesThisMonth,
           grossProfit: grossProfitThisMonth,
           operationalExpenses: operationalExpensesThisMonth,
+          cardCommissions: cardCommissionsThisMonth,
           operationalExpensesCount: operationalExpensesThisMonthCount,
           realProfit: realProfitThisMonth,
           grossMarginPercent: Math.round(grossMarginThisMonthPercent * 10) / 10,
+          realMarginPercent: Math.round(realMarginThisMonthPercent * 10) / 10,
           itemsWithoutCost: salesThisMonthItemsWithoutCost,
           costCoveragePercent: salesThisMonthItems.length > 0
             ? Math.round((salesThisMonthItemsWithCost.length / salesThisMonthItems.length) * 1000) / 10
@@ -939,6 +988,7 @@ export async function GET() {
         inventoryValueAtCost,
         creditExposurePercent: Math.round(creditExposurePercent * 10) / 10,
         operationalExpensesThisMonth,
+        cardCommissionsThisMonth,
         realProfitThisMonth,
         actionItems: zimpleActionItems,
       },

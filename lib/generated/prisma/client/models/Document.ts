@@ -28,6 +28,8 @@ export type AggregateDocument = {
 
 export type DocumentAvgAggregateOutputType = {
   docNumber: number | null
+  cardCommissionRate: runtime.Decimal | null
+  cardCommissionAmount: runtime.Decimal | null
   subtotal: runtime.Decimal | null
   taxRate: runtime.Decimal | null
   taxAmount: runtime.Decimal | null
@@ -39,6 +41,8 @@ export type DocumentAvgAggregateOutputType = {
 
 export type DocumentSumAggregateOutputType = {
   docNumber: number | null
+  cardCommissionRate: runtime.Decimal | null
+  cardCommissionAmount: runtime.Decimal | null
   subtotal: runtime.Decimal | null
   taxRate: runtime.Decimal | null
   taxAmount: runtime.Decimal | null
@@ -60,6 +64,10 @@ export type DocumentMinAggregateOutputType = {
   dueAt: Date | null
   paidAt: Date | null
   paymentMethod: $Enums.PaymentMethod | null
+  cardType: $Enums.CardType | null
+  cardProvider: $Enums.CardProvider | null
+  cardCommissionRate: runtime.Decimal | null
+  cardCommissionAmount: runtime.Decimal | null
   subtotal: runtime.Decimal | null
   taxRate: runtime.Decimal | null
   taxAmount: runtime.Decimal | null
@@ -85,6 +93,10 @@ export type DocumentMaxAggregateOutputType = {
   dueAt: Date | null
   paidAt: Date | null
   paymentMethod: $Enums.PaymentMethod | null
+  cardType: $Enums.CardType | null
+  cardProvider: $Enums.CardProvider | null
+  cardCommissionRate: runtime.Decimal | null
+  cardCommissionAmount: runtime.Decimal | null
   subtotal: runtime.Decimal | null
   taxRate: runtime.Decimal | null
   taxAmount: runtime.Decimal | null
@@ -110,6 +122,10 @@ export type DocumentCountAggregateOutputType = {
   dueAt: number
   paidAt: number
   paymentMethod: number
+  cardType: number
+  cardProvider: number
+  cardCommissionRate: number
+  cardCommissionAmount: number
   subtotal: number
   taxRate: number
   taxAmount: number
@@ -127,6 +143,8 @@ export type DocumentCountAggregateOutputType = {
 
 export type DocumentAvgAggregateInputType = {
   docNumber?: true
+  cardCommissionRate?: true
+  cardCommissionAmount?: true
   subtotal?: true
   taxRate?: true
   taxAmount?: true
@@ -138,6 +156,8 @@ export type DocumentAvgAggregateInputType = {
 
 export type DocumentSumAggregateInputType = {
   docNumber?: true
+  cardCommissionRate?: true
+  cardCommissionAmount?: true
   subtotal?: true
   taxRate?: true
   taxAmount?: true
@@ -159,6 +179,10 @@ export type DocumentMinAggregateInputType = {
   dueAt?: true
   paidAt?: true
   paymentMethod?: true
+  cardType?: true
+  cardProvider?: true
+  cardCommissionRate?: true
+  cardCommissionAmount?: true
   subtotal?: true
   taxRate?: true
   taxAmount?: true
@@ -184,6 +208,10 @@ export type DocumentMaxAggregateInputType = {
   dueAt?: true
   paidAt?: true
   paymentMethod?: true
+  cardType?: true
+  cardProvider?: true
+  cardCommissionRate?: true
+  cardCommissionAmount?: true
   subtotal?: true
   taxRate?: true
   taxAmount?: true
@@ -209,6 +237,10 @@ export type DocumentCountAggregateInputType = {
   dueAt?: true
   paidAt?: true
   paymentMethod?: true
+  cardType?: true
+  cardProvider?: true
+  cardCommissionRate?: true
+  cardCommissionAmount?: true
   subtotal?: true
   taxRate?: true
   taxAmount?: true
@@ -321,6 +353,10 @@ export type DocumentGroupByOutputType = {
   dueAt: Date | null
   paidAt: Date | null
   paymentMethod: $Enums.PaymentMethod
+  cardType: $Enums.CardType | null
+  cardProvider: $Enums.CardProvider | null
+  cardCommissionRate: runtime.Decimal | null
+  cardCommissionAmount: runtime.Decimal | null
   subtotal: runtime.Decimal
   taxRate: runtime.Decimal
   taxAmount: runtime.Decimal
@@ -369,6 +405,10 @@ export type DocumentWhereInput = {
   dueAt?: Prisma.DateTimeNullableFilter<"Document"> | Date | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"Document"> | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFilter<"Document"> | $Enums.PaymentMethod
+  cardType?: Prisma.EnumCardTypeNullableFilter<"Document"> | $Enums.CardType | null
+  cardProvider?: Prisma.EnumCardProviderNullableFilter<"Document"> | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.DecimalNullableFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.DecimalNullableFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -399,6 +439,10 @@ export type DocumentOrderByWithRelationInput = {
   dueAt?: Prisma.SortOrderInput | Prisma.SortOrder
   paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
+  cardType?: Prisma.SortOrderInput | Prisma.SortOrder
+  cardProvider?: Prisma.SortOrderInput | Prisma.SortOrder
+  cardCommissionRate?: Prisma.SortOrderInput | Prisma.SortOrder
+  cardCommissionAmount?: Prisma.SortOrderInput | Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
   taxAmount?: Prisma.SortOrder
@@ -433,6 +477,10 @@ export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   dueAt?: Prisma.DateTimeNullableFilter<"Document"> | Date | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"Document"> | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFilter<"Document"> | $Enums.PaymentMethod
+  cardType?: Prisma.EnumCardTypeNullableFilter<"Document"> | $Enums.CardType | null
+  cardProvider?: Prisma.EnumCardProviderNullableFilter<"Document"> | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.DecimalNullableFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.DecimalNullableFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -463,6 +511,10 @@ export type DocumentOrderByWithAggregationInput = {
   dueAt?: Prisma.SortOrderInput | Prisma.SortOrder
   paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
+  cardType?: Prisma.SortOrderInput | Prisma.SortOrder
+  cardProvider?: Prisma.SortOrderInput | Prisma.SortOrder
+  cardCommissionRate?: Prisma.SortOrderInput | Prisma.SortOrder
+  cardCommissionAmount?: Prisma.SortOrderInput | Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
   taxAmount?: Prisma.SortOrder
@@ -496,6 +548,10 @@ export type DocumentScalarWhereWithAggregatesInput = {
   dueAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Document"> | Date | string | null
   paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Document"> | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodWithAggregatesFilter<"Document"> | $Enums.PaymentMethod
+  cardType?: Prisma.EnumCardTypeNullableWithAggregatesFilter<"Document"> | $Enums.CardType | null
+  cardProvider?: Prisma.EnumCardProviderNullableWithAggregatesFilter<"Document"> | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.DecimalNullableWithAggregatesFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.DecimalNullableWithAggregatesFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalWithAggregatesFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalWithAggregatesFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalWithAggregatesFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -519,6 +575,10 @@ export type DocumentCreateInput = {
   dueAt?: Date | string | null
   paidAt?: Date | string | null
   paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -549,6 +609,10 @@ export type DocumentUncheckedCreateInput = {
   dueAt?: Date | string | null
   paidAt?: Date | string | null
   paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -575,6 +639,10 @@ export type DocumentUpdateInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -605,6 +673,10 @@ export type DocumentUncheckedUpdateInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -633,6 +705,10 @@ export type DocumentCreateManyInput = {
   dueAt?: Date | string | null
   paidAt?: Date | string | null
   paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -656,6 +732,10 @@ export type DocumentUpdateManyMutationInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -681,6 +761,10 @@ export type DocumentUncheckedUpdateManyInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -722,6 +806,10 @@ export type DocumentCountOrderByAggregateInput = {
   dueAt?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
+  cardType?: Prisma.SortOrder
+  cardProvider?: Prisma.SortOrder
+  cardCommissionRate?: Prisma.SortOrder
+  cardCommissionAmount?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
   taxAmount?: Prisma.SortOrder
@@ -737,6 +825,8 @@ export type DocumentCountOrderByAggregateInput = {
 
 export type DocumentAvgOrderByAggregateInput = {
   docNumber?: Prisma.SortOrder
+  cardCommissionRate?: Prisma.SortOrder
+  cardCommissionAmount?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
   taxAmount?: Prisma.SortOrder
@@ -758,6 +848,10 @@ export type DocumentMaxOrderByAggregateInput = {
   dueAt?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
+  cardType?: Prisma.SortOrder
+  cardProvider?: Prisma.SortOrder
+  cardCommissionRate?: Prisma.SortOrder
+  cardCommissionAmount?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
   taxAmount?: Prisma.SortOrder
@@ -783,6 +877,10 @@ export type DocumentMinOrderByAggregateInput = {
   dueAt?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
+  cardType?: Prisma.SortOrder
+  cardProvider?: Prisma.SortOrder
+  cardCommissionRate?: Prisma.SortOrder
+  cardCommissionAmount?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
   taxAmount?: Prisma.SortOrder
@@ -798,6 +896,8 @@ export type DocumentMinOrderByAggregateInput = {
 
 export type DocumentSumOrderByAggregateInput = {
   docNumber?: Prisma.SortOrder
+  cardCommissionRate?: Prisma.SortOrder
+  cardCommissionAmount?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
   taxAmount?: Prisma.SortOrder
@@ -913,6 +1013,14 @@ export type EnumPaymentMethodFieldUpdateOperationsInput = {
   set?: $Enums.PaymentMethod
 }
 
+export type NullableEnumCardTypeFieldUpdateOperationsInput = {
+  set?: $Enums.CardType | null
+}
+
+export type NullableEnumCardProviderFieldUpdateOperationsInput = {
+  set?: $Enums.CardProvider | null
+}
+
 export type DocumentCreateNestedOneWithoutItemsInput = {
   create?: Prisma.XOR<Prisma.DocumentCreateWithoutItemsInput, Prisma.DocumentUncheckedCreateWithoutItemsInput>
   connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutItemsInput
@@ -969,6 +1077,10 @@ export type DocumentCreateWithoutOrganizationInput = {
   dueAt?: Date | string | null
   paidAt?: Date | string | null
   paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -997,6 +1109,10 @@ export type DocumentUncheckedCreateWithoutOrganizationInput = {
   dueAt?: Date | string | null
   paidAt?: Date | string | null
   paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1054,6 +1170,10 @@ export type DocumentScalarWhereInput = {
   dueAt?: Prisma.DateTimeNullableFilter<"Document"> | Date | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"Document"> | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFilter<"Document"> | $Enums.PaymentMethod
+  cardType?: Prisma.EnumCardTypeNullableFilter<"Document"> | $Enums.CardType | null
+  cardProvider?: Prisma.EnumCardProviderNullableFilter<"Document"> | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.DecimalNullableFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.DecimalNullableFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFilter<"Document"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1077,6 +1197,10 @@ export type DocumentCreateWithoutCustomerInput = {
   dueAt?: Date | string | null
   paidAt?: Date | string | null
   paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1105,6 +1229,10 @@ export type DocumentUncheckedCreateWithoutCustomerInput = {
   dueAt?: Date | string | null
   paidAt?: Date | string | null
   paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1157,6 +1285,10 @@ export type DocumentCreateWithoutItemsInput = {
   dueAt?: Date | string | null
   paidAt?: Date | string | null
   paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1186,6 +1318,10 @@ export type DocumentUncheckedCreateWithoutItemsInput = {
   dueAt?: Date | string | null
   paidAt?: Date | string | null
   paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1227,6 +1363,10 @@ export type DocumentUpdateWithoutItemsInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1256,6 +1396,10 @@ export type DocumentUncheckedUpdateWithoutItemsInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1281,6 +1425,10 @@ export type DocumentCreateWithoutProjectInput = {
   dueAt?: Date | string | null
   paidAt?: Date | string | null
   paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1310,6 +1458,10 @@ export type DocumentUncheckedCreateWithoutProjectInput = {
   dueAt?: Date | string | null
   paidAt?: Date | string | null
   paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1351,6 +1503,10 @@ export type DocumentUpdateWithoutProjectInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1380,6 +1536,10 @@ export type DocumentUncheckedUpdateWithoutProjectInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1405,6 +1565,10 @@ export type DocumentCreateWithoutCreditsInput = {
   dueAt?: Date | string | null
   paidAt?: Date | string | null
   paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1434,6 +1598,10 @@ export type DocumentUncheckedCreateWithoutCreditsInput = {
   dueAt?: Date | string | null
   paidAt?: Date | string | null
   paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1475,6 +1643,10 @@ export type DocumentUpdateWithoutCreditsInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1504,6 +1676,10 @@ export type DocumentUncheckedUpdateWithoutCreditsInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1530,6 +1706,10 @@ export type DocumentCreateManyOrganizationInput = {
   dueAt?: Date | string | null
   paidAt?: Date | string | null
   paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1553,6 +1733,10 @@ export type DocumentUpdateWithoutOrganizationInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1581,6 +1765,10 @@ export type DocumentUncheckedUpdateWithoutOrganizationInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1608,6 +1796,10 @@ export type DocumentUncheckedUpdateManyWithoutOrganizationInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1632,6 +1824,10 @@ export type DocumentCreateManyCustomerInput = {
   dueAt?: Date | string | null
   paidAt?: Date | string | null
   paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1655,6 +1851,10 @@ export type DocumentUpdateWithoutCustomerInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1683,6 +1883,10 @@ export type DocumentUncheckedUpdateWithoutCustomerInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1710,6 +1914,10 @@ export type DocumentUncheckedUpdateManyWithoutCustomerInput = {
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1775,6 +1983,10 @@ export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   dueAt?: boolean
   paidAt?: boolean
   paymentMethod?: boolean
+  cardType?: boolean
+  cardProvider?: boolean
+  cardCommissionRate?: boolean
+  cardCommissionAmount?: boolean
   subtotal?: boolean
   taxRate?: boolean
   taxAmount?: boolean
@@ -1806,6 +2018,10 @@ export type DocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   dueAt?: boolean
   paidAt?: boolean
   paymentMethod?: boolean
+  cardType?: boolean
+  cardProvider?: boolean
+  cardCommissionRate?: boolean
+  cardCommissionAmount?: boolean
   subtotal?: boolean
   taxRate?: boolean
   taxAmount?: boolean
@@ -1833,6 +2049,10 @@ export type DocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   dueAt?: boolean
   paidAt?: boolean
   paymentMethod?: boolean
+  cardType?: boolean
+  cardProvider?: boolean
+  cardCommissionRate?: boolean
+  cardCommissionAmount?: boolean
   subtotal?: boolean
   taxRate?: boolean
   taxAmount?: boolean
@@ -1860,6 +2080,10 @@ export type DocumentSelectScalar = {
   dueAt?: boolean
   paidAt?: boolean
   paymentMethod?: boolean
+  cardType?: boolean
+  cardProvider?: boolean
+  cardCommissionRate?: boolean
+  cardCommissionAmount?: boolean
   subtotal?: boolean
   taxRate?: boolean
   taxAmount?: boolean
@@ -1873,7 +2097,7 @@ export type DocumentSelectScalar = {
   updatedAt?: boolean
 }
 
-export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "customerId" | "type" | "status" | "docNumber" | "docPrefix" | "issuedAt" | "dueAt" | "paidAt" | "paymentMethod" | "subtotal" | "taxRate" | "taxAmount" | "discount" | "total" | "cashReceived" | "cashChange" | "notes" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>
+export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "customerId" | "type" | "status" | "docNumber" | "docPrefix" | "issuedAt" | "dueAt" | "paidAt" | "paymentMethod" | "cardType" | "cardProvider" | "cardCommissionRate" | "cardCommissionAmount" | "subtotal" | "taxRate" | "taxAmount" | "discount" | "total" | "cashReceived" | "cashChange" | "notes" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>
 export type DocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.Document$customerArgs<ExtArgs>
@@ -1912,6 +2136,10 @@ export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     dueAt: Date | null
     paidAt: Date | null
     paymentMethod: $Enums.PaymentMethod
+    cardType: $Enums.CardType | null
+    cardProvider: $Enums.CardProvider | null
+    cardCommissionRate: runtime.Decimal | null
+    cardCommissionAmount: runtime.Decimal | null
     subtotal: runtime.Decimal
     taxRate: runtime.Decimal
     taxAmount: runtime.Decimal
@@ -2362,6 +2590,10 @@ export interface DocumentFieldRefs {
   readonly dueAt: Prisma.FieldRef<"Document", 'DateTime'>
   readonly paidAt: Prisma.FieldRef<"Document", 'DateTime'>
   readonly paymentMethod: Prisma.FieldRef<"Document", 'PaymentMethod'>
+  readonly cardType: Prisma.FieldRef<"Document", 'CardType'>
+  readonly cardProvider: Prisma.FieldRef<"Document", 'CardProvider'>
+  readonly cardCommissionRate: Prisma.FieldRef<"Document", 'Decimal'>
+  readonly cardCommissionAmount: Prisma.FieldRef<"Document", 'Decimal'>
   readonly subtotal: Prisma.FieldRef<"Document", 'Decimal'>
   readonly taxRate: Prisma.FieldRef<"Document", 'Decimal'>
   readonly taxAmount: Prisma.FieldRef<"Document", 'Decimal'>

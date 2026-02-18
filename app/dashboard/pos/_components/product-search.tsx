@@ -207,7 +207,7 @@ export function ProductSearch() {
                 }}
                 disabled={product.currentStock <= 0}
               >
-                <div className="flex items-center gap-3 w-full">
+                <div className="flex w-full items-start gap-3">
                   <div className="w-12 h-12 rounded bg-muted flex items-center justify-center shrink-0">
                     {product.imageUrl ? (
                       <img
@@ -219,15 +219,22 @@ export function ProductSearch() {
                       <Package className="h-6 w-6 text-muted-foreground" />
                     )}
                   </div>
-                  <div className="flex-1 text-left min-w-0">
-                    <p className="font-medium text-sm truncate">{product.name}</p>
-                    <p className="text-xs text-muted-foreground">SKU: {product.sku}</p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <p className="font-bold text-base">
-                      ${product.price.toLocaleString('es-CL')}
+                  <div className="min-w-0 flex-1 text-left">
+                    <p
+                      className="overflow-hidden text-sm font-medium leading-tight break-words [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
+                      title={product.name}
+                    >
+                      {product.name}
                     </p>
-                    <p className="text-xs text-muted-foreground">
+                    <div className="mt-1 flex items-center justify-between gap-2">
+                      <p className="min-w-0 truncate text-xs text-muted-foreground" title={`SKU: ${product.sku}`}>
+                        SKU: {product.sku}
+                      </p>
+                      <p className="shrink-0 text-base font-bold">
+                        ${product.price.toLocaleString('es-CL')}
+                      </p>
+                    </div>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
                       Stock: {product.currentStock}
                     </p>
                   </div>

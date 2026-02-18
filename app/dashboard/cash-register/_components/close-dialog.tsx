@@ -37,6 +37,7 @@ interface CashRegister {
   openedAt: string;
   totalCashSales?: number;
   totalCardSales?: number;
+  totalCardCommissions?: number;
   totalTransferSales?: number;
   totalMultiSales?: number;
   totalSales: number;
@@ -167,6 +168,12 @@ export function CloseDialog({ cashRegister, open, onOpenChange, onSuccess }: Clo
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">💳 Tarjetas (vouchers):</span>
                     <span className="font-medium">{formatCurrency(cashRegister.totalCardSales || 0)}</span>
+                  </div>
+                )}
+                {(cashRegister.totalCardCommissions || 0) > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">💸 Comisiones tarjeta:</span>
+                    <span className="font-medium">-{formatCurrency(cashRegister.totalCardCommissions || 0)}</span>
                   </div>
                 )}
                 {(cashRegister.totalTransferSales || 0) > 0 && (

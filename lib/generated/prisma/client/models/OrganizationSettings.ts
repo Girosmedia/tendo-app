@@ -20,8 +20,20 @@ export type OrganizationSettingsModel = runtime.Types.Result.DefaultSelection<Pr
 
 export type AggregateOrganizationSettings = {
   _count: OrganizationSettingsCountAggregateOutputType | null
+  _avg: OrganizationSettingsAvgAggregateOutputType | null
+  _sum: OrganizationSettingsSumAggregateOutputType | null
   _min: OrganizationSettingsMinAggregateOutputType | null
   _max: OrganizationSettingsMaxAggregateOutputType | null
+}
+
+export type OrganizationSettingsAvgAggregateOutputType = {
+  cardDebitCommissionRate: runtime.Decimal | null
+  cardCreditCommissionRate: runtime.Decimal | null
+}
+
+export type OrganizationSettingsSumAggregateOutputType = {
+  cardDebitCommissionRate: runtime.Decimal | null
+  cardCreditCommissionRate: runtime.Decimal | null
 }
 
 export type OrganizationSettingsMinAggregateOutputType = {
@@ -43,6 +55,8 @@ export type OrganizationSettingsMinAggregateOutputType = {
   timezone: string | null
   currency: string | null
   locale: string | null
+  cardDebitCommissionRate: runtime.Decimal | null
+  cardCreditCommissionRate: runtime.Decimal | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -66,6 +80,8 @@ export type OrganizationSettingsMaxAggregateOutputType = {
   timezone: string | null
   currency: string | null
   locale: string | null
+  cardDebitCommissionRate: runtime.Decimal | null
+  cardCreditCommissionRate: runtime.Decimal | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -89,11 +105,23 @@ export type OrganizationSettingsCountAggregateOutputType = {
   timezone: number
   currency: number
   locale: number
+  cardDebitCommissionRate: number
+  cardCreditCommissionRate: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type OrganizationSettingsAvgAggregateInputType = {
+  cardDebitCommissionRate?: true
+  cardCreditCommissionRate?: true
+}
+
+export type OrganizationSettingsSumAggregateInputType = {
+  cardDebitCommissionRate?: true
+  cardCreditCommissionRate?: true
+}
 
 export type OrganizationSettingsMinAggregateInputType = {
   id?: true
@@ -114,6 +142,8 @@ export type OrganizationSettingsMinAggregateInputType = {
   timezone?: true
   currency?: true
   locale?: true
+  cardDebitCommissionRate?: true
+  cardCreditCommissionRate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -137,6 +167,8 @@ export type OrganizationSettingsMaxAggregateInputType = {
   timezone?: true
   currency?: true
   locale?: true
+  cardDebitCommissionRate?: true
+  cardCreditCommissionRate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -160,6 +192,8 @@ export type OrganizationSettingsCountAggregateInputType = {
   timezone?: true
   currency?: true
   locale?: true
+  cardDebitCommissionRate?: true
+  cardCreditCommissionRate?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -203,6 +237,18 @@ export type OrganizationSettingsAggregateArgs<ExtArgs extends runtime.Types.Exte
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: OrganizationSettingsAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: OrganizationSettingsSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: OrganizationSettingsMinAggregateInputType
@@ -233,6 +279,8 @@ export type OrganizationSettingsGroupByArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   _count?: OrganizationSettingsCountAggregateInputType | true
+  _avg?: OrganizationSettingsAvgAggregateInputType
+  _sum?: OrganizationSettingsSumAggregateInputType
   _min?: OrganizationSettingsMinAggregateInputType
   _max?: OrganizationSettingsMaxAggregateInputType
 }
@@ -256,9 +304,13 @@ export type OrganizationSettingsGroupByOutputType = {
   timezone: string
   currency: string
   locale: string
+  cardDebitCommissionRate: runtime.Decimal
+  cardCreditCommissionRate: runtime.Decimal
   createdAt: Date
   updatedAt: Date
   _count: OrganizationSettingsCountAggregateOutputType | null
+  _avg: OrganizationSettingsAvgAggregateOutputType | null
+  _sum: OrganizationSettingsSumAggregateOutputType | null
   _min: OrganizationSettingsMinAggregateOutputType | null
   _max: OrganizationSettingsMaxAggregateOutputType | null
 }
@@ -300,6 +352,8 @@ export type OrganizationSettingsWhereInput = {
   timezone?: Prisma.StringFilter<"OrganizationSettings"> | string
   currency?: Prisma.StringFilter<"OrganizationSettings"> | string
   locale?: Prisma.StringFilter<"OrganizationSettings"> | string
+  cardDebitCommissionRate?: Prisma.DecimalFilter<"OrganizationSettings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardCreditCommissionRate?: Prisma.DecimalFilter<"OrganizationSettings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"OrganizationSettings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrganizationSettings"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
@@ -324,6 +378,8 @@ export type OrganizationSettingsOrderByWithRelationInput = {
   timezone?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   locale?: Prisma.SortOrder
+  cardDebitCommissionRate?: Prisma.SortOrder
+  cardCreditCommissionRate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
@@ -351,6 +407,8 @@ export type OrganizationSettingsWhereUniqueInput = Prisma.AtLeast<{
   timezone?: Prisma.StringFilter<"OrganizationSettings"> | string
   currency?: Prisma.StringFilter<"OrganizationSettings"> | string
   locale?: Prisma.StringFilter<"OrganizationSettings"> | string
+  cardDebitCommissionRate?: Prisma.DecimalFilter<"OrganizationSettings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardCreditCommissionRate?: Prisma.DecimalFilter<"OrganizationSettings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"OrganizationSettings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrganizationSettings"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
@@ -375,11 +433,15 @@ export type OrganizationSettingsOrderByWithAggregationInput = {
   timezone?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   locale?: Prisma.SortOrder
+  cardDebitCommissionRate?: Prisma.SortOrder
+  cardCreditCommissionRate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.OrganizationSettingsCountOrderByAggregateInput
+  _avg?: Prisma.OrganizationSettingsAvgOrderByAggregateInput
   _max?: Prisma.OrganizationSettingsMaxOrderByAggregateInput
   _min?: Prisma.OrganizationSettingsMinOrderByAggregateInput
+  _sum?: Prisma.OrganizationSettingsSumOrderByAggregateInput
 }
 
 export type OrganizationSettingsScalarWhereWithAggregatesInput = {
@@ -404,6 +466,8 @@ export type OrganizationSettingsScalarWhereWithAggregatesInput = {
   timezone?: Prisma.StringWithAggregatesFilter<"OrganizationSettings"> | string
   currency?: Prisma.StringWithAggregatesFilter<"OrganizationSettings"> | string
   locale?: Prisma.StringWithAggregatesFilter<"OrganizationSettings"> | string
+  cardDebitCommissionRate?: Prisma.DecimalWithAggregatesFilter<"OrganizationSettings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardCreditCommissionRate?: Prisma.DecimalWithAggregatesFilter<"OrganizationSettings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"OrganizationSettings"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"OrganizationSettings"> | Date | string
 }
@@ -426,6 +490,8 @@ export type OrganizationSettingsCreateInput = {
   timezone?: string
   currency?: string
   locale?: string
+  cardDebitCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardCreditCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutSettingsInput
@@ -450,6 +516,8 @@ export type OrganizationSettingsUncheckedCreateInput = {
   timezone?: string
   currency?: string
   locale?: string
+  cardDebitCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardCreditCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -472,6 +540,8 @@ export type OrganizationSettingsUpdateInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   locale?: Prisma.StringFieldUpdateOperationsInput | string
+  cardDebitCommissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardCreditCommissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutSettingsNestedInput
@@ -496,6 +566,8 @@ export type OrganizationSettingsUncheckedUpdateInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   locale?: Prisma.StringFieldUpdateOperationsInput | string
+  cardDebitCommissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardCreditCommissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -519,6 +591,8 @@ export type OrganizationSettingsCreateManyInput = {
   timezone?: string
   currency?: string
   locale?: string
+  cardDebitCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardCreditCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -541,6 +615,8 @@ export type OrganizationSettingsUpdateManyMutationInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   locale?: Prisma.StringFieldUpdateOperationsInput | string
+  cardDebitCommissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardCreditCommissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -564,6 +640,8 @@ export type OrganizationSettingsUncheckedUpdateManyInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   locale?: Prisma.StringFieldUpdateOperationsInput | string
+  cardDebitCommissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardCreditCommissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -592,8 +670,15 @@ export type OrganizationSettingsCountOrderByAggregateInput = {
   timezone?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   locale?: Prisma.SortOrder
+  cardDebitCommissionRate?: Prisma.SortOrder
+  cardCreditCommissionRate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type OrganizationSettingsAvgOrderByAggregateInput = {
+  cardDebitCommissionRate?: Prisma.SortOrder
+  cardCreditCommissionRate?: Prisma.SortOrder
 }
 
 export type OrganizationSettingsMaxOrderByAggregateInput = {
@@ -615,6 +700,8 @@ export type OrganizationSettingsMaxOrderByAggregateInput = {
   timezone?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   locale?: Prisma.SortOrder
+  cardDebitCommissionRate?: Prisma.SortOrder
+  cardCreditCommissionRate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -638,8 +725,15 @@ export type OrganizationSettingsMinOrderByAggregateInput = {
   timezone?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   locale?: Prisma.SortOrder
+  cardDebitCommissionRate?: Prisma.SortOrder
+  cardCreditCommissionRate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type OrganizationSettingsSumOrderByAggregateInput = {
+  cardDebitCommissionRate?: Prisma.SortOrder
+  cardCreditCommissionRate?: Prisma.SortOrder
 }
 
 export type OrganizationSettingsCreateNestedOneWithoutOrganizationInput = {
@@ -692,6 +786,8 @@ export type OrganizationSettingsCreateWithoutOrganizationInput = {
   timezone?: string
   currency?: string
   locale?: string
+  cardDebitCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardCreditCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -714,6 +810,8 @@ export type OrganizationSettingsUncheckedCreateWithoutOrganizationInput = {
   timezone?: string
   currency?: string
   locale?: string
+  cardDebitCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardCreditCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -752,6 +850,8 @@ export type OrganizationSettingsUpdateWithoutOrganizationInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   locale?: Prisma.StringFieldUpdateOperationsInput | string
+  cardDebitCommissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardCreditCommissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -774,6 +874,8 @@ export type OrganizationSettingsUncheckedUpdateWithoutOrganizationInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   locale?: Prisma.StringFieldUpdateOperationsInput | string
+  cardDebitCommissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardCreditCommissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -799,6 +901,8 @@ export type OrganizationSettingsSelect<ExtArgs extends runtime.Types.Extensions.
   timezone?: boolean
   currency?: boolean
   locale?: boolean
+  cardDebitCommissionRate?: boolean
+  cardCreditCommissionRate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -823,6 +927,8 @@ export type OrganizationSettingsSelectCreateManyAndReturn<ExtArgs extends runtim
   timezone?: boolean
   currency?: boolean
   locale?: boolean
+  cardDebitCommissionRate?: boolean
+  cardCreditCommissionRate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -847,6 +953,8 @@ export type OrganizationSettingsSelectUpdateManyAndReturn<ExtArgs extends runtim
   timezone?: boolean
   currency?: boolean
   locale?: boolean
+  cardDebitCommissionRate?: boolean
+  cardCreditCommissionRate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -871,11 +979,13 @@ export type OrganizationSettingsSelectScalar = {
   timezone?: boolean
   currency?: boolean
   locale?: boolean
+  cardDebitCommissionRate?: boolean
+  cardCreditCommissionRate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OrganizationSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "businessName" | "tradeName" | "rut" | "logoUrl" | "address" | "city" | "region" | "country" | "phone" | "email" | "website" | "taxRegime" | "economicActivity" | "timezone" | "currency" | "locale" | "createdAt" | "updatedAt", ExtArgs["result"]["organizationSettings"]>
+export type OrganizationSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "businessName" | "tradeName" | "rut" | "logoUrl" | "address" | "city" | "region" | "country" | "phone" | "email" | "website" | "taxRegime" | "economicActivity" | "timezone" | "currency" | "locale" | "cardDebitCommissionRate" | "cardCreditCommissionRate" | "createdAt" | "updatedAt", ExtArgs["result"]["organizationSettings"]>
 export type OrganizationSettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
@@ -910,6 +1020,8 @@ export type $OrganizationSettingsPayload<ExtArgs extends runtime.Types.Extension
     timezone: string
     currency: string
     locale: string
+    cardDebitCommissionRate: runtime.Decimal
+    cardCreditCommissionRate: runtime.Decimal
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["organizationSettings"]>
@@ -1354,6 +1466,8 @@ export interface OrganizationSettingsFieldRefs {
   readonly timezone: Prisma.FieldRef<"OrganizationSettings", 'String'>
   readonly currency: Prisma.FieldRef<"OrganizationSettings", 'String'>
   readonly locale: Prisma.FieldRef<"OrganizationSettings", 'String'>
+  readonly cardDebitCommissionRate: Prisma.FieldRef<"OrganizationSettings", 'Decimal'>
+  readonly cardCreditCommissionRate: Prisma.FieldRef<"OrganizationSettings", 'Decimal'>
   readonly createdAt: Prisma.FieldRef<"OrganizationSettings", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"OrganizationSettings", 'DateTime'>
 }

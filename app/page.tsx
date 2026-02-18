@@ -63,10 +63,18 @@ export default function LandingPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-bold text-sm shadow-lg shadow-primary/25">
-                T
+              <div className="flex h-12 items-center">
+                <img
+                  src="/tendo_sin_fondo/logo.svg"
+                  alt="Tendo"
+                  className="h-10 w-auto dark:hidden sm:h-11"
+                />
+                <img
+                  src="/tendo_sin_fondo/logo_negativo.svg"
+                  alt="Tendo"
+                  className="hidden h-10 w-auto dark:block sm:h-11"
+                />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Tendo</span>
             </motion.div>
             <nav className="hidden md:flex items-center gap-6">
               <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
@@ -93,7 +101,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section - Split Layout 60/40 */}
-      <section className="relative py-20 sm:py-32 lg:py-40" style={{ contain: 'layout' }}>
+      <section className="relative pt-12 pb-20 sm:pt-16 sm:pb-28 lg:pt-12 lg:pb-32" style={{ contain: 'layout' }}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-[60%_40%] gap-12 lg:gap-16 items-center">
             {/* Left: Copy */}
@@ -773,12 +781,18 @@ export default function LandingPage() {
           >
             <motion.div variants={fadeInUp}>
               <div className="flex items-center gap-2 mb-4">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-bold text-sm shadow-lg shadow-primary/25">
-                  T
+                <div className="flex h-12 items-center">
+                  <img
+                    src="/tendo_sin_fondo/logo.svg"
+                    alt="Tendo"
+                    className="h-10 w-auto dark:hidden sm:h-11"
+                  />
+                  <img
+                    src="/tendo_sin_fondo/logo_negativo.svg"
+                    alt="Tendo"
+                    className="hidden h-10 w-auto dark:block sm:h-11"
+                  />
                 </div>
-                <span className="text-lg font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                  Tendo
-                </span>
               </div>
               <p className="text-sm text-muted-foreground">
                 El Sistema Operativo para tu negocio. Simple, poderoso, chileno.

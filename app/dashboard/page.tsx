@@ -72,9 +72,11 @@ interface FinancialMetrics {
   costOfSales: number;
   grossProfit: number;
   operationalExpenses: number;
+  cardCommissions: number;
   operationalExpensesCount: number;
   realProfit: number;
   grossMarginPercent: number;
+  realMarginPercent: number;
   itemsWithoutCost: number;
   costCoveragePercent: number;
 }
@@ -89,6 +91,7 @@ interface ZimpleIndicators {
   inventoryValueAtCost: number;
   creditExposurePercent: number;
   operationalExpensesThisMonth: number;
+  cardCommissionsThisMonth: number;
   realProfitThisMonth: number;
   actionItems: string[];
 }
@@ -187,9 +190,11 @@ export default async function DashboardPage() {
       costOfSales: kpisData.financials?.today?.costOfSales || 0,
       grossProfit: kpisData.financials?.today?.grossProfit || 0,
       operationalExpenses: kpisData.financials?.today?.operationalExpenses || 0,
+      cardCommissions: kpisData.financials?.today?.cardCommissions || 0,
       operationalExpensesCount: kpisData.financials?.today?.operationalExpensesCount || 0,
       realProfit: kpisData.financials?.today?.realProfit || 0,
       grossMarginPercent: kpisData.financials?.today?.grossMarginPercent || 0,
+      realMarginPercent: kpisData.financials?.today?.realMarginPercent || 0,
       itemsWithoutCost: kpisData.financials?.today?.itemsWithoutCost || 0,
       costCoveragePercent: kpisData.financials?.today?.costCoveragePercent || 100,
     },
@@ -203,9 +208,11 @@ export default async function DashboardPage() {
       costOfSales: kpisData.financials?.thisMonth?.costOfSales || 0,
       grossProfit: kpisData.financials?.thisMonth?.grossProfit || 0,
       operationalExpenses: kpisData.financials?.thisMonth?.operationalExpenses || 0,
+      cardCommissions: kpisData.financials?.thisMonth?.cardCommissions || 0,
       operationalExpensesCount: kpisData.financials?.thisMonth?.operationalExpensesCount || 0,
       realProfit: kpisData.financials?.thisMonth?.realProfit || 0,
       grossMarginPercent: kpisData.financials?.thisMonth?.grossMarginPercent || 0,
+      realMarginPercent: kpisData.financials?.thisMonth?.realMarginPercent || 0,
       itemsWithoutCost: kpisData.financials?.thisMonth?.itemsWithoutCost || 0,
       costCoveragePercent: kpisData.financials?.thisMonth?.costCoveragePercent || 100,
     },
@@ -248,6 +255,7 @@ export default async function DashboardPage() {
     inventoryValueAtCost: kpisData.zimpleIndicators?.inventoryValueAtCost || 0,
     creditExposurePercent: kpisData.zimpleIndicators?.creditExposurePercent || 0,
     operationalExpensesThisMonth: kpisData.zimpleIndicators?.operationalExpensesThisMonth || 0,
+    cardCommissionsThisMonth: kpisData.zimpleIndicators?.cardCommissionsThisMonth || 0,
     realProfitThisMonth: kpisData.zimpleIndicators?.realProfitThisMonth || 0,
     actionItems: kpisData.zimpleIndicators?.actionItems || [],
   };
@@ -286,6 +294,7 @@ export default async function DashboardPage() {
       netSales: number;
       costOfSales: number;
       operationalExpenses: number;
+      cardCommissions: number;
       totalCost: number;
       realProfit: number;
       realMarginPercent: number;
@@ -297,13 +306,14 @@ export default async function DashboardPage() {
       netSales: item.netSales || 0,
       costOfSales: item.costOfSales || 0,
       operationalExpenses: item.operationalExpenses || 0,
+      cardCommissions: item.cardCommissions || 0,
       totalCost: item.totalCost || 0,
       realProfit: item.realProfit || 0,
       realMarginPercent: item.realMarginPercent || 0,
     })
   );
 
-  const marginComponent = Math.max(0, Math.min(100, financials.thisMonth.grossMarginPercent * 2));
+  const marginComponent = Math.max(0, Math.min(100, financials.thisMonth.realMarginPercent * 2));
   const coverageComponent = Math.max(0, Math.min(100, financials.thisMonth.costCoveragePercent));
   const stockComponent = Math.max(0, 100 - zimpleIndicators.stockRiskPercent * 2);
   const debtComponent = Math.max(0, 100 - zimpleIndicators.creditExposurePercent);
@@ -366,9 +376,9 @@ export default async function DashboardPage() {
                 </p>
               </div>
               <div className='rounded-lg border bg-muted/40 p-3'>
-                <p className='text-xs text-muted-foreground'>Margen Bruto</p>
+                <p className='text-xs text-muted-foreground'>Margen Real</p>
                 <p className='mt-1 text-base font-semibold md:text-lg'>
-                  {formatPercentage(financials.thisMonth.grossMarginPercent)}
+                  {formatPercentage(financials.thisMonth.realMarginPercent)}
                 </p>
                 <p className='text-[11px] text-muted-foreground'>
                   {formatCurrency(financials.thisMonth.realProfit)} utilidad real
@@ -390,6 +400,7 @@ export default async function DashboardPage() {
               <span className='rounded-full border px-2 py-1'>IVA del mes: {formatCurrency(financials.thisMonth.taxAmount)}</span>
               <span className='rounded-full border px-2 py-1'>Descuento global: {formatCurrency(financials.thisMonth.globalDiscount)}</span>
               <span className='rounded-full border px-2 py-1'>Egresos Mi Caja: {formatCurrency(financials.thisMonth.operationalExpenses)}</span>
+              <span className='rounded-full border px-2 py-1'>Comisión tarjetas: {formatCurrency(financials.thisMonth.cardCommissions)}</span>
               <span className='rounded-full border px-2 py-1'>Cobranza del mes: {formatCurrency(zimpleIndicators.collectionsThisMonth)}</span>
               <span className='rounded-full border px-2 py-1'>CxC total: {formatCurrency(accountsReceivable.total)}</span>
               <span className='rounded-full border px-2 py-1'>Inventario a costo: {formatCurrency(zimpleIndicators.inventoryValueAtCost)}</span>
