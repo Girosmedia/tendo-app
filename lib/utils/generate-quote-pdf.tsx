@@ -1,5 +1,5 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -30,6 +30,7 @@ interface QuotePdfOrganization {
   region: string | null;
   email: string | null;
   phone: string | null;
+  logoUrl?: string | null;
 }
 
 export interface QuotePdfData {
@@ -56,11 +57,23 @@ const styles = StyleSheet.create({
     color: '#111827',
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
     borderBottomColor: '#d1d5db',
     paddingBottom: 10,
     marginBottom: 14,
+  },
+  headerInfo: {
+    flex: 1,
+    paddingRight: 12,
+  },
+  logo: {
+    width: 120,
+    height: 48,
+    objectFit: 'contain',
   },
   heading: {
     fontSize: 16,
@@ -199,21 +212,26 @@ export function buildQuotePdfDocument(data: QuotePdfData) {
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <Text style={styles.heading}>Cotización {quoteCode}</Text>
-          <Text style={styles.muted}>{data.organization.name}</Text>
-          {data.organization.rut && <Text style={styles.muted}>RUT: {data.organization.rut}</Text>}
-          {(data.organization.address || data.organization.city || data.organization.region) && (
-            <Text style={styles.muted}>
-              {[data.organization.address, data.organization.city, data.organization.region]
-                .filter(Boolean)
-                .join(', ')}
-            </Text>
-          )}
-          {(data.organization.email || data.organization.phone) && (
-            <Text style={styles.muted}>
-              {[data.organization.email, data.organization.phone].filter(Boolean).join(' · ')}
-            </Text>
-          )}
+          <View style={styles.headerInfo}>
+            <Text style={styles.heading}>Cotización {quoteCode}</Text>
+            <Text style={styles.muted}>{data.organization.name}</Text>
+            {data.organization.rut && <Text style={styles.muted}>RUT: {data.organization.rut}</Text>}
+            {(data.organization.address || data.organization.city || data.organization.region) && (
+              <Text style={styles.muted}>
+                {[data.organization.address, data.organization.city, data.organization.region]
+                  .filter(Boolean)
+                  .join(', ')}
+              </Text>
+            )}
+            {(data.organization.email || data.organization.phone) && (
+              <Text style={styles.muted}>
+                {[data.organization.email, data.organization.phone].filter(Boolean).join(' · ')}
+              </Text>
+            )}
+          </View>
+          {data.organization.logoUrl ? (
+            <Image style={styles.logo} src={data.organization.logoUrl} />
+          ) : null}
         </View>
 
         <View style={[styles.section, styles.row]}>

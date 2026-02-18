@@ -7,6 +7,20 @@ import { buildQuotePdfDocument } from '@/lib/utils/generate-quote-pdf';
 
 export const runtime = 'nodejs';
 
+function resolveLogoUrl(logoUrl: string | null | undefined, origin: string) {
+  if (!logoUrl) return null;
+
+  if (/^https?:\/\//i.test(logoUrl) || logoUrl.startsWith('data:')) {
+    return logoUrl;
+  }
+
+  try {
+    return new URL(logoUrl, origin).toString();
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -97,6 +111,10 @@ export async function GET(
           region: organization.settings?.region || null,
           email: organization.settings?.email || null,
           phone: organization.settings?.phone || null,
+          logoUrl: resolveLogoUrl(
+            organization.settings?.logoUrl || organization.logoUrl,
+            req.nextUrl.origin
+          ),
         },
         items: quote.items.map((item) => ({
           id: item.id,
