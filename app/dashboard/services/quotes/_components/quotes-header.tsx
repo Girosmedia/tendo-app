@@ -5,7 +5,15 @@ import { FilePlus2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { QuoteDialog } from './quote-dialog';
 
-export function QuotesHeader() {
+interface QuotesHeaderProps {
+  customers: Array<{
+    id: string;
+    name: string;
+    company: string | null;
+  }>;
+}
+
+export function QuotesHeader({ customers }: QuotesHeaderProps) {
   const [showDialog, setShowDialog] = useState(false);
 
   return (
@@ -23,7 +31,7 @@ export function QuotesHeader() {
         </Button>
       </div>
 
-      <QuoteDialog open={showDialog} onOpenChange={setShowDialog} />
+      <QuoteDialog open={showDialog} onOpenChange={setShowDialog} initialCustomers={customers} />
     </>
   );
 }

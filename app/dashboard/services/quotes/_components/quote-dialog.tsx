@@ -55,6 +55,7 @@ type QuoteFormValues = z.infer<typeof quoteFormSchema>;
 interface QuoteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  initialCustomers?: CustomerOption[];
 }
 
 interface CustomerOption {
@@ -63,11 +64,15 @@ interface CustomerOption {
   company: string | null;
 }
 
-export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
+const NO_CUSTOMER_VALUE = 'no-customer';
+
+export function QuoteDialog({ open, onOpenChange, initialCustomers = [] }: QuoteDialogProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [customers, setCustomers] = useState<CustomerOption[]>([]);
-  const [hasLoadedCustomers, setHasLoadedCustomers] = useState(false);
+  const [customers, setCustomers] = useState<CustomerOption[]>(initialCustomers);
+  const [isLoadingCustomers, setIsLoadingCustomers] = useState(false);
+  const [customersLoadError, setCustomersLoadError] = useState<string | null>(null);
+  const [hasLoadedCustomers, setHasLoadedCustomers] = useState(initialCustomers.length > 0);
 
   const form = useForm<QuoteFormValues>({
     resolver: zodResolver(quoteFormSchema),
@@ -91,16 +96,24 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
 
   const loadCustomers = async () => {
     if (hasLoadedCustomers) return;
+    setIsLoadingCustomers(true);
+    setCustomersLoadError(null);
 
     try {
       const response = await fetch('/api/customers');
-      if (!response.ok) return;
+      if (!response.ok) {
+        setCustomersLoadError('No se pudieron cargar los clientes');
+        return;
+      }
 
       const data = await response.json();
       setCustomers(data.customers || []);
       setHasLoadedCustomers(true);
     } catch (error) {
       console.error('Error loading customers:', error);
+      setCustomersLoadError('No se pudieron cargar los clientes');
+    } finally {
+      setIsLoadingCustomers(false);
     }
   };
 
@@ -210,8 +223,9 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
                   <FormItem>
                     <FormLabel>Cliente (opcional)</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
-                      value={field.value}
+                      onValueChange={(value) => field.onChange(value === NO_CUSTOMER_VALUE ? undefined : value)}
+                      value={field.value ?? NO_CUSTOMER_VALUE}
+                      disabled={isLoadingCustomers}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -219,6 +233,7 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
+                        <SelectItem value={NO_CUSTOMER_VALUE}>Sin cliente</SelectItem>
                         {customers.map((customer) => (
                           <SelectItem key={customer.id} value={customer.id}>
                             {customer.name}
@@ -227,6 +242,9 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
                         ))}
                       </SelectContent>
                     </Select>
+                    {customersLoadError ? (
+                      <p className="text-xs text-destructive">{customersLoadError}</p>
+                    ) : null}
                     <FormMessage />
                   </FormItem>
                 )}
