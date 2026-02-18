@@ -87,6 +87,22 @@ export async function POST(
       },
     });
 
+    await db.treasuryMovement.create({
+      data: {
+        organizationId: organization.id,
+        accountPayableId: payable.id,
+        type: 'OUTFLOW',
+        category: 'ACCOUNT_PAYABLE_PAYMENT',
+        source: validatedData.source,
+        title: `Pago CxP ${updatedPayable.documentNumber || updatedPayable.id.slice(0, 8)}`,
+        description: validatedData.notes || `Pago a proveedor ${updatedPayable.supplier.name}`,
+        reference: validatedData.reference || null,
+        amount: validatedData.paymentAmount,
+        occurredAt: validatedData.paidAt ? new Date(validatedData.paidAt) : new Date(),
+        createdBy: session.user.id,
+      },
+    });
+
     await logAuditAction({
       userId: session.user.id,
       action: 'REGISTER_ACCOUNT_PAYABLE_PAYMENT',
@@ -94,6 +110,7 @@ export async function POST(
       resourceId: payable.id,
       changes: {
         paymentAmount: validatedData.paymentAmount,
+        source: validatedData.source,
         previousBalance: currentBalance,
         nextBalance,
       },

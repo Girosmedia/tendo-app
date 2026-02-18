@@ -228,8 +228,10 @@ export type OrganizationWhereInput = {
   projectExpenses?: Prisma.ProjectExpenseListRelationFilter
   projectMilestones?: Prisma.ProjectMilestoneListRelationFilter
   projectResources?: Prisma.ProjectResourceListRelationFilter
+  projectPayments?: Prisma.ProjectPaymentListRelationFilter
   cashRegisters?: Prisma.CashRegisterListRelationFilter
   operationalExpenses?: Prisma.OperationalExpenseListRelationFilter
+  treasuryMovements?: Prisma.TreasuryMovementListRelationFilter
   credits?: Prisma.CreditListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
   suppliers?: Prisma.SupplierListRelationFilter
@@ -257,8 +259,10 @@ export type OrganizationOrderByWithRelationInput = {
   projectExpenses?: Prisma.ProjectExpenseOrderByRelationAggregateInput
   projectMilestones?: Prisma.ProjectMilestoneOrderByRelationAggregateInput
   projectResources?: Prisma.ProjectResourceOrderByRelationAggregateInput
+  projectPayments?: Prisma.ProjectPaymentOrderByRelationAggregateInput
   cashRegisters?: Prisma.CashRegisterOrderByRelationAggregateInput
   operationalExpenses?: Prisma.OperationalExpenseOrderByRelationAggregateInput
+  treasuryMovements?: Prisma.TreasuryMovementOrderByRelationAggregateInput
   credits?: Prisma.CreditOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
   suppliers?: Prisma.SupplierOrderByRelationAggregateInput
@@ -289,8 +293,10 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   projectExpenses?: Prisma.ProjectExpenseListRelationFilter
   projectMilestones?: Prisma.ProjectMilestoneListRelationFilter
   projectResources?: Prisma.ProjectResourceListRelationFilter
+  projectPayments?: Prisma.ProjectPaymentListRelationFilter
   cashRegisters?: Prisma.CashRegisterListRelationFilter
   operationalExpenses?: Prisma.OperationalExpenseListRelationFilter
+  treasuryMovements?: Prisma.TreasuryMovementListRelationFilter
   credits?: Prisma.CreditListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
   suppliers?: Prisma.SupplierListRelationFilter
@@ -350,8 +356,10 @@ export type OrganizationCreateInput = {
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
@@ -379,8 +387,10 @@ export type OrganizationUncheckedCreateInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
@@ -408,8 +418,10 @@ export type OrganizationUpdateInput = {
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
@@ -437,8 +449,10 @@ export type OrganizationUncheckedUpdateInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -673,6 +687,20 @@ export type OrganizationUpdateOneRequiredWithoutProjectsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutProjectsInput, Prisma.OrganizationUpdateWithoutProjectsInput>, Prisma.OrganizationUncheckedUpdateWithoutProjectsInput>
 }
 
+export type OrganizationCreateNestedOneWithoutProjectPaymentsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutProjectPaymentsInput, Prisma.OrganizationUncheckedCreateWithoutProjectPaymentsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutProjectPaymentsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutProjectPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutProjectPaymentsInput, Prisma.OrganizationUncheckedCreateWithoutProjectPaymentsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutProjectPaymentsInput
+  upsert?: Prisma.OrganizationUpsertWithoutProjectPaymentsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutProjectPaymentsInput, Prisma.OrganizationUpdateWithoutProjectPaymentsInput>, Prisma.OrganizationUncheckedUpdateWithoutProjectPaymentsInput>
+}
+
 export type OrganizationCreateNestedOneWithoutProjectResourcesInput = {
   create?: Prisma.XOR<Prisma.OrganizationCreateWithoutProjectResourcesInput, Prisma.OrganizationUncheckedCreateWithoutProjectResourcesInput>
   connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutProjectResourcesInput
@@ -743,6 +771,20 @@ export type OrganizationUpdateOneRequiredWithoutOperationalExpensesNestedInput =
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutOperationalExpensesInput, Prisma.OrganizationUpdateWithoutOperationalExpensesInput>, Prisma.OrganizationUncheckedUpdateWithoutOperationalExpensesInput>
 }
 
+export type OrganizationCreateNestedOneWithoutTreasuryMovementsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutTreasuryMovementsInput, Prisma.OrganizationUncheckedCreateWithoutTreasuryMovementsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutTreasuryMovementsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutTreasuryMovementsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutTreasuryMovementsInput, Prisma.OrganizationUncheckedCreateWithoutTreasuryMovementsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutTreasuryMovementsInput
+  upsert?: Prisma.OrganizationUpsertWithoutTreasuryMovementsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutTreasuryMovementsInput, Prisma.OrganizationUpdateWithoutTreasuryMovementsInput>, Prisma.OrganizationUncheckedUpdateWithoutTreasuryMovementsInput>
+}
+
 export type OrganizationCreateNestedOneWithoutCreditsInput = {
   create?: Prisma.XOR<Prisma.OrganizationCreateWithoutCreditsInput, Prisma.OrganizationUncheckedCreateWithoutCreditsInput>
   connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutCreditsInput
@@ -792,8 +834,10 @@ export type OrganizationCreateWithoutSuppliersInput = {
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
@@ -820,8 +864,10 @@ export type OrganizationUncheckedCreateWithoutSuppliersInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
@@ -864,8 +910,10 @@ export type OrganizationUpdateWithoutSuppliersInput = {
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
@@ -892,8 +940,10 @@ export type OrganizationUncheckedUpdateWithoutSuppliersInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -920,8 +970,10 @@ export type OrganizationCreateWithoutAccountsPayableInput = {
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
@@ -948,8 +1000,10 @@ export type OrganizationUncheckedCreateWithoutAccountsPayableInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
@@ -992,8 +1046,10 @@ export type OrganizationUpdateWithoutAccountsPayableInput = {
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
@@ -1020,8 +1076,10 @@ export type OrganizationUncheckedUpdateWithoutAccountsPayableInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1047,8 +1105,10 @@ export type OrganizationCreateWithoutMembersInput = {
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
@@ -1075,8 +1135,10 @@ export type OrganizationUncheckedCreateWithoutMembersInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1119,8 +1181,10 @@ export type OrganizationUpdateWithoutMembersInput = {
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
@@ -1147,8 +1211,10 @@ export type OrganizationUncheckedUpdateWithoutMembersInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1175,8 +1241,10 @@ export type OrganizationCreateWithoutSettingsInput = {
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
@@ -1203,8 +1271,10 @@ export type OrganizationUncheckedCreateWithoutSettingsInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1247,8 +1317,10 @@ export type OrganizationUpdateWithoutSettingsInput = {
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
@@ -1275,8 +1347,10 @@ export type OrganizationUncheckedUpdateWithoutSettingsInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1303,8 +1377,10 @@ export type OrganizationCreateWithoutCategoriesInput = {
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
@@ -1331,8 +1407,10 @@ export type OrganizationUncheckedCreateWithoutCategoriesInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1375,8 +1453,10 @@ export type OrganizationUpdateWithoutCategoriesInput = {
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
@@ -1403,8 +1483,10 @@ export type OrganizationUncheckedUpdateWithoutCategoriesInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1431,8 +1513,10 @@ export type OrganizationCreateWithoutProductsInput = {
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
@@ -1459,8 +1543,10 @@ export type OrganizationUncheckedCreateWithoutProductsInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1503,8 +1589,10 @@ export type OrganizationUpdateWithoutProductsInput = {
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
@@ -1531,8 +1619,10 @@ export type OrganizationUncheckedUpdateWithoutProductsInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1559,8 +1649,10 @@ export type OrganizationCreateWithoutCustomersInput = {
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
@@ -1587,8 +1679,10 @@ export type OrganizationUncheckedCreateWithoutCustomersInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1631,8 +1725,10 @@ export type OrganizationUpdateWithoutCustomersInput = {
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
@@ -1659,8 +1755,10 @@ export type OrganizationUncheckedUpdateWithoutCustomersInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1687,8 +1785,10 @@ export type OrganizationCreateWithoutDocumentsInput = {
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
@@ -1715,8 +1815,10 @@ export type OrganizationUncheckedCreateWithoutDocumentsInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1759,8 +1861,10 @@ export type OrganizationUpdateWithoutDocumentsInput = {
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
@@ -1787,8 +1891,10 @@ export type OrganizationUncheckedUpdateWithoutDocumentsInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1815,8 +1921,10 @@ export type OrganizationCreateWithoutProjectsInput = {
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
@@ -1843,8 +1951,10 @@ export type OrganizationUncheckedCreateWithoutProjectsInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1887,8 +1997,10 @@ export type OrganizationUpdateWithoutProjectsInput = {
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
@@ -1915,8 +2027,146 @@ export type OrganizationUncheckedUpdateWithoutProjectsInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+  credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
+  accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutProjectPaymentsInput = {
+  id?: string
+  name: string
+  slug: string
+  rut: string
+  logoUrl?: string | null
+  status?: $Enums.OrganizationStatus
+  plan?: string
+  modules?: Prisma.OrganizationCreatemodulesInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
+  settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
+  products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
+  projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
+  projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
+  operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
+  credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
+  accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutProjectPaymentsInput = {
+  id?: string
+  name: string
+  slug: string
+  rut: string
+  logoUrl?: string | null
+  status?: $Enums.OrganizationStatus
+  plan?: string
+  modules?: Prisma.OrganizationCreatemodulesInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
+  settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+  projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
+  operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
+  credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
+  accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutProjectPaymentsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutProjectPaymentsInput, Prisma.OrganizationUncheckedCreateWithoutProjectPaymentsInput>
+}
+
+export type OrganizationUpsertWithoutProjectPaymentsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutProjectPaymentsInput, Prisma.OrganizationUncheckedUpdateWithoutProjectPaymentsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutProjectPaymentsInput, Prisma.OrganizationUncheckedCreateWithoutProjectPaymentsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutProjectPaymentsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutProjectPaymentsInput, Prisma.OrganizationUncheckedUpdateWithoutProjectPaymentsInput>
+}
+
+export type OrganizationUpdateWithoutProjectPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  rut?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  modules?: Prisma.OrganizationUpdatemodulesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
+  settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
+  products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
+  projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
+  projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
+  operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
+  credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
+  accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutProjectPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  rut?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  modules?: Prisma.OrganizationUpdatemodulesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
+  operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1943,8 +2193,10 @@ export type OrganizationCreateWithoutProjectResourcesInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
@@ -1971,8 +2223,10 @@ export type OrganizationUncheckedCreateWithoutProjectResourcesInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2015,8 +2269,10 @@ export type OrganizationUpdateWithoutProjectResourcesInput = {
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
@@ -2043,8 +2299,10 @@ export type OrganizationUncheckedUpdateWithoutProjectResourcesInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2071,8 +2329,10 @@ export type OrganizationCreateWithoutProjectMilestonesInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
@@ -2099,8 +2359,10 @@ export type OrganizationUncheckedCreateWithoutProjectMilestonesInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2143,8 +2405,10 @@ export type OrganizationUpdateWithoutProjectMilestonesInput = {
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
@@ -2171,8 +2435,10 @@ export type OrganizationUncheckedUpdateWithoutProjectMilestonesInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2199,8 +2465,10 @@ export type OrganizationCreateWithoutProjectExpensesInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
@@ -2227,8 +2495,10 @@ export type OrganizationUncheckedCreateWithoutProjectExpensesInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2271,8 +2541,10 @@ export type OrganizationUpdateWithoutProjectExpensesInput = {
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
@@ -2299,8 +2571,10 @@ export type OrganizationUncheckedUpdateWithoutProjectExpensesInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2328,7 +2602,9 @@ export type OrganizationCreateWithoutCashRegistersInput = {
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
@@ -2356,7 +2632,9 @@ export type OrganizationUncheckedCreateWithoutCashRegistersInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2400,7 +2678,9 @@ export type OrganizationUpdateWithoutCashRegistersInput = {
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
@@ -2428,7 +2708,9 @@ export type OrganizationUncheckedUpdateWithoutCashRegistersInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2456,7 +2738,9 @@ export type OrganizationCreateWithoutOperationalExpensesInput = {
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
@@ -2484,7 +2768,9 @@ export type OrganizationUncheckedCreateWithoutOperationalExpensesInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2528,7 +2814,9 @@ export type OrganizationUpdateWithoutOperationalExpensesInput = {
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
@@ -2556,7 +2844,145 @@ export type OrganizationUncheckedUpdateWithoutOperationalExpensesInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+  credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
+  accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutTreasuryMovementsInput = {
+  id?: string
+  name: string
+  slug: string
+  rut: string
+  logoUrl?: string | null
+  status?: $Enums.OrganizationStatus
+  plan?: string
+  modules?: Prisma.OrganizationCreatemodulesInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
+  settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
+  products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
+  projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
+  projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
+  cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
+  operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
+  accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutTreasuryMovementsInput = {
+  id?: string
+  name: string
+  slug: string
+  rut: string
+  logoUrl?: string | null
+  status?: $Enums.OrganizationStatus
+  plan?: string
+  modules?: Prisma.OrganizationCreatemodulesInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
+  settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+  projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
+  cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
+  operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
+  accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutTreasuryMovementsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutTreasuryMovementsInput, Prisma.OrganizationUncheckedCreateWithoutTreasuryMovementsInput>
+}
+
+export type OrganizationUpsertWithoutTreasuryMovementsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutTreasuryMovementsInput, Prisma.OrganizationUncheckedUpdateWithoutTreasuryMovementsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutTreasuryMovementsInput, Prisma.OrganizationUncheckedCreateWithoutTreasuryMovementsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutTreasuryMovementsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutTreasuryMovementsInput, Prisma.OrganizationUncheckedUpdateWithoutTreasuryMovementsInput>
+}
+
+export type OrganizationUpdateWithoutTreasuryMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  rut?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  modules?: Prisma.OrganizationUpdatemodulesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
+  settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
+  products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
+  projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
+  projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
+  cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
+  operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
+  accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutTreasuryMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  rut?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  modules?: Prisma.OrganizationUpdatemodulesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+  cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
+  operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2584,8 +3010,10 @@ export type OrganizationCreateWithoutCreditsInput = {
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
@@ -2612,8 +3040,10 @@ export type OrganizationUncheckedCreateWithoutCreditsInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2656,8 +3086,10 @@ export type OrganizationUpdateWithoutCreditsInput = {
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
@@ -2684,8 +3116,10 @@ export type OrganizationUncheckedUpdateWithoutCreditsInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2712,8 +3146,10 @@ export type OrganizationCreateWithoutPaymentsInput = {
   projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
@@ -2740,8 +3176,10 @@ export type OrganizationUncheckedCreateWithoutPaymentsInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
   projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
   cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2784,8 +3222,10 @@ export type OrganizationUpdateWithoutPaymentsInput = {
   projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
@@ -2812,8 +3252,10 @@ export type OrganizationUncheckedUpdateWithoutPaymentsInput = {
   projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
   projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
   operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2834,8 +3276,10 @@ export type OrganizationCountOutputType = {
   projectExpenses: number
   projectMilestones: number
   projectResources: number
+  projectPayments: number
   cashRegisters: number
   operationalExpenses: number
+  treasuryMovements: number
   credits: number
   payments: number
   suppliers: number
@@ -2852,8 +3296,10 @@ export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   projectExpenses?: boolean | OrganizationCountOutputTypeCountProjectExpensesArgs
   projectMilestones?: boolean | OrganizationCountOutputTypeCountProjectMilestonesArgs
   projectResources?: boolean | OrganizationCountOutputTypeCountProjectResourcesArgs
+  projectPayments?: boolean | OrganizationCountOutputTypeCountProjectPaymentsArgs
   cashRegisters?: boolean | OrganizationCountOutputTypeCountCashRegistersArgs
   operationalExpenses?: boolean | OrganizationCountOutputTypeCountOperationalExpensesArgs
+  treasuryMovements?: boolean | OrganizationCountOutputTypeCountTreasuryMovementsArgs
   credits?: boolean | OrganizationCountOutputTypeCountCreditsArgs
   payments?: boolean | OrganizationCountOutputTypeCountPaymentsArgs
   suppliers?: boolean | OrganizationCountOutputTypeCountSuppliersArgs
@@ -2936,6 +3382,13 @@ export type OrganizationCountOutputTypeCountProjectResourcesArgs<ExtArgs extends
 /**
  * OrganizationCountOutputType without action
  */
+export type OrganizationCountOutputTypeCountProjectPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectPaymentWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
 export type OrganizationCountOutputTypeCountCashRegistersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CashRegisterWhereInput
 }
@@ -2945,6 +3398,13 @@ export type OrganizationCountOutputTypeCountCashRegistersArgs<ExtArgs extends ru
  */
 export type OrganizationCountOutputTypeCountOperationalExpensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.OperationalExpenseWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountTreasuryMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TreasuryMovementWhereInput
 }
 
 /**
@@ -2997,8 +3457,10 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   projectExpenses?: boolean | Prisma.Organization$projectExpensesArgs<ExtArgs>
   projectMilestones?: boolean | Prisma.Organization$projectMilestonesArgs<ExtArgs>
   projectResources?: boolean | Prisma.Organization$projectResourcesArgs<ExtArgs>
+  projectPayments?: boolean | Prisma.Organization$projectPaymentsArgs<ExtArgs>
   cashRegisters?: boolean | Prisma.Organization$cashRegistersArgs<ExtArgs>
   operationalExpenses?: boolean | Prisma.Organization$operationalExpensesArgs<ExtArgs>
+  treasuryMovements?: boolean | Prisma.Organization$treasuryMovementsArgs<ExtArgs>
   credits?: boolean | Prisma.Organization$creditsArgs<ExtArgs>
   payments?: boolean | Prisma.Organization$paymentsArgs<ExtArgs>
   suppliers?: boolean | Prisma.Organization$suppliersArgs<ExtArgs>
@@ -3057,8 +3519,10 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   projectExpenses?: boolean | Prisma.Organization$projectExpensesArgs<ExtArgs>
   projectMilestones?: boolean | Prisma.Organization$projectMilestonesArgs<ExtArgs>
   projectResources?: boolean | Prisma.Organization$projectResourcesArgs<ExtArgs>
+  projectPayments?: boolean | Prisma.Organization$projectPaymentsArgs<ExtArgs>
   cashRegisters?: boolean | Prisma.Organization$cashRegistersArgs<ExtArgs>
   operationalExpenses?: boolean | Prisma.Organization$operationalExpensesArgs<ExtArgs>
+  treasuryMovements?: boolean | Prisma.Organization$treasuryMovementsArgs<ExtArgs>
   credits?: boolean | Prisma.Organization$creditsArgs<ExtArgs>
   payments?: boolean | Prisma.Organization$paymentsArgs<ExtArgs>
   suppliers?: boolean | Prisma.Organization$suppliersArgs<ExtArgs>
@@ -3081,8 +3545,10 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     projectExpenses: Prisma.$ProjectExpensePayload<ExtArgs>[]
     projectMilestones: Prisma.$ProjectMilestonePayload<ExtArgs>[]
     projectResources: Prisma.$ProjectResourcePayload<ExtArgs>[]
+    projectPayments: Prisma.$ProjectPaymentPayload<ExtArgs>[]
     cashRegisters: Prisma.$CashRegisterPayload<ExtArgs>[]
     operationalExpenses: Prisma.$OperationalExpensePayload<ExtArgs>[]
+    treasuryMovements: Prisma.$TreasuryMovementPayload<ExtArgs>[]
     credits: Prisma.$CreditPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
     suppliers: Prisma.$SupplierPayload<ExtArgs>[]
@@ -3503,8 +3969,10 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   projectExpenses<T extends Prisma.Organization$projectExpensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$projectExpensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projectMilestones<T extends Prisma.Organization$projectMilestonesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$projectMilestonesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectMilestonePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projectResources<T extends Prisma.Organization$projectResourcesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$projectResourcesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectResourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  projectPayments<T extends Prisma.Organization$projectPaymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$projectPaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cashRegisters<T extends Prisma.Organization$cashRegistersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$cashRegistersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CashRegisterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   operationalExpenses<T extends Prisma.Organization$operationalExpensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$operationalExpensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OperationalExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  treasuryMovements<T extends Prisma.Organization$treasuryMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$treasuryMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TreasuryMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   credits<T extends Prisma.Organization$creditsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$creditsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CreditPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Organization$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   suppliers<T extends Prisma.Organization$suppliersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$suppliersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupplierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4171,6 +4639,30 @@ export type Organization$projectResourcesArgs<ExtArgs extends runtime.Types.Exte
 }
 
 /**
+ * Organization.projectPayments
+ */
+export type Organization$projectPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectPayment
+   */
+  select?: Prisma.ProjectPaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectPayment
+   */
+  omit?: Prisma.ProjectPaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectPaymentInclude<ExtArgs> | null
+  where?: Prisma.ProjectPaymentWhereInput
+  orderBy?: Prisma.ProjectPaymentOrderByWithRelationInput | Prisma.ProjectPaymentOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectPaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectPaymentScalarFieldEnum | Prisma.ProjectPaymentScalarFieldEnum[]
+}
+
+/**
  * Organization.cashRegisters
  */
 export type Organization$cashRegistersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4216,6 +4708,30 @@ export type Organization$operationalExpensesArgs<ExtArgs extends runtime.Types.E
   take?: number
   skip?: number
   distinct?: Prisma.OperationalExpenseScalarFieldEnum | Prisma.OperationalExpenseScalarFieldEnum[]
+}
+
+/**
+ * Organization.treasuryMovements
+ */
+export type Organization$treasuryMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TreasuryMovement
+   */
+  select?: Prisma.TreasuryMovementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TreasuryMovement
+   */
+  omit?: Prisma.TreasuryMovementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TreasuryMovementInclude<ExtArgs> | null
+  where?: Prisma.TreasuryMovementWhereInput
+  orderBy?: Prisma.TreasuryMovementOrderByWithRelationInput | Prisma.TreasuryMovementOrderByWithRelationInput[]
+  cursor?: Prisma.TreasuryMovementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TreasuryMovementScalarFieldEnum | Prisma.TreasuryMovementScalarFieldEnum[]
 }
 
 /**

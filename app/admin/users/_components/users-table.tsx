@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { MoreHorizontal, Pencil, Trash2, Shield } from 'lucide-react'
+import { MoreHorizontal, Pencil, Trash2, Shield, KeyRound } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -77,6 +77,35 @@ export function UsersTable({ users }: UsersTableProps) {
     } catch (error) {
       console.error('Error:', error)
       toast.error('Error al eliminar el usuario')
+    }
+  }
+
+  const handleResetPassword = async (id: string, email: string) => {
+    if (!confirm(`¿Resetear contraseña para ${email}? Se enviará una nueva clave temporal al correo del usuario.`)) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/admin/users/${id}/reset-password`, {
+        method: 'POST',
+      })
+
+      const body = await response.json()
+
+      if (!response.ok) {
+        toast.error(body.error || 'No se pudo resetear la contraseña')
+        return
+      }
+
+      if (body.temporaryPassword) {
+        toast.success('Contraseña restablecida. Revisa el mensaje para compartir clave temporal manualmente.')
+        alert(`No se pudo enviar correo. Contraseña temporal para ${email}: ${body.temporaryPassword}`)
+      } else {
+        toast.success('Contraseña restablecida y enviada por correo')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      toast.error('Error al resetear la contraseña')
     }
   }
 
@@ -154,6 +183,10 @@ export function UsersTable({ users }: UsersTableProps) {
                       <DropdownMenuItem onClick={() => handleEdit(user)}>
                         <Pencil className="mr-2 h-4 w-4" />
                         Editar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleResetPassword(user.id, user.email)}>
+                        <KeyRound className="mr-2 h-4 w-4" />
+                        Resetear contraseña
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => handleDelete(user.id, user.email)}
@@ -243,6 +276,10 @@ export function UsersTable({ users }: UsersTableProps) {
                               <DropdownMenuItem onClick={() => handleEdit(user)}>
                                 <Pencil className="mr-2 h-4 w-4" />
                                 Editar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleResetPassword(user.id, user.email)}>
+                                <KeyRound className="mr-2 h-4 w-4" />
+                                Resetear contraseña
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => handleDelete(user.id, user.email)}

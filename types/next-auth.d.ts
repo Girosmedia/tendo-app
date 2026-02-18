@@ -7,6 +7,7 @@ declare module 'next-auth' {
       organizationId: string | null;
       isSuperAdmin: boolean;
       impersonationSessionId?: string;
+      jobTitle?: string | null;
     } & DefaultSession['user'];
   }
 }
@@ -17,5 +18,6 @@ declare module 'next-auth/jwt' {
     organizationId: string | null;
     isSuperAdmin: boolean;
     impersonationSessionId?: string;
+    jobTitle?: string | null;
   }
 }

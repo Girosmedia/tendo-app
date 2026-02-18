@@ -59,6 +59,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           id: user.id,
           email: user.email,
           name: user.name,
+          image: user.image,
         };
       },
     }),
@@ -75,11 +76,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           select: { 
             currentOrganizationId: true,
             isSuperAdmin: true,
+            name: true,
+            email: true,
+            image: true,
+            jobTitle: true,
           },
         });
         
         token.organizationId = dbUser?.currentOrganizationId ?? null;
         token.isSuperAdmin = dbUser?.isSuperAdmin ?? false;
+        token.name = dbUser?.name ?? user.name;
+        token.email = dbUser?.email ?? user.email;
+        token.picture = dbUser?.image ?? null;
+        token.jobTitle = dbUser?.jobTitle ?? null;
       }
       
       // Si hay un update manual de la sesión O si el token no tiene organizationId
@@ -90,6 +99,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           select: { 
             currentOrganizationId: true,
             isSuperAdmin: true,
+            name: true,
+            email: true,
+            image: true,
+            jobTitle: true,
           },
         });
         
@@ -99,6 +112,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (dbUser?.isSuperAdmin !== undefined) {
           token.isSuperAdmin = dbUser.isSuperAdmin;
         }
+        token.name = dbUser?.name ?? token.name;
+        token.email = dbUser?.email ?? token.email;
+        token.picture = dbUser?.image ?? token.picture;
+        token.jobTitle = dbUser?.jobTitle ?? token.jobTitle;
       }
 
       // Verificar si hay sesión de impersonation activa (solo para super admins)
@@ -142,6 +159,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.organizationId = token.organizationId as string | null;
         session.user.isSuperAdmin = token.isSuperAdmin as boolean;
         session.user.impersonationSessionId = token.impersonationSessionId as string | undefined;
+        session.user.name = (token.name as string | null | undefined) ?? session.user.name;
+        session.user.email = (token.email as string | null | undefined) ?? session.user.email;
+        session.user.image = (token.picture as string | null | undefined) ?? session.user.image;
+        session.user.jobTitle = (token.jobTitle as string | null | undefined) ?? null;
       }
       
       return session;

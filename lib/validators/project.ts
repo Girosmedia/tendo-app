@@ -11,6 +11,7 @@ export const createProjectSchema = z.object({
   quoteId: z.string().optional().nullable(),
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres').max(120),
   description: z.string().max(5000).optional().nullable(),
+  contractedAmount: z.number().nonnegative('El monto contratado no puede ser negativo').optional().nullable(),
   budget: z.number().nonnegative('El presupuesto no puede ser negativo').optional().nullable(),
   startDate: z.string().datetime().optional().nullable(),
   endDate: z.string().datetime().optional().nullable(),
@@ -21,10 +22,19 @@ export const updateProjectSchema = z.object({
   name: z.string().min(2).max(120).optional(),
   description: z.string().max(5000).optional().nullable(),
   status: ProjectStatusEnum.optional(),
+  contractedAmount: z.number().nonnegative().optional().nullable(),
   budget: z.number().nonnegative().optional().nullable(),
   actualCost: z.number().nonnegative().optional(),
   startDate: z.string().datetime().optional().nullable(),
   endDate: z.string().datetime().optional().nullable(),
+  notes: z.string().max(5000).optional().nullable(),
+});
+
+export const createProjectPaymentSchema = z.object({
+  amount: z.number().positive('El monto del cobro debe ser mayor a 0'),
+  paymentMethod: z.enum(['CASH', 'CARD', 'TRANSFER', 'CHECK', 'MULTI']),
+  paidAt: z.string().datetime().optional().nullable(),
+  reference: z.string().max(120).optional().nullable(),
   notes: z.string().max(5000).optional().nullable(),
 });
 
@@ -107,3 +117,4 @@ export type CreateProjectMilestoneInput = z.infer<typeof createProjectMilestoneS
 export type UpdateProjectMilestoneInput = z.infer<typeof updateProjectMilestoneSchema>;
 export type CreateProjectResourceInput = z.infer<typeof createProjectResourceSchema>;
 export type UpdateProjectResourceInput = z.infer<typeof updateProjectResourceSchema>;
+export type CreateProjectPaymentInput = z.infer<typeof createProjectPaymentSchema>;

@@ -100,6 +100,8 @@ export const registerAccountPayablePaymentSchema = z.object({
     .positive('El monto del pago debe ser mayor a 0')
     .max(9999999999, 'El monto es demasiado alto'),
   paidAt: z.string().datetime('Fecha de pago inválida').optional().nullable(),
+  source: z.enum(['CASH', 'BANK', 'TRANSFER', 'OTHER']).default('OTHER'),
+  reference: z.string().max(120).optional().nullable(),
   notes: z.string().max(2000).optional().nullable(),
 });
 

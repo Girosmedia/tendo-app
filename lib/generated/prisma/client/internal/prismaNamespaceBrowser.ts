@@ -69,11 +69,13 @@ export const ModelName = {
   Document: 'Document',
   DocumentItem: 'DocumentItem',
   Project: 'Project',
+  ProjectPayment: 'ProjectPayment',
   ProjectResource: 'ProjectResource',
   ProjectMilestone: 'ProjectMilestone',
   ProjectExpense: 'ProjectExpense',
   CashRegister: 'CashRegister',
   OperationalExpense: 'OperationalExpense',
+  TreasuryMovement: 'TreasuryMovement',
   Credit: 'Credit',
   Payment: 'Payment'
 } as const
@@ -125,6 +127,7 @@ export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeo
 export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  jobTitle: 'jobTitle',
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
@@ -415,6 +418,7 @@ export const ProjectScalarFieldEnum = {
   name: 'name',
   description: 'description',
   status: 'status',
+  contractedAmount: 'contractedAmount',
   budget: 'budget',
   actualCost: 'actualCost',
   startDate: 'startDate',
@@ -426,6 +430,23 @@ export const ProjectScalarFieldEnum = {
 } as const
 
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+export const ProjectPaymentScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  projectId: 'projectId',
+  amount: 'amount',
+  paymentMethod: 'paymentMethod',
+  paidAt: 'paidAt',
+  reference: 'reference',
+  notes: 'notes',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectPaymentScalarFieldEnum = (typeof ProjectPaymentScalarFieldEnum)[keyof typeof ProjectPaymentScalarFieldEnum]
 
 
 export const ProjectResourceScalarFieldEnum = {
@@ -525,6 +546,26 @@ export const OperationalExpenseScalarFieldEnum = {
 } as const
 
 export type OperationalExpenseScalarFieldEnum = (typeof OperationalExpenseScalarFieldEnum)[keyof typeof OperationalExpenseScalarFieldEnum]
+
+
+export const TreasuryMovementScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  accountPayableId: 'accountPayableId',
+  type: 'type',
+  category: 'category',
+  source: 'source',
+  title: 'title',
+  description: 'description',
+  reference: 'reference',
+  amount: 'amount',
+  occurredAt: 'occurredAt',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TreasuryMovementScalarFieldEnum = (typeof TreasuryMovementScalarFieldEnum)[keyof typeof TreasuryMovementScalarFieldEnum]
 
 
 export const CreditScalarFieldEnum = {

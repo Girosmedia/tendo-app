@@ -123,48 +123,86 @@ export default async function DocumentsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Número</TableHead>
-                <TableHead>Tipo</TableHead>
-                <TableHead>Estado</TableHead>
-                <TableHead>Cliente</TableHead>
-                <TableHead>Fecha</TableHead>
-                <TableHead className="text-right">Total</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {documents.map((doc) => (
-                <TableRow key={doc.id}>
-                  <TableCell className="font-medium">
-                    {doc.docPrefix ? `${doc.docPrefix}-${doc.docNumber}` : `#${doc.docNumber}`}
-                  </TableCell>
-                  <TableCell>{documentTypeLabels[doc.type] ?? doc.type}</TableCell>
-                  <TableCell>
-                    <Badge variant={getStatusVariant(doc.status)}>
-                      {statusLabels[doc.status] ?? doc.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{doc.customer?.name ?? 'Consumidor final'}</TableCell>
-                  <TableCell>
-                    {new Intl.DateTimeFormat('es-CL', {
-                      dateStyle: 'short',
-                      timeStyle: 'short',
-                    }).format(doc.issuedAt)}
-                  </TableCell>
-                  <TableCell className="text-right">{formatCurrency(Number(doc.total))}</TableCell>
-                </TableRow>
-              ))}
-              {documents.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground">
-                    No hay documentos para mostrar.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+          {documents.length === 0 ? (
+            <div className="rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground">
+              No hay documentos para mostrar.
+            </div>
+          ) : (
+            <>
+              <div className="space-y-3 md:hidden">
+                {documents.map((doc) => (
+                  <div key={doc.id} className="rounded-lg border p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="font-semibold">
+                          {doc.docPrefix ? `${doc.docPrefix}-${doc.docNumber}` : `#${doc.docNumber}`}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {documentTypeLabels[doc.type] ?? doc.type}
+                        </p>
+                      </div>
+                      <Badge variant={getStatusVariant(doc.status)}>
+                        {statusLabels[doc.status] ?? doc.status}
+                      </Badge>
+                    </div>
+
+                    <div className="mt-3 space-y-1 text-sm">
+                      <p>
+                        <span className="text-muted-foreground">Cliente:</span>{' '}
+                        {doc.customer?.name ?? 'Consumidor final'}
+                      </p>
+                      <p>
+                        <span className="text-muted-foreground">Fecha:</span>{' '}
+                        {new Intl.DateTimeFormat('es-CL', {
+                          dateStyle: 'short',
+                          timeStyle: 'short',
+                        }).format(doc.issuedAt)}
+                      </p>
+                      <p className="font-semibold">{formatCurrency(Number(doc.total))}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="hidden md:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Número</TableHead>
+                      <TableHead>Tipo</TableHead>
+                      <TableHead>Estado</TableHead>
+                      <TableHead>Cliente</TableHead>
+                      <TableHead>Fecha</TableHead>
+                      <TableHead className="text-right">Total</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {documents.map((doc) => (
+                      <TableRow key={doc.id}>
+                        <TableCell className="font-medium">
+                          {doc.docPrefix ? `${doc.docPrefix}-${doc.docNumber}` : `#${doc.docNumber}`}
+                        </TableCell>
+                        <TableCell>{documentTypeLabels[doc.type] ?? doc.type}</TableCell>
+                        <TableCell>
+                          <Badge variant={getStatusVariant(doc.status)}>
+                            {statusLabels[doc.status] ?? doc.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{doc.customer?.name ?? 'Consumidor final'}</TableCell>
+                        <TableCell>
+                          {new Intl.DateTimeFormat('es-CL', {
+                            dateStyle: 'short',
+                            timeStyle: 'short',
+                          }).format(doc.issuedAt)}
+                        </TableCell>
+                        <TableCell className="text-right">{formatCurrency(Number(doc.total))}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>

@@ -32,18 +32,30 @@ export default async function DashboardLayout({
   }
 
   // Obtener datos de la organización
-  const organization = await db.organization.findUnique({
-    where: { id: organizationId },
-    select: { 
-      name: true,
-      logoUrl: true,
-      settings: {
-        select: {
-          logoUrl: true,
+  const [organization, sidebarUser] = await Promise.all([
+    db.organization.findUnique({
+      where: { id: organizationId },
+      select: {
+        name: true,
+        logoUrl: true,
+        settings: {
+          select: {
+            logoUrl: true,
+          },
         },
       },
-    },
-  });
+    }),
+    db.user.findUnique({
+      where: { id: session.user.id },
+      select: {
+        name: true,
+        email: true,
+        image: true,
+        jobTitle: true,
+        isSuperAdmin: true,
+      },
+    }),
+  ]);
 
   const organizationLogo = organization?.settings?.logoUrl || organization?.logoUrl || null;
 
@@ -54,7 +66,13 @@ export default async function DashboardLayout({
       )}
       <div className="flex min-h-screen w-full bg-background" style={impersonation ? { marginTop: '48px' } : {}}>
         <AppSidebar 
-          user={session.user} 
+          user={{
+            name: sidebarUser?.name ?? session.user.name,
+            email: sidebarUser?.email ?? session.user.email,
+            image: sidebarUser?.image ?? session.user.image,
+            jobTitle: sidebarUser?.jobTitle ?? session.user.jobTitle,
+            isSuperAdmin: sidebarUser?.isSuperAdmin ?? session.user.isSuperAdmin,
+          }}
           organizationName={organization?.name}
           organizationLogo={organizationLogo}
         />

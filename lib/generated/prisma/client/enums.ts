@@ -153,6 +153,36 @@ export const OperationalExpensePaymentMethod = {
 export type OperationalExpensePaymentMethod = (typeof OperationalExpensePaymentMethod)[keyof typeof OperationalExpensePaymentMethod]
 
 
+export const TreasuryMovementType = {
+  INFLOW: 'INFLOW',
+  OUTFLOW: 'OUTFLOW'
+} as const
+
+export type TreasuryMovementType = (typeof TreasuryMovementType)[keyof typeof TreasuryMovementType]
+
+
+export const TreasuryMovementCategory = {
+  CAPITAL_INJECTION: 'CAPITAL_INJECTION',
+  OWNER_WITHDRAWAL: 'OWNER_WITHDRAWAL',
+  LOAN_IN: 'LOAN_IN',
+  LOAN_OUT: 'LOAN_OUT',
+  ACCOUNT_PAYABLE_PAYMENT: 'ACCOUNT_PAYABLE_PAYMENT',
+  OTHER: 'OTHER'
+} as const
+
+export type TreasuryMovementCategory = (typeof TreasuryMovementCategory)[keyof typeof TreasuryMovementCategory]
+
+
+export const TreasuryMovementSource = {
+  CASH: 'CASH',
+  BANK: 'BANK',
+  TRANSFER: 'TRANSFER',
+  OTHER: 'OTHER'
+} as const
+
+export type TreasuryMovementSource = (typeof TreasuryMovementSource)[keyof typeof TreasuryMovementSource]
+
+
 export const CreditStatus = {
   ACTIVE: 'ACTIVE',
   PAID: 'PAID',

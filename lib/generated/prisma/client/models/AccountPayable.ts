@@ -310,6 +310,7 @@ export type AccountPayableWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"AccountPayable"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   supplier?: Prisma.XOR<Prisma.SupplierScalarRelationFilter, Prisma.SupplierWhereInput>
+  treasuryMovements?: Prisma.TreasuryMovementListRelationFilter
 }
 
 export type AccountPayableOrderByWithRelationInput = {
@@ -331,6 +332,7 @@ export type AccountPayableOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
   supplier?: Prisma.SupplierOrderByWithRelationInput
+  treasuryMovements?: Prisma.TreasuryMovementOrderByRelationAggregateInput
 }
 
 export type AccountPayableWhereUniqueInput = Prisma.AtLeast<{
@@ -355,6 +357,7 @@ export type AccountPayableWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"AccountPayable"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   supplier?: Prisma.XOR<Prisma.SupplierScalarRelationFilter, Prisma.SupplierWhereInput>
+  treasuryMovements?: Prisma.TreasuryMovementListRelationFilter
 }, "id">
 
 export type AccountPayableOrderByWithAggregationInput = {
@@ -420,6 +423,7 @@ export type AccountPayableCreateInput = {
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutAccountsPayableInput
   supplier: Prisma.SupplierCreateNestedOneWithoutPayablesInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutAccountPayableInput
 }
 
 export type AccountPayableUncheckedCreateInput = {
@@ -439,6 +443,7 @@ export type AccountPayableUncheckedCreateInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutAccountPayableInput
 }
 
 export type AccountPayableUpdateInput = {
@@ -458,6 +463,7 @@ export type AccountPayableUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutAccountsPayableNestedInput
   supplier?: Prisma.SupplierUpdateOneRequiredWithoutPayablesNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutAccountPayableNestedInput
 }
 
 export type AccountPayableUncheckedUpdateInput = {
@@ -477,6 +483,7 @@ export type AccountPayableUncheckedUpdateInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutAccountPayableNestedInput
 }
 
 export type AccountPayableCreateManyInput = {
@@ -611,6 +618,11 @@ export type AccountPayableSumOrderByAggregateInput = {
   balance?: Prisma.SortOrder
 }
 
+export type AccountPayableNullableScalarRelationFilter = {
+  is?: Prisma.AccountPayableWhereInput | null
+  isNot?: Prisma.AccountPayableWhereInput | null
+}
+
 export type AccountPayableCreateNestedManyWithoutOrganizationInput = {
   create?: Prisma.XOR<Prisma.AccountPayableCreateWithoutOrganizationInput, Prisma.AccountPayableUncheckedCreateWithoutOrganizationInput> | Prisma.AccountPayableCreateWithoutOrganizationInput[] | Prisma.AccountPayableUncheckedCreateWithoutOrganizationInput[]
   connectOrCreate?: Prisma.AccountPayableCreateOrConnectWithoutOrganizationInput | Prisma.AccountPayableCreateOrConnectWithoutOrganizationInput[]
@@ -711,6 +723,22 @@ export type EnumAccountPayableStatusFieldUpdateOperationsInput = {
   set?: $Enums.AccountPayableStatus
 }
 
+export type AccountPayableCreateNestedOneWithoutTreasuryMovementsInput = {
+  create?: Prisma.XOR<Prisma.AccountPayableCreateWithoutTreasuryMovementsInput, Prisma.AccountPayableUncheckedCreateWithoutTreasuryMovementsInput>
+  connectOrCreate?: Prisma.AccountPayableCreateOrConnectWithoutTreasuryMovementsInput
+  connect?: Prisma.AccountPayableWhereUniqueInput
+}
+
+export type AccountPayableUpdateOneWithoutTreasuryMovementsNestedInput = {
+  create?: Prisma.XOR<Prisma.AccountPayableCreateWithoutTreasuryMovementsInput, Prisma.AccountPayableUncheckedCreateWithoutTreasuryMovementsInput>
+  connectOrCreate?: Prisma.AccountPayableCreateOrConnectWithoutTreasuryMovementsInput
+  upsert?: Prisma.AccountPayableUpsertWithoutTreasuryMovementsInput
+  disconnect?: Prisma.AccountPayableWhereInput | boolean
+  delete?: Prisma.AccountPayableWhereInput | boolean
+  connect?: Prisma.AccountPayableWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AccountPayableUpdateToOneWithWhereWithoutTreasuryMovementsInput, Prisma.AccountPayableUpdateWithoutTreasuryMovementsInput>, Prisma.AccountPayableUncheckedUpdateWithoutTreasuryMovementsInput>
+}
+
 export type AccountPayableCreateWithoutOrganizationInput = {
   id?: string
   documentType?: $Enums.AccountPayableDocumentType
@@ -727,6 +755,7 @@ export type AccountPayableCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   supplier: Prisma.SupplierCreateNestedOneWithoutPayablesInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutAccountPayableInput
 }
 
 export type AccountPayableUncheckedCreateWithoutOrganizationInput = {
@@ -745,6 +774,7 @@ export type AccountPayableUncheckedCreateWithoutOrganizationInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutAccountPayableInput
 }
 
 export type AccountPayableCreateOrConnectWithoutOrganizationInput = {
@@ -811,6 +841,7 @@ export type AccountPayableCreateWithoutSupplierInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutAccountsPayableInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutAccountPayableInput
 }
 
 export type AccountPayableUncheckedCreateWithoutSupplierInput = {
@@ -829,6 +860,7 @@ export type AccountPayableUncheckedCreateWithoutSupplierInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutAccountPayableInput
 }
 
 export type AccountPayableCreateOrConnectWithoutSupplierInput = {
@@ -855,6 +887,98 @@ export type AccountPayableUpdateWithWhereUniqueWithoutSupplierInput = {
 export type AccountPayableUpdateManyWithWhereWithoutSupplierInput = {
   where: Prisma.AccountPayableScalarWhereInput
   data: Prisma.XOR<Prisma.AccountPayableUpdateManyMutationInput, Prisma.AccountPayableUncheckedUpdateManyWithoutSupplierInput>
+}
+
+export type AccountPayableCreateWithoutTreasuryMovementsInput = {
+  id?: string
+  documentType?: $Enums.AccountPayableDocumentType
+  documentNumber?: string | null
+  issueDate: Date | string
+  dueDate: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.AccountPayableStatus
+  description?: string | null
+  notes?: string | null
+  createdBy: string
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutAccountsPayableInput
+  supplier: Prisma.SupplierCreateNestedOneWithoutPayablesInput
+}
+
+export type AccountPayableUncheckedCreateWithoutTreasuryMovementsInput = {
+  id?: string
+  organizationId: string
+  supplierId: string
+  documentType?: $Enums.AccountPayableDocumentType
+  documentNumber?: string | null
+  issueDate: Date | string
+  dueDate: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.AccountPayableStatus
+  description?: string | null
+  notes?: string | null
+  createdBy: string
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AccountPayableCreateOrConnectWithoutTreasuryMovementsInput = {
+  where: Prisma.AccountPayableWhereUniqueInput
+  create: Prisma.XOR<Prisma.AccountPayableCreateWithoutTreasuryMovementsInput, Prisma.AccountPayableUncheckedCreateWithoutTreasuryMovementsInput>
+}
+
+export type AccountPayableUpsertWithoutTreasuryMovementsInput = {
+  update: Prisma.XOR<Prisma.AccountPayableUpdateWithoutTreasuryMovementsInput, Prisma.AccountPayableUncheckedUpdateWithoutTreasuryMovementsInput>
+  create: Prisma.XOR<Prisma.AccountPayableCreateWithoutTreasuryMovementsInput, Prisma.AccountPayableUncheckedCreateWithoutTreasuryMovementsInput>
+  where?: Prisma.AccountPayableWhereInput
+}
+
+export type AccountPayableUpdateToOneWithWhereWithoutTreasuryMovementsInput = {
+  where?: Prisma.AccountPayableWhereInput
+  data: Prisma.XOR<Prisma.AccountPayableUpdateWithoutTreasuryMovementsInput, Prisma.AccountPayableUncheckedUpdateWithoutTreasuryMovementsInput>
+}
+
+export type AccountPayableUpdateWithoutTreasuryMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.EnumAccountPayableDocumentTypeFieldUpdateOperationsInput | $Enums.AccountPayableDocumentType
+  documentNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumAccountPayableStatusFieldUpdateOperationsInput | $Enums.AccountPayableStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutAccountsPayableNestedInput
+  supplier?: Prisma.SupplierUpdateOneRequiredWithoutPayablesNestedInput
+}
+
+export type AccountPayableUncheckedUpdateWithoutTreasuryMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierId?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.EnumAccountPayableDocumentTypeFieldUpdateOperationsInput | $Enums.AccountPayableDocumentType
+  documentNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumAccountPayableStatusFieldUpdateOperationsInput | $Enums.AccountPayableStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AccountPayableCreateManyOrganizationInput = {
@@ -891,6 +1015,7 @@ export type AccountPayableUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   supplier?: Prisma.SupplierUpdateOneRequiredWithoutPayablesNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutAccountPayableNestedInput
 }
 
 export type AccountPayableUncheckedUpdateWithoutOrganizationInput = {
@@ -909,6 +1034,7 @@ export type AccountPayableUncheckedUpdateWithoutOrganizationInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutAccountPayableNestedInput
 }
 
 export type AccountPayableUncheckedUpdateManyWithoutOrganizationInput = {
@@ -963,6 +1089,7 @@ export type AccountPayableUpdateWithoutSupplierInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutAccountsPayableNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutAccountPayableNestedInput
 }
 
 export type AccountPayableUncheckedUpdateWithoutSupplierInput = {
@@ -981,6 +1108,7 @@ export type AccountPayableUncheckedUpdateWithoutSupplierInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutAccountPayableNestedInput
 }
 
 export type AccountPayableUncheckedUpdateManyWithoutSupplierInput = {
@@ -1002,6 +1130,35 @@ export type AccountPayableUncheckedUpdateManyWithoutSupplierInput = {
 }
 
 
+/**
+ * Count Type AccountPayableCountOutputType
+ */
+
+export type AccountPayableCountOutputType = {
+  treasuryMovements: number
+}
+
+export type AccountPayableCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  treasuryMovements?: boolean | AccountPayableCountOutputTypeCountTreasuryMovementsArgs
+}
+
+/**
+ * AccountPayableCountOutputType without action
+ */
+export type AccountPayableCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AccountPayableCountOutputType
+   */
+  select?: Prisma.AccountPayableCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * AccountPayableCountOutputType without action
+ */
+export type AccountPayableCountOutputTypeCountTreasuryMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TreasuryMovementWhereInput
+}
+
 
 export type AccountPayableSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1022,6 +1179,8 @@ export type AccountPayableSelect<ExtArgs extends runtime.Types.Extensions.Intern
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
+  treasuryMovements?: boolean | Prisma.AccountPayable$treasuryMovementsArgs<ExtArgs>
+  _count?: boolean | Prisma.AccountPayableCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["accountPayable"]>
 
 export type AccountPayableSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1089,6 +1248,8 @@ export type AccountPayableOmit<ExtArgs extends runtime.Types.Extensions.Internal
 export type AccountPayableInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
+  treasuryMovements?: boolean | Prisma.AccountPayable$treasuryMovementsArgs<ExtArgs>
+  _count?: boolean | Prisma.AccountPayableCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AccountPayableIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -1104,6 +1265,7 @@ export type $AccountPayablePayload<ExtArgs extends runtime.Types.Extensions.Inte
   objects: {
     organization: Prisma.$OrganizationPayload<ExtArgs>
     supplier: Prisma.$SupplierPayload<ExtArgs>
+    treasuryMovements: Prisma.$TreasuryMovementPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1518,6 +1680,7 @@ export interface Prisma__AccountPayableClient<T, Null = never, ExtArgs extends r
   readonly [Symbol.toStringTag]: "PrismaPromise"
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   supplier<T extends Prisma.SupplierDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupplierDefaultArgs<ExtArgs>>): Prisma.Prisma__SupplierClient<runtime.Types.Result.GetResult<Prisma.$SupplierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  treasuryMovements<T extends Prisma.AccountPayable$treasuryMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AccountPayable$treasuryMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TreasuryMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1956,6 +2119,30 @@ export type AccountPayableDeleteManyArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many AccountPayables to delete.
    */
   limit?: number
+}
+
+/**
+ * AccountPayable.treasuryMovements
+ */
+export type AccountPayable$treasuryMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TreasuryMovement
+   */
+  select?: Prisma.TreasuryMovementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TreasuryMovement
+   */
+  omit?: Prisma.TreasuryMovementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TreasuryMovementInclude<ExtArgs> | null
+  where?: Prisma.TreasuryMovementWhereInput
+  orderBy?: Prisma.TreasuryMovementOrderByWithRelationInput | Prisma.TreasuryMovementOrderByWithRelationInput[]
+  cursor?: Prisma.TreasuryMovementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TreasuryMovementScalarFieldEnum | Prisma.TreasuryMovementScalarFieldEnum[]
 }
 
 /**

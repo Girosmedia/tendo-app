@@ -24,6 +24,16 @@ interface UserWelcomeEmailInput {
   name?: string | null;
 }
 
+interface PasswordResetEmailInput {
+  toEmail: string;
+  resetUrl: string;
+}
+
+interface AdminPasswordResetEmailInput {
+  toEmail: string;
+  temporaryPassword: string;
+}
+
 interface OrganizationCreatedEmailInput {
   toEmail: string;
   name?: string | null;
@@ -214,6 +224,47 @@ export async function sendUserWelcomeEmail(input: UserWelcomeEmailInput) {
       paragraphs: ['Para partir rápido, completa tu configuración inicial en pocos pasos.'],
       ctaLabel: 'Ir al onboarding',
       ctaUrl: onboardingUrl,
+    }),
+  });
+}
+
+export async function sendPasswordResetEmail(input: PasswordResetEmailInput) {
+  return sendWithResend({
+    from: getSender(),
+    to: [input.toEmail],
+    subject: 'Recuperación de contraseña en Tendo',
+    html: renderEmailTemplate({
+      title: 'Recupera tu contraseña',
+      greeting: 'Recibimos una solicitud para restablecer tu contraseña en Tendo.',
+      paragraphs: [
+        'Si fuiste tú, usa el siguiente botón para crear una nueva contraseña.',
+        `Si el botón no funciona, copia este enlace:<br /><a href="${input.resetUrl}" style="color:#2563eb;">${input.resetUrl}</a>`,
+        'Si no solicitaste este cambio, puedes ignorar este correo.',
+      ],
+      ctaLabel: 'Restablecer contraseña',
+      ctaUrl: input.resetUrl,
+      supportMessage: 'Por seguridad, este enlace expira en 1 hora.',
+    }),
+  });
+}
+
+export async function sendAdminPasswordResetEmail(input: AdminPasswordResetEmailInput) {
+  const loginUrl = `${getBaseUrl()}/login`;
+
+  return sendWithResend({
+    from: getSender(),
+    to: [input.toEmail],
+    subject: 'Tu contraseña fue restablecida por soporte en Tendo',
+    html: renderEmailTemplate({
+      title: 'Contraseña restablecida',
+      greeting: 'Un administrador restableció tu acceso en Tendo.',
+      paragraphs: [
+        `<strong>Correo:</strong> ${input.toEmail}`,
+        `<strong>Nueva contraseña temporal:</strong> ${input.temporaryPassword}`,
+        'Te recomendamos cambiar esta contraseña apenas ingreses.',
+      ],
+      ctaLabel: 'Iniciar sesión',
+      ctaUrl: loginUrl,
     }),
   });
 }

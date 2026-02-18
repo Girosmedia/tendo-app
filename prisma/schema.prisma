@@ -47,6 +47,7 @@ model Session {
 model User {
   id                    String    @id @default(cuid())
   name                  String?
+  jobTitle              String?   @map("job_title")
   email                 String    @unique
   emailVerified         DateTime? @map("email_verified")
   image                 String?
@@ -110,8 +111,10 @@ model Organization {
   projectExpenses ProjectExpense[]
   projectMilestones ProjectMilestone[]
   projectResources ProjectResource[]
+  projectPayments ProjectPayment[]
   cashRegisters CashRegister[]
   operationalExpenses OperationalExpense[]
+  treasuryMovements TreasuryMovement[]
   credits       Credit[]
   payments      Payment[]
   suppliers     Supplier[]
@@ -196,6 +199,7 @@ model AccountPayable {
 
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   supplier       Supplier     @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  treasuryMovements TreasuryMovement[]
 
   @@index([organizationId])
   @@index([supplierId])
@@ -628,6 +632,7 @@ model Project {
 
   // Estado y control
   status         ProjectStatus @default(ACTIVE)
+  contractedAmount Decimal?    @db.Decimal(12, 2) @map("contracted_amount")
   budget         Decimal?      @db.Decimal(12, 2) // Presupuesto inicial
   actualCost     Decimal       @default(0) @db.Decimal(12, 2) @map("actual_cost")
   startDate      DateTime      @default(now()) @map("start_date")
@@ -644,11 +649,36 @@ model Project {
   expenses       ProjectExpense[]
   milestones     ProjectMilestone[]
   resources      ProjectResource[]
+  payments       ProjectPayment[]
 
   @@index([organizationId])
   @@index([status])
   @@index([startDate])
   @@map("projects")
+}
+
+model ProjectPayment {
+  id             String        @id @default(cuid())
+  organizationId String        @map("organization_id")
+  projectId      String        @map("project_id")
+
+  amount         Decimal       @db.Decimal(12, 2)
+  paymentMethod  PaymentMethod @map("payment_method")
+  paidAt         DateTime      @default(now()) @map("paid_at")
+
+  reference      String?
+  notes          String?       @db.Text
+  createdBy      String        @map("created_by")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  project        Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([projectId])
+  @@index([paidAt])
+  @@map("project_payments")
 }
 
 model ProjectResource {
@@ -797,6 +827,27 @@ enum OperationalExpensePaymentMethod {
   OTHER
 }
 
+enum TreasuryMovementType {
+  INFLOW
+  OUTFLOW
+}
+
+enum TreasuryMovementCategory {
+  CAPITAL_INJECTION
+  OWNER_WITHDRAWAL
+  LOAN_IN
+  LOAN_OUT
+  ACCOUNT_PAYABLE_PAYMENT
+  OTHER
+}
+
+enum TreasuryMovementSource {
+  CASH
+  BANK
+  TRANSFER
+  OTHER
+}
+
 model OperationalExpense {
   id             String   @id @default(cuid())
   organizationId String   @map("organization_id")
@@ -823,6 +874,36 @@ model OperationalExpense {
   @@index([expenseDate])
   @@index([category])
   @@map("operational_expenses")
+}
+
+model TreasuryMovement {
+  id               String                   @id @default(cuid())
+  organizationId   String                   @map("organization_id")
+  accountPayableId String?                  @map("account_payable_id")
+
+  type             TreasuryMovementType
+  category         TreasuryMovementCategory @default(OTHER)
+  source           TreasuryMovementSource   @default(OTHER)
+
+  title            String
+  description      String?                  @db.Text
+  reference        String?
+  amount           Decimal                  @db.Decimal(12, 2)
+  occurredAt       DateTime                 @default(now()) @map("occurred_at")
+
+  createdBy        String                   @map("created_by")
+  createdAt        DateTime                 @default(now()) @map("created_at")
+  updatedAt        DateTime                 @updatedAt @map("updated_at")
+
+  organization     Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  accountPayable   AccountPayable?          @relation(fields: [accountPayableId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([accountPayableId])
+  @@index([occurredAt])
+  @@index([type])
+  @@index([category])
+  @@map("treasury_movements")
 }
 
 // ============================================

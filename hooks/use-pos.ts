@@ -1,5 +1,22 @@
 import { create } from 'zustand';
 
+function generateCartItemId() {
+  const cryptoApi = globalThis.crypto;
+
+  if (cryptoApi?.randomUUID) {
+    return cryptoApi.randomUUID();
+  }
+
+  if (cryptoApi?.getRandomValues) {
+    const randomBytes = new Uint8Array(16);
+    cryptoApi.getRandomValues(randomBytes);
+    const randomHex = Array.from(randomBytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+    return `cart-${randomHex}`;
+  }
+
+  return `cart-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
 export interface CartItem {
   id: string;
   productId: string;
@@ -79,7 +96,7 @@ export const usePosStore = create<PosStore>((set, get) => ({
     } else {
       // Agregar nuevo item
       const newItem: CartItem = {
-        id: crypto.randomUUID(),
+        id: generateCartItemId(),
         productId: product.id,
         sku: product.sku,
         name: product.name,

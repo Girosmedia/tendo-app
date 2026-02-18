@@ -22,8 +22,9 @@ import { ResponsiveTable } from '@/components/ui/responsive-table';
 import { ProjectExpenseDialog } from './project-expense-dialog';
 import { ProjectMilestoneDialog } from './project-milestone-dialog';
 import { ProjectResourceDialog } from './project-resource-dialog';
+import { ProjectPaymentDialog } from './project-payment-dialog';
 import { ProjectDialog } from '../../_components/project-dialog';
-import { ArrowLeft, Plus, TrendingUp, TrendingDown, CheckCircle2, Circle, Trash2, Boxes, Pencil } from 'lucide-react';
+import { ArrowLeft, Plus, TrendingUp, TrendingDown, CheckCircle2, Circle, Trash2, Boxes, Pencil, HandCoins } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils/dashboard-helpers';
 import Link from 'next/link';
 
@@ -77,9 +78,21 @@ interface ProjectData {
       isCompleted: boolean;
       completedAt: string | null;
     }>;
+    payments: Array<{
+      id: string;
+      amount: number;
+      paymentMethod: 'CASH' | 'CARD' | 'TRANSFER' | 'CHECK' | 'MULTI';
+      paidAt: string;
+      reference: string | null;
+      notes: string | null;
+    }>;
   };
   metrics: {
     budget: number | null;
+    contractedAmount: number | null;
+    collectedAmount: number;
+    pendingCollection: number | null;
+    collectionProgressPercent: number | null;
     actualCost: number;
     variance: number | null;
     budgetUsagePercent: number | null;
@@ -155,6 +168,24 @@ export function ProjectDetailView({ projectData }: ProjectDetailViewProps) {
   const [showEditMilestoneDialog, setShowEditMilestoneDialog] = useState(false);
   const [showResourceDialog, setShowResourceDialog] = useState(false);
   const [showEditResourceDialog, setShowEditResourceDialog] = useState(false);
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+
+  function paymentMethodLabel(method: 'CASH' | 'CARD' | 'TRANSFER' | 'CHECK' | 'MULTI') {
+    switch (method) {
+      case 'CASH':
+        return 'Efectivo';
+      case 'CARD':
+        return 'Tarjeta';
+      case 'TRANSFER':
+        return 'Transferencia';
+      case 'CHECK':
+        return 'Cheque';
+      case 'MULTI':
+        return 'Mixto';
+      default:
+        return method;
+    }
+  }
   const [loadingMilestoneId, setLoadingMilestoneId] = useState<string | null>(null);
   const [loadingResourceId, setLoadingResourceId] = useState<string | null>(null);
   const [loadingExpenseId, setLoadingExpenseId] = useState<string | null>(null);
@@ -416,6 +447,18 @@ export function ProjectDetailView({ projectData }: ProjectDetailViewProps) {
             </p>
             <p className="text-xs text-muted-foreground mt-1">
               Progreso: {metrics.milestonesProgressPercent.toFixed(1)}%
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Cobranza proyecto</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-lg font-semibold">{formatCurrency(metrics.collectedAmount || 0)}</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Pendiente: {metrics.pendingCollection !== null ? formatCurrency(metrics.pendingCollection) : 'Sin definir'}
             </p>
           </CardContent>
         </Card>
@@ -698,6 +741,67 @@ export function ProjectDetailView({ projectData }: ProjectDetailViewProps) {
       </Card>
 
       <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Cobros del proyecto</CardTitle>
+          <Button
+            size="sm"
+            onClick={() => setShowPaymentDialog(true)}
+            disabled={metrics.pendingCollection !== null && metrics.pendingCollection <= 0}
+          >
+            <HandCoins className="mr-2 h-4 w-4" />
+            Registrar cobro
+          </Button>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="rounded-md border bg-muted/40 px-3 py-2 text-sm">
+            <p>
+              Contratado: {metrics.contractedAmount !== null ? formatCurrency(metrics.contractedAmount) : 'Sin definir'} ·
+              {' '}Cobrado: {formatCurrency(metrics.collectedAmount)} ·
+              {' '}Pendiente: {metrics.pendingCollection !== null ? formatCurrency(metrics.pendingCollection) : 'Sin definir'}
+            </p>
+            {metrics.collectionProgressPercent !== null && (
+              <p className="text-xs text-muted-foreground mt-1">
+                Avance de cobranza: {metrics.collectionProgressPercent.toFixed(1)}%
+              </p>
+            )}
+          </div>
+
+          {project.payments.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-8 text-center">
+              <p className="text-muted-foreground">Aún no registras cobros para este proyecto</p>
+            </div>
+          ) : (
+            <ResponsiveTable>
+              <div style={{ minWidth: '760px' }}>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Fecha</TableHead>
+                      <TableHead>Método</TableHead>
+                      <TableHead>Monto</TableHead>
+                      <TableHead>Referencia</TableHead>
+                      <TableHead>Notas</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {project.payments.map((payment) => (
+                      <TableRow key={payment.id}>
+                        <TableCell>{format(new Date(payment.paidAt), 'dd MMM yyyy', { locale: es })}</TableCell>
+                        <TableCell>{paymentMethodLabel(payment.paymentMethod)}</TableCell>
+                        <TableCell>{formatCurrency(Number(payment.amount))}</TableCell>
+                        <TableCell>{payment.reference || '-'}</TableCell>
+                        <TableCell className="max-w-[280px] truncate">{payment.notes || '-'}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </ResponsiveTable>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
         <CardHeader>
           <CardTitle>Información del proyecto</CardTitle>
         </CardHeader>
@@ -932,6 +1036,17 @@ export function ProjectDetailView({ projectData }: ProjectDetailViewProps) {
         }}
         onSaved={() => {
           toast.success('Recurso actualizado');
+          void refreshProject();
+        }}
+      />
+
+      <ProjectPaymentDialog
+        projectId={project.id}
+        maxAmount={metrics.pendingCollection}
+        open={showPaymentDialog}
+        onOpenChange={setShowPaymentDialog}
+        onSaved={() => {
+          toast.success('Cobro registrado');
           void refreshProject();
         }}
       />

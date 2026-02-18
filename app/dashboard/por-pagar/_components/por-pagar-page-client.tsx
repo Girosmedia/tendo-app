@@ -111,6 +111,8 @@ type PayableFormValues = z.infer<typeof payableFormSchema>;
 const paymentFormSchema = z.object({
   paymentAmount: z.number().positive('El monto del pago debe ser mayor a 0'),
   paidAtRaw: z.string().min(1, 'La fecha de pago es requerida'),
+  source: z.enum(['CASH', 'BANK', 'TRANSFER', 'OTHER']),
+  reference: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
 });
 
@@ -170,6 +172,7 @@ export function PorPagarPageClient() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [payables, setPayables] = useState<AccountPayable[]>([]);
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonthValue());
+  const [appliedMonth, setAppliedMonth] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<'ALL' | AccountPayable['status']>('ALL');
   const [selectedSupplierId, setSelectedSupplierId] = useState<string>('ALL');
   const [search, setSearch] = useState('');
@@ -216,6 +219,8 @@ export function PorPagarPageClient() {
     defaultValues: {
       paymentAmount: 0,
       paidAtRaw: new Date().toISOString().slice(0, 10),
+      source: 'BANK',
+      reference: '',
       notes: '',
     },
   });
@@ -262,13 +267,14 @@ export function PorPagarPageClient() {
     setSuppliers(data.suppliers || []);
   }
 
-  async function loadPayables() {
-    const { startDate, endDate } = getMonthDateRange(selectedMonth);
+  async function loadPayables(monthFilter: string | null = appliedMonth) {
+    const params = new URLSearchParams();
 
-    const params = new URLSearchParams({
-      startDueDate: startDate,
-      endDueDate: endDate,
-    });
+    if (monthFilter) {
+      const { startDate, endDate } = getMonthDateRange(monthFilter);
+      params.set('startDueDate', startDate);
+      params.set('endDueDate', endDate);
+    }
 
     if (selectedStatus !== 'ALL') {
       params.set('status', selectedStatus);
@@ -289,7 +295,7 @@ export function PorPagarPageClient() {
 
     const data = await response.json();
     setPayables(
-      (data.payables || []).map((payable: any) => ({
+      (data.payables || []).map((payable: AccountPayable & { amount: number | string; balance: number | string }) => ({
         ...payable,
         amount: Number(payable.amount),
         balance: Number(payable.balance),
@@ -312,7 +318,19 @@ export function PorPagarPageClient() {
   useEffect(() => {
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMonth, selectedStatus, selectedSupplierId]);
+  }, [appliedMonth, selectedStatus, selectedSupplierId]);
+
+  function applyFilters() {
+    const nextMonth = selectedMonth || null;
+    setAppliedMonth(nextMonth);
+    void loadPayables(nextMonth);
+  }
+
+  function clearMonthFilter() {
+    const nextMonth = null;
+    setAppliedMonth(null);
+    void loadPayables(nextMonth);
+  }
 
   function openCreatePayableDialog() {
     if (suppliers.length === 0) {
@@ -354,6 +372,8 @@ export function PorPagarPageClient() {
     paymentForm.reset({
       paymentAmount: Number(payable.balance),
       paidAtRaw: new Date().toISOString().slice(0, 10),
+      source: 'BANK',
+      reference: '',
       notes: '',
     });
     setPaymentDialogOpen(true);
@@ -451,6 +471,8 @@ export function PorPagarPageClient() {
         body: JSON.stringify({
           paymentAmount: Number(values.paymentAmount),
           paidAt: new Date(`${values.paidAtRaw}T12:00:00-03:00`).toISOString(),
+          source: values.source,
+          reference: values.reference || null,
           notes: values.notes || null,
         }),
       });
@@ -614,8 +636,12 @@ export function PorPagarPageClient() {
                 className='w-full sm:w-44'
               />
 
-              <Button variant='outline' onClick={() => loadPayables()}>
+              <Button variant='outline' onClick={applyFilters}>
                 Filtrar
+              </Button>
+
+              <Button variant='ghost' onClick={clearMonthFilter}>
+                Ver todo
               </Button>
             </div>
           </div>
@@ -633,90 +659,164 @@ export function PorPagarPageClient() {
               </p>
             </div>
           ) : (
-            <div className='overflow-x-auto'>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Proveedor</TableHead>
-                    <TableHead>Documento</TableHead>
-                    <TableHead>Vencimiento</TableHead>
-                    <TableHead>Monto</TableHead>
-                    <TableHead>Saldo</TableHead>
-                    <TableHead>Estado</TableHead>
-                    <TableHead className='text-right'>Acciones</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {payables.map((payable) => (
-                    <TableRow key={payable.id}>
-                      <TableCell>
-                        <div className='font-medium'>{payable.supplier.name}</div>
-                        {payable.supplier.rut ? (
-                          <p className='text-xs text-muted-foreground'>{payable.supplier.rut}</p>
-                        ) : null}
-                      </TableCell>
-                      <TableCell>
-                        <div className='font-medium'>
+            <>
+              <div className='space-y-3 md:hidden'>
+                {payables.map((payable) => (
+                  <div key={payable.id} className='rounded-lg border p-4'>
+                    <div className='flex items-start justify-between gap-3'>
+                      <div>
+                        <p className='font-semibold'>{payable.supplier.name}</p>
+                        <p className='text-sm text-muted-foreground'>
                           {payable.documentType === 'INVOICE'
                             ? 'Factura'
                             : payable.documentType === 'RECEIPT'
                               ? 'Boleta'
                               : 'Otro'}
-                        </div>
-                        <p className='text-xs text-muted-foreground'>
+                          {' · '}
                           {payable.documentNumber || 'Sin número'}
                         </p>
-                      </TableCell>
-                      <TableCell>
-                        <div>{formatDate(payable.dueDate)}</div>
-                        <p className='text-xs text-muted-foreground'>
-                          Emisión: {formatDate(payable.issueDate)}
-                        </p>
-                      </TableCell>
-                      <TableCell>{formatCurrency(payable.amount)}</TableCell>
-                      <TableCell className='font-semibold'>
-                        {formatCurrency(payable.balance)}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={getStatusVariant(payable.status)}>
-                          {getStatusLabel(payable.status)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className='text-right'>
-                        <div className='flex items-center justify-end gap-1'>
-                          {(payable.status === 'PENDING' || payable.status === 'PARTIAL' || payable.status === 'OVERDUE') ? (
+                      </div>
+                      <Badge variant={getStatusVariant(payable.status)}>
+                        {getStatusLabel(payable.status)}
+                      </Badge>
+                    </div>
+
+                    <div className='mt-3 grid grid-cols-2 gap-2 text-sm'>
+                      <div>
+                        <p className='text-muted-foreground'>Vencimiento</p>
+                        <p>{formatDate(payable.dueDate)}</p>
+                      </div>
+                      <div>
+                        <p className='text-muted-foreground'>Emisión</p>
+                        <p>{formatDate(payable.issueDate)}</p>
+                      </div>
+                      <div>
+                        <p className='text-muted-foreground'>Monto</p>
+                        <p>{formatCurrency(payable.amount)}</p>
+                      </div>
+                      <div>
+                        <p className='text-muted-foreground'>Saldo</p>
+                        <p className='font-semibold'>{formatCurrency(payable.balance)}</p>
+                      </div>
+                    </div>
+
+                    <div className='mt-3 flex items-center justify-end gap-1'>
+                      {(payable.status === 'PENDING' || payable.status === 'PARTIAL' || payable.status === 'OVERDUE') ? (
+                        <Button
+                          size='icon'
+                          variant='ghost'
+                          onClick={() => openPaymentDialog(payable)}
+                          title='Registrar pago'
+                        >
+                          <HandCoins className='h-4 w-4' />
+                        </Button>
+                      ) : null}
+                      <Button
+                        size='icon'
+                        variant='ghost'
+                        onClick={() => openEditPayableDialog(payable)}
+                        title='Editar'
+                      >
+                        <Pencil className='h-4 w-4' />
+                      </Button>
+                      <Button
+                        size='icon'
+                        variant='ghost'
+                        onClick={() => deletePayable(payable)}
+                        title='Eliminar'
+                      >
+                        <Trash2 className='h-4 w-4 text-destructive' />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className='hidden md:block overflow-x-auto'>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Proveedor</TableHead>
+                      <TableHead>Documento</TableHead>
+                      <TableHead>Vencimiento</TableHead>
+                      <TableHead>Monto</TableHead>
+                      <TableHead>Saldo</TableHead>
+                      <TableHead>Estado</TableHead>
+                      <TableHead className='text-right'>Acciones</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {payables.map((payable) => (
+                      <TableRow key={payable.id}>
+                        <TableCell>
+                          <div className='font-medium'>{payable.supplier.name}</div>
+                          {payable.supplier.rut ? (
+                            <p className='text-xs text-muted-foreground'>{payable.supplier.rut}</p>
+                          ) : null}
+                        </TableCell>
+                        <TableCell>
+                          <div className='font-medium'>
+                            {payable.documentType === 'INVOICE'
+                              ? 'Factura'
+                              : payable.documentType === 'RECEIPT'
+                                ? 'Boleta'
+                                : 'Otro'}
+                          </div>
+                          <p className='text-xs text-muted-foreground'>
+                            {payable.documentNumber || 'Sin número'}
+                          </p>
+                        </TableCell>
+                        <TableCell>
+                          <div>{formatDate(payable.dueDate)}</div>
+                          <p className='text-xs text-muted-foreground'>
+                            Emisión: {formatDate(payable.issueDate)}
+                          </p>
+                        </TableCell>
+                        <TableCell>{formatCurrency(payable.amount)}</TableCell>
+                        <TableCell className='font-semibold'>
+                          {formatCurrency(payable.balance)}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={getStatusVariant(payable.status)}>
+                            {getStatusLabel(payable.status)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className='text-right'>
+                          <div className='flex items-center justify-end gap-1'>
+                            {(payable.status === 'PENDING' || payable.status === 'PARTIAL' || payable.status === 'OVERDUE') ? (
+                              <Button
+                                size='icon'
+                                variant='ghost'
+                                onClick={() => openPaymentDialog(payable)}
+                                title='Registrar pago'
+                              >
+                                <HandCoins className='h-4 w-4' />
+                              </Button>
+                            ) : null}
                             <Button
                               size='icon'
                               variant='ghost'
-                              onClick={() => openPaymentDialog(payable)}
-                              title='Registrar pago'
+                              onClick={() => openEditPayableDialog(payable)}
+                              title='Editar'
                             >
-                              <HandCoins className='h-4 w-4' />
+                              <Pencil className='h-4 w-4' />
                             </Button>
-                          ) : null}
-                          <Button
-                            size='icon'
-                            variant='ghost'
-                            onClick={() => openEditPayableDialog(payable)}
-                            title='Editar'
-                          >
-                            <Pencil className='h-4 w-4' />
-                          </Button>
-                          <Button
-                            size='icon'
-                            variant='ghost'
-                            onClick={() => deletePayable(payable)}
-                            title='Eliminar'
-                          >
-                            <Trash2 className='h-4 w-4 text-destructive' />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                            <Button
+                              size='icon'
+                              variant='ghost'
+                              onClick={() => deletePayable(payable)}
+                              title='Eliminar'
+                            >
+                              <Trash2 className='h-4 w-4 text-destructive' />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
@@ -1034,6 +1134,44 @@ export function PorPagarPageClient() {
                     <FormLabel>Fecha de pago *</FormLabel>
                     <FormControl>
                       <Input type='date' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={paymentForm.control}
+                name='source'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Origen del pago *</FormLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder='Selecciona origen' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value='CASH'>Caja</SelectItem>
+                        <SelectItem value='BANK'>Banco</SelectItem>
+                        <SelectItem value='TRANSFER'>Transferencia</SelectItem>
+                        <SelectItem value='OTHER'>Otro</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={paymentForm.control}
+                name='reference'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Referencia</FormLabel>
+                    <FormControl>
+                      <Input {...field} value={field.value || ''} placeholder='N° transferencia / comprobante' />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

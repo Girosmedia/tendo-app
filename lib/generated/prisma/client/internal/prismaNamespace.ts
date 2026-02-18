@@ -402,11 +402,13 @@ export const ModelName = {
   Document: 'Document',
   DocumentItem: 'DocumentItem',
   Project: 'Project',
+  ProjectPayment: 'ProjectPayment',
   ProjectResource: 'ProjectResource',
   ProjectMilestone: 'ProjectMilestone',
   ProjectExpense: 'ProjectExpense',
   CashRegister: 'CashRegister',
   OperationalExpense: 'OperationalExpense',
+  TreasuryMovement: 'TreasuryMovement',
   Credit: 'Credit',
   Payment: 'Payment'
 } as const
@@ -424,7 +426,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "user" | "verificationToken" | "organization" | "supplier" | "accountPayable" | "member" | "teamInvitation" | "organizationSettings" | "auditLog" | "impersonationSession" | "category" | "product" | "customer" | "document" | "documentItem" | "project" | "projectResource" | "projectMilestone" | "projectExpense" | "cashRegister" | "operationalExpense" | "credit" | "payment"
+    modelProps: "account" | "session" | "user" | "verificationToken" | "organization" | "supplier" | "accountPayable" | "member" | "teamInvitation" | "organizationSettings" | "auditLog" | "impersonationSession" | "category" | "product" | "customer" | "document" | "documentItem" | "project" | "projectPayment" | "projectResource" | "projectMilestone" | "projectExpense" | "cashRegister" | "operationalExpense" | "treasuryMovement" | "credit" | "payment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1760,6 +1762,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ProjectPayment: {
+      payload: Prisma.$ProjectPaymentPayload<ExtArgs>
+      fields: Prisma.ProjectPaymentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProjectPaymentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPaymentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProjectPaymentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPaymentPayload>
+        }
+        findFirst: {
+          args: Prisma.ProjectPaymentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPaymentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProjectPaymentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPaymentPayload>
+        }
+        findMany: {
+          args: Prisma.ProjectPaymentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPaymentPayload>[]
+        }
+        create: {
+          args: Prisma.ProjectPaymentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPaymentPayload>
+        }
+        createMany: {
+          args: Prisma.ProjectPaymentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProjectPaymentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPaymentPayload>[]
+        }
+        delete: {
+          args: Prisma.ProjectPaymentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPaymentPayload>
+        }
+        update: {
+          args: Prisma.ProjectPaymentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPaymentPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProjectPaymentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProjectPaymentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProjectPaymentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPaymentPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProjectPaymentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPaymentPayload>
+        }
+        aggregate: {
+          args: Prisma.ProjectPaymentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProjectPayment>
+        }
+        groupBy: {
+          args: Prisma.ProjectPaymentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectPaymentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProjectPaymentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectPaymentCountAggregateOutputType> | number
+        }
+      }
+    }
     ProjectResource: {
       payload: Prisma.$ProjectResourcePayload<ExtArgs>
       fields: Prisma.ProjectResourceFieldRefs
@@ -2130,6 +2206,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TreasuryMovement: {
+      payload: Prisma.$TreasuryMovementPayload<ExtArgs>
+      fields: Prisma.TreasuryMovementFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TreasuryMovementFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreasuryMovementPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TreasuryMovementFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreasuryMovementPayload>
+        }
+        findFirst: {
+          args: Prisma.TreasuryMovementFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreasuryMovementPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TreasuryMovementFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreasuryMovementPayload>
+        }
+        findMany: {
+          args: Prisma.TreasuryMovementFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreasuryMovementPayload>[]
+        }
+        create: {
+          args: Prisma.TreasuryMovementCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreasuryMovementPayload>
+        }
+        createMany: {
+          args: Prisma.TreasuryMovementCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TreasuryMovementCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreasuryMovementPayload>[]
+        }
+        delete: {
+          args: Prisma.TreasuryMovementDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreasuryMovementPayload>
+        }
+        update: {
+          args: Prisma.TreasuryMovementUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreasuryMovementPayload>
+        }
+        deleteMany: {
+          args: Prisma.TreasuryMovementDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TreasuryMovementUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TreasuryMovementUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreasuryMovementPayload>[]
+        }
+        upsert: {
+          args: Prisma.TreasuryMovementUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreasuryMovementPayload>
+        }
+        aggregate: {
+          args: Prisma.TreasuryMovementAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTreasuryMovement>
+        }
+        groupBy: {
+          args: Prisma.TreasuryMovementGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TreasuryMovementGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TreasuryMovementCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TreasuryMovementCountAggregateOutputType> | number
+        }
+      }
+    }
     Credit: {
       payload: Prisma.$CreditPayload<ExtArgs>
       fields: Prisma.CreditFieldRefs
@@ -2348,6 +2498,7 @@ export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeo
 export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  jobTitle: 'jobTitle',
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
@@ -2638,6 +2789,7 @@ export const ProjectScalarFieldEnum = {
   name: 'name',
   description: 'description',
   status: 'status',
+  contractedAmount: 'contractedAmount',
   budget: 'budget',
   actualCost: 'actualCost',
   startDate: 'startDate',
@@ -2649,6 +2801,23 @@ export const ProjectScalarFieldEnum = {
 } as const
 
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+export const ProjectPaymentScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  projectId: 'projectId',
+  amount: 'amount',
+  paymentMethod: 'paymentMethod',
+  paidAt: 'paidAt',
+  reference: 'reference',
+  notes: 'notes',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectPaymentScalarFieldEnum = (typeof ProjectPaymentScalarFieldEnum)[keyof typeof ProjectPaymentScalarFieldEnum]
 
 
 export const ProjectResourceScalarFieldEnum = {
@@ -2748,6 +2917,26 @@ export const OperationalExpenseScalarFieldEnum = {
 } as const
 
 export type OperationalExpenseScalarFieldEnum = (typeof OperationalExpenseScalarFieldEnum)[keyof typeof OperationalExpenseScalarFieldEnum]
+
+
+export const TreasuryMovementScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  accountPayableId: 'accountPayableId',
+  type: 'type',
+  category: 'category',
+  source: 'source',
+  title: 'title',
+  description: 'description',
+  reference: 'reference',
+  amount: 'amount',
+  occurredAt: 'occurredAt',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TreasuryMovementScalarFieldEnum = (typeof TreasuryMovementScalarFieldEnum)[keyof typeof TreasuryMovementScalarFieldEnum]
 
 
 export const CreditScalarFieldEnum = {
@@ -3119,6 +3308,48 @@ export type ListEnumOperationalExpensePaymentMethodFieldRefInput<$PrismaModel> =
 
 
 /**
+ * Reference to a field of type 'TreasuryMovementType'
+ */
+export type EnumTreasuryMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TreasuryMovementType'>
+    
+
+
+/**
+ * Reference to a field of type 'TreasuryMovementType[]'
+ */
+export type ListEnumTreasuryMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TreasuryMovementType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TreasuryMovementCategory'
+ */
+export type EnumTreasuryMovementCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TreasuryMovementCategory'>
+    
+
+
+/**
+ * Reference to a field of type 'TreasuryMovementCategory[]'
+ */
+export type ListEnumTreasuryMovementCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TreasuryMovementCategory[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TreasuryMovementSource'
+ */
+export type EnumTreasuryMovementSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TreasuryMovementSource'>
+    
+
+
+/**
+ * Reference to a field of type 'TreasuryMovementSource[]'
+ */
+export type ListEnumTreasuryMovementSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TreasuryMovementSource[]'>
+    
+
+
+/**
  * Reference to a field of type 'CreditStatus'
  */
 export type EnumCreditStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CreditStatus'>
@@ -3258,11 +3489,13 @@ export type GlobalOmitConfig = {
   document?: Prisma.DocumentOmit
   documentItem?: Prisma.DocumentItemOmit
   project?: Prisma.ProjectOmit
+  projectPayment?: Prisma.ProjectPaymentOmit
   projectResource?: Prisma.ProjectResourceOmit
   projectMilestone?: Prisma.ProjectMilestoneOmit
   projectExpense?: Prisma.ProjectExpenseOmit
   cashRegister?: Prisma.CashRegisterOmit
   operationalExpense?: Prisma.OperationalExpenseOmit
+  treasuryMovement?: Prisma.TreasuryMovementOmit
   credit?: Prisma.CreditOmit
   payment?: Prisma.PaymentOmit
 }

@@ -58,6 +58,11 @@ export async function GET(
             createdAt: 'desc',
           },
         },
+        payments: {
+          orderBy: {
+            paidAt: 'desc',
+          },
+        },
         milestones: {
           orderBy: [{ position: 'asc' }, { createdAt: 'asc' }],
         },
@@ -72,6 +77,11 @@ export async function GET(
     }
 
     const budget = project.budget ? Number(project.budget) : null;
+    const contractedAmount = project.contractedAmount !== null
+      ? Number(project.contractedAmount)
+      : project.quote?.total
+        ? Number(project.quote.total)
+        : null;
     const actualCost = Number(project.actualCost);
     const variance = budget !== null ? actualCost - budget : null;
     const budgetUsagePercent =
@@ -117,6 +127,17 @@ export async function GET(
     });
 
     const now = new Date();
+    const collectedAmount = project.payments.reduce(
+      (sum, payment) => sum + Number(payment.amount),
+      0
+    );
+    const pendingCollection = contractedAmount !== null
+      ? Math.max(contractedAmount - collectedAmount, 0)
+      : null;
+    const collectionProgressPercent = contractedAmount && contractedAmount > 0
+      ? (collectedAmount / contractedAmount) * 100
+      : null;
+
     const alerts = {
       projectOverBudget:
         budget !== null && actualCost > budget
@@ -152,6 +173,10 @@ export async function GET(
       project,
       metrics: {
         budget,
+        contractedAmount,
+        collectedAmount,
+        pendingCollection,
+        collectionProgressPercent,
         actualCost,
         variance,
         budgetUsagePercent,
@@ -224,6 +249,9 @@ export async function PATCH(
           description: validatedData.description,
         }),
         ...(validatedData.status !== undefined && { status: validatedData.status }),
+        ...(validatedData.contractedAmount !== undefined && {
+          contractedAmount: validatedData.contractedAmount,
+        }),
         ...(validatedData.budget !== undefined && { budget: validatedData.budget }),
         ...(validatedData.actualCost !== undefined && {
           actualCost: validatedData.actualCost,

@@ -47,6 +47,11 @@ export async function GET(req: NextRequest) {
             },
           },
         },
+        payments: {
+          select: {
+            amount: true,
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',
@@ -83,6 +88,8 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const validatedData = createProjectSchema.parse(body);
 
+    let quoteTotal: number | null = null;
+
     if (validatedData.quoteId) {
       const quote = await db.document.findFirst({
         where: {
@@ -90,7 +97,7 @@ export async function POST(req: NextRequest) {
           organizationId: organization.id,
           type: 'QUOTE',
         },
-        select: { id: true },
+        select: { id: true, total: true },
       });
 
       if (!quote) {
@@ -99,7 +106,11 @@ export async function POST(req: NextRequest) {
           { status: 404 }
         );
       }
+
+      quoteTotal = Number(quote.total);
     }
+
+    const contractedAmount = quoteTotal ?? validatedData.contractedAmount ?? validatedData.budget ?? null;
 
     const project = await db.project.create({
       data: {
@@ -107,6 +118,7 @@ export async function POST(req: NextRequest) {
         quoteId: validatedData.quoteId || null,
         name: validatedData.name,
         description: validatedData.description || null,
+        contractedAmount,
         budget: validatedData.budget ?? null,
         actualCost: 0,
         startDate: validatedData.startDate ? new Date(validatedData.startDate) : new Date(),
@@ -133,6 +145,7 @@ export async function POST(req: NextRequest) {
       changes: {
         name: project.name,
         quoteId: project.quoteId,
+        contractedAmount: project.contractedAmount ? Number(project.contractedAmount) : null,
       },
     });
 

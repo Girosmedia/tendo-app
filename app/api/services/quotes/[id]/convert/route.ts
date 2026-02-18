@@ -87,6 +87,7 @@ export async function POST(
           `Proyecto COT-${quote.docNumber}${quote.customer?.name ? ` - ${quote.customer.name}` : ''}`,
         description: validatedData.description ?? quote.notes ?? null,
         status: 'ACTIVE',
+        contractedAmount: quote.total,
         budget: quote.total,
         actualCost: 0,
         startDate: validatedData.startDate ? new Date(validatedData.startDate) : new Date(),

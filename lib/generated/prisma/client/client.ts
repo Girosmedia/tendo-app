@@ -130,6 +130,11 @@ export type DocumentItem = Prisma.DocumentItemModel
  */
 export type Project = Prisma.ProjectModel
 /**
+ * Model ProjectPayment
+ * 
+ */
+export type ProjectPayment = Prisma.ProjectPaymentModel
+/**
  * Model ProjectResource
  * 
  */
@@ -154,6 +159,11 @@ export type CashRegister = Prisma.CashRegisterModel
  * 
  */
 export type OperationalExpense = Prisma.OperationalExpenseModel
+/**
+ * Model TreasuryMovement
+ * 
+ */
+export type TreasuryMovement = Prisma.TreasuryMovementModel
 /**
  * Model Credit
  * 

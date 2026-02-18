@@ -562,6 +562,57 @@ export type EnumOperationalExpensePaymentMethodWithAggregatesFilter<$PrismaModel
   _max?: Prisma.NestedEnumOperationalExpensePaymentMethodFilter<$PrismaModel>
 }
 
+export type EnumTreasuryMovementTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.TreasuryMovementType | Prisma.EnumTreasuryMovementTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.TreasuryMovementType[] | Prisma.ListEnumTreasuryMovementTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TreasuryMovementType[] | Prisma.ListEnumTreasuryMovementTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTreasuryMovementTypeFilter<$PrismaModel> | $Enums.TreasuryMovementType
+}
+
+export type EnumTreasuryMovementCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.TreasuryMovementCategory | Prisma.EnumTreasuryMovementCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.TreasuryMovementCategory[] | Prisma.ListEnumTreasuryMovementCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TreasuryMovementCategory[] | Prisma.ListEnumTreasuryMovementCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTreasuryMovementCategoryFilter<$PrismaModel> | $Enums.TreasuryMovementCategory
+}
+
+export type EnumTreasuryMovementSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.TreasuryMovementSource | Prisma.EnumTreasuryMovementSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.TreasuryMovementSource[] | Prisma.ListEnumTreasuryMovementSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TreasuryMovementSource[] | Prisma.ListEnumTreasuryMovementSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTreasuryMovementSourceFilter<$PrismaModel> | $Enums.TreasuryMovementSource
+}
+
+export type EnumTreasuryMovementTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TreasuryMovementType | Prisma.EnumTreasuryMovementTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.TreasuryMovementType[] | Prisma.ListEnumTreasuryMovementTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TreasuryMovementType[] | Prisma.ListEnumTreasuryMovementTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTreasuryMovementTypeWithAggregatesFilter<$PrismaModel> | $Enums.TreasuryMovementType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTreasuryMovementTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTreasuryMovementTypeFilter<$PrismaModel>
+}
+
+export type EnumTreasuryMovementCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TreasuryMovementCategory | Prisma.EnumTreasuryMovementCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.TreasuryMovementCategory[] | Prisma.ListEnumTreasuryMovementCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TreasuryMovementCategory[] | Prisma.ListEnumTreasuryMovementCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTreasuryMovementCategoryWithAggregatesFilter<$PrismaModel> | $Enums.TreasuryMovementCategory
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTreasuryMovementCategoryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTreasuryMovementCategoryFilter<$PrismaModel>
+}
+
+export type EnumTreasuryMovementSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TreasuryMovementSource | Prisma.EnumTreasuryMovementSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.TreasuryMovementSource[] | Prisma.ListEnumTreasuryMovementSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TreasuryMovementSource[] | Prisma.ListEnumTreasuryMovementSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTreasuryMovementSourceWithAggregatesFilter<$PrismaModel> | $Enums.TreasuryMovementSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTreasuryMovementSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTreasuryMovementSourceFilter<$PrismaModel>
+}
+
 export type EnumCreditStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.CreditStatus | Prisma.EnumCreditStatusFieldRefInput<$PrismaModel>
   in?: $Enums.CreditStatus[] | Prisma.ListEnumCreditStatusFieldRefInput<$PrismaModel>
@@ -1111,6 +1162,57 @@ export type NestedEnumOperationalExpensePaymentMethodWithAggregatesFilter<$Prism
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumOperationalExpensePaymentMethodFilter<$PrismaModel>
   _max?: Prisma.NestedEnumOperationalExpensePaymentMethodFilter<$PrismaModel>
+}
+
+export type NestedEnumTreasuryMovementTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.TreasuryMovementType | Prisma.EnumTreasuryMovementTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.TreasuryMovementType[] | Prisma.ListEnumTreasuryMovementTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TreasuryMovementType[] | Prisma.ListEnumTreasuryMovementTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTreasuryMovementTypeFilter<$PrismaModel> | $Enums.TreasuryMovementType
+}
+
+export type NestedEnumTreasuryMovementCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.TreasuryMovementCategory | Prisma.EnumTreasuryMovementCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.TreasuryMovementCategory[] | Prisma.ListEnumTreasuryMovementCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TreasuryMovementCategory[] | Prisma.ListEnumTreasuryMovementCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTreasuryMovementCategoryFilter<$PrismaModel> | $Enums.TreasuryMovementCategory
+}
+
+export type NestedEnumTreasuryMovementSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.TreasuryMovementSource | Prisma.EnumTreasuryMovementSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.TreasuryMovementSource[] | Prisma.ListEnumTreasuryMovementSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TreasuryMovementSource[] | Prisma.ListEnumTreasuryMovementSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTreasuryMovementSourceFilter<$PrismaModel> | $Enums.TreasuryMovementSource
+}
+
+export type NestedEnumTreasuryMovementTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TreasuryMovementType | Prisma.EnumTreasuryMovementTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.TreasuryMovementType[] | Prisma.ListEnumTreasuryMovementTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TreasuryMovementType[] | Prisma.ListEnumTreasuryMovementTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTreasuryMovementTypeWithAggregatesFilter<$PrismaModel> | $Enums.TreasuryMovementType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTreasuryMovementTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTreasuryMovementTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumTreasuryMovementCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TreasuryMovementCategory | Prisma.EnumTreasuryMovementCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.TreasuryMovementCategory[] | Prisma.ListEnumTreasuryMovementCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TreasuryMovementCategory[] | Prisma.ListEnumTreasuryMovementCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTreasuryMovementCategoryWithAggregatesFilter<$PrismaModel> | $Enums.TreasuryMovementCategory
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTreasuryMovementCategoryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTreasuryMovementCategoryFilter<$PrismaModel>
+}
+
+export type NestedEnumTreasuryMovementSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TreasuryMovementSource | Prisma.EnumTreasuryMovementSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.TreasuryMovementSource[] | Prisma.ListEnumTreasuryMovementSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TreasuryMovementSource[] | Prisma.ListEnumTreasuryMovementSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTreasuryMovementSourceWithAggregatesFilter<$PrismaModel> | $Enums.TreasuryMovementSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTreasuryMovementSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTreasuryMovementSourceFilter<$PrismaModel>
 }
 
 export type NestedEnumCreditStatusFilter<$PrismaModel = never> = {

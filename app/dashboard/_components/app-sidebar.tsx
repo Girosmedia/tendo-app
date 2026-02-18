@@ -16,7 +16,9 @@ import {
   Tag,
   HandCoins,
   Coins,
-  WalletCards
+  WalletCards,
+  Landmark,
+  UserRound,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -52,6 +54,7 @@ interface AppSidebarProps {
     name?: string | null;
     email?: string | null;
     image?: string | null;
+    jobTitle?: string | null;
     isSuperAdmin?: boolean;
   };
   organizationName?: string | null;
@@ -176,8 +179,25 @@ const navigationSections: NavigationSection[] = [
     ],
   },
   {
+    label: 'Cuenta',
+    items: [
+      {
+        title: 'Mi Perfil',
+        href: '/dashboard/profile',
+        icon: UserRound,
+        match: (path) => path.startsWith('/dashboard/profile'),
+      },
+    ],
+  },
+  {
     label: 'Organización',
     items: [
+      {
+        title: 'Contabilidad',
+        href: '/dashboard/contabilidad',
+        icon: Landmark,
+        match: (path) => path.startsWith('/dashboard/contabilidad'),
+      },
       {
         title: 'Equipo',
         href: '/dashboard/team',
@@ -319,7 +339,7 @@ export function AppSidebar({ user, organizationName, organizationLogo }: AppSide
                   {user.name || 'Usuario'}
                 </span>
                 <span className="truncate text-xs text-muted-foreground">
-                  {user.email}
+                  {user.jobTitle || user.email}
                 </span>
               </div>
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
@@ -337,6 +357,12 @@ export function AppSidebar({ user, organizationName, organizationLogo }: AppSide
                 <DropdownMenuSeparator />
               </>
             )}
+            <DropdownMenuItem asChild>
+              <Link href="/dashboard/profile">
+                <UserRound className="mr-2 h-4 w-4" />
+                Mi Perfil
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/dashboard/settings">
                 <Settings className="mr-2 h-4 w-4" />

@@ -79,7 +79,7 @@ export default async function SettingsPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Configuración</h1>
         <p className="text-muted-foreground">
-          Gestiona la información de tu empresa
+          Gestiona la información y parámetros de tu organización
         </p>
       </div>
 
