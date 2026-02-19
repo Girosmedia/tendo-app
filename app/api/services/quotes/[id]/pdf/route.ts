@@ -21,6 +21,111 @@ function resolveLogoUrl(logoUrl: string | null | undefined, origin: string) {
   }
 }
 
+async function resolveLogoForPdf(
+  logoUrl: string | null | undefined,
+  origin: string,
+  requestCookie: string | null,
+  context?: { quoteId?: string; organizationId?: string }
+) {
+  const resolvedUrl = resolveLogoUrl(logoUrl, origin);
+  const logPrefix = `[Quote PDF][Logo] quote=${context?.quoteId || 'n/a'} org=${context?.organizationId || 'n/a'}`;
+
+  console.log(`${logPrefix} input=`, {
+    rawLogoUrl: logoUrl,
+    resolvedLogoUrl: resolvedUrl,
+  });
+
+  if (!resolvedUrl) return null;
+
+  if (resolvedUrl.startsWith('data:')) {
+    console.log(`${logPrefix} using pre-embedded data URI`);
+    return resolvedUrl;
+  }
+
+  try {
+    const logoUrlObject = new URL(resolvedUrl);
+    const sameOrigin = logoUrlObject.origin === origin;
+
+    console.log(`${logPrefix} fetching logo`, {
+      sameOrigin,
+      host: logoUrlObject.host,
+      pathname: logoUrlObject.pathname,
+    });
+
+    const response = await fetch(resolvedUrl, {
+      headers:
+        sameOrigin && requestCookie
+          ? {
+              cookie: requestCookie,
+            }
+          : undefined,
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      console.warn(`${logPrefix} fetch failed`, {
+        status: response.status,
+        statusText: response.statusText,
+      });
+      return resolvedUrl;
+    }
+
+    const contentType = response.headers.get('content-type') || 'image/png';
+    console.log(`${logPrefix} fetch ok`, {
+      contentType,
+      contentLength: response.headers.get('content-length') || 'unknown',
+    });
+
+    if (!contentType.startsWith('image/')) {
+      console.warn(`${logPrefix} invalid content-type for logo`, { contentType });
+      return resolvedUrl;
+    }
+
+    if (contentType.includes('svg')) {
+      const svgText = await response.text();
+
+      if (!svgText.trim()) {
+        console.warn(`${logPrefix} empty svg payload`);
+        return resolvedUrl;
+      }
+
+      try {
+        const sharpModule = await import('sharp');
+        const sharp = sharpModule.default;
+
+        const pngData = await sharp(Buffer.from(svgText, 'utf8'))
+          .png({ quality: 100 })
+          .toBuffer();
+
+        const pngBase64 = pngData.toString('base64');
+
+        console.log(`${logPrefix} svg converted to png`, {
+          svgChars: svgText.length,
+          pngBytes: pngData.byteLength,
+        });
+
+        return `data:image/png;base64,${pngBase64}`;
+      } catch (svgError) {
+        console.error(`${logPrefix} svg conversion failed`, svgError);
+        console.warn(`${logPrefix} svg logo omitted due conversion error`);
+        return null;
+      }
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const base64 = Buffer.from(arrayBuffer).toString('base64');
+
+    console.log(`${logPrefix} raster image embedded as base64`, {
+      bytes: arrayBuffer.byteLength,
+    });
+
+    return `data:${contentType};base64,${base64}`;
+  } catch (error) {
+    console.error(`${logPrefix} unexpected error resolving logo`, error);
+    return resolvedUrl;
+  }
+}
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -82,6 +187,16 @@ export async function GET(
       );
     }
 
+    const logoForPdf = await resolveLogoForPdf(
+      organization.settings?.logoUrl || organization.logoUrl,
+      req.nextUrl.origin,
+      req.headers.get('cookie'),
+      {
+        quoteId: quote.id,
+        organizationId: organization.id,
+      }
+    );
+
     const pdfStream = await pdf(
       buildQuotePdfDocument({
         quoteId: quote.id,
@@ -111,10 +226,7 @@ export async function GET(
           region: organization.settings?.region || null,
           email: organization.settings?.email || null,
           phone: organization.settings?.phone || null,
-          logoUrl: resolveLogoUrl(
-            organization.settings?.logoUrl || organization.logoUrl,
-            req.nextUrl.origin
-          ),
+          logoUrl: logoForPdf,
         },
         items: quote.items.map((item) => ({
           id: item.id,
