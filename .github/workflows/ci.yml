@@ -7,8 +7,8 @@ on:
     branches: [main, develop]
 
 env:
-  DATABASE_URL: postgresql://tendo_ci:tendo_ci@localhost:5432/tendo_ci
-  NEXTAUTH_SECRET: ci-local-secret
+  DATABASE_URL: postgresql://postgres@localhost:5432/tendo_ci
+  NEXTAUTH_SECRET: ${{ github.sha }}
   NEXTAUTH_URL: http://localhost:3000
 
 jobs:
@@ -74,9 +74,9 @@ jobs:
       postgres:
         image: postgres:16
         env:
-          POSTGRES_USER: tendo_ci
-          POSTGRES_PASSWORD: tendo_ci
+          POSTGRES_USER: postgres
           POSTGRES_DB: tendo_ci
+          POSTGRES_HOST_AUTH_METHOD: trust
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -112,8 +112,8 @@ jobs:
       - name: Run Playwright Tests
         run: npm run test:e2e
         env:
-          DATABASE_URL: postgresql://tendo_ci:tendo_ci@localhost:5432/tendo_ci
-          NEXTAUTH_SECRET: ci-local-secret
+          DATABASE_URL: postgresql://postgres@localhost:5432/tendo_ci
+          NEXTAUTH_SECRET: ${{ github.sha }}
           NEXTAUTH_URL: http://localhost:3000
       
       - name: Upload Playwright Report
@@ -185,9 +185,9 @@ jobs:
       postgres:
         image: postgres:16
         env:
-          POSTGRES_USER: tendo_test
-          POSTGRES_PASSWORD: test_password
+          POSTGRES_USER: postgres
           POSTGRES_DB: tendo_test
+          POSTGRES_HOST_AUTH_METHOD: trust
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -211,7 +211,7 @@ jobs:
       - name: Run Migrations
         run: npx prisma migrate deploy
         env:
-          DATABASE_URL: postgresql://tendo_test:test_password@localhost:5432/tendo_test
+          DATABASE_URL: postgresql://postgres@localhost:5432/tendo_test
       
       - name: Validate Schema
         run: npx prisma validate
