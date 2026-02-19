@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers'
 import { TenantsTable } from './_components/tenants-table'
 import { CreateTenantButton } from './_components/create-tenant-button'
+import { PageHeader } from '@/components/ui/page-header'
 
 async function getTenants() {
   const cookieStore = await cookies()
@@ -31,12 +32,11 @@ export default async function TenantsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">Gestión de Tenants</h2>
-        <p className="text-muted-foreground">
-          Administra todas las organizaciones registradas en el sistema
-        </p>
-      </div>
+      <PageHeader
+        title="Gestión de Tenants"
+        description="Administra todas las organizaciones registradas en el sistema"
+        breadcrumbs={['Admin', 'Tenants']}
+      />
 
       <div className="rounded-lg border bg-card p-6">
         <div className="mb-4 flex items-center justify-between">

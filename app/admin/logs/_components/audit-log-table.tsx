@@ -20,6 +20,7 @@ import {
   Building2,
 } from 'lucide-react'
 import { formatInTimeZone } from 'date-fns-tz'
+import { EmptyState } from '@/components/ui/empty-state'
 
 interface AuditLog {
   id: string
@@ -83,9 +84,11 @@ export function AuditLogTable({ logs }: AuditLogTableProps) {
   return (
     <>
       {logs.length === 0 ? (
-        <div className="rounded-md border p-6 text-center text-sm text-muted-foreground">
-          No hay registros de auditoría.
-        </div>
+        <EmptyState
+          icon={Shield}
+          title="No hay registros de auditoría"
+          description="Cuando ocurran acciones administrativas, aparecerán listadas aquí."
+        />
       ) : (
         <>
           <div className="space-y-3 md:hidden">

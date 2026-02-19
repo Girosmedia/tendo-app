@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { z } from 'zod';
-import { getCurrentOrganization, isAdmin } from '@/lib/organization';
+import { getCurrentOrganization } from '@/lib/organization';
+import { requireOwner } from '@/lib/utils/permissions';
 import { logAuditAction, AUDIT_ACTIONS } from '@/lib/audit';
 
 const commissionRateSchema = z.number().min(0, 'La tasa no puede ser negativa').max(100, 'La tasa no puede superar 100%');
@@ -88,13 +89,10 @@ export async function PATCH(request: Request) {
       );
     }
 
-    // Verificar que es ADMIN o OWNER
-    const canManageSettings = await isAdmin();
-    if (!canManageSettings) {
-      return NextResponse.json(
-        { error: 'No tienes permisos para modificar la configuración' },
-        { status: 403 }
-      );
+    // Solo OWNER puede modificar la configuración de la organización
+    const { error: permissionError } = await requireOwner();
+    if (permissionError) {
+      return permissionError;
     }
 
     const organization = await getCurrentOrganization();

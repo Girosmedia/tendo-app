@@ -53,24 +53,26 @@ const statusVariants = {
   SUSPENDED: { label: 'Suspendido', variant: 'destructive' as const },
   TRIAL: { label: 'Prueba', variant: 'secondary' as const },
 }
+import { EmptyState } from '@/components/ui/empty-state'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 
 export function TenantsTable({ tenants }: TenantsTableProps) {
   const router = useRouter()
   const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null)
   const [isEditOpen, setIsEditOpen] = useState(false)
+  const [tenantToDelete, setTenantToDelete] = useState<Tenant | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const handleEdit = (tenant: Tenant) => {
     setSelectedTenant(tenant)
     setIsEditOpen(true)
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro de eliminar este tenant? Esta acción no se puede deshacer.')) {
-      return
-    }
-
+  const handleDelete = async () => {
+    if (!tenantToDelete) return
+    setIsDeleting(true)
     try {
-      const response = await fetch(`/api/admin/tenants/${id}`, {
+      const response = await fetch(`/api/admin/tenants/${tenantToDelete.id}`, {
         method: 'DELETE',
       })
 
@@ -84,15 +86,20 @@ export function TenantsTable({ tenants }: TenantsTableProps) {
     } catch (error) {
       console.error('Error:', error)
       toast.error('Error al eliminar el tenant')
+    } finally {
+      setIsDeleting(false)
+      setTenantToDelete(null)
     }
   }
 
   return (
     <>
       {tenants.length === 0 ? (
-        <div className="rounded-md border p-6 text-center text-sm text-muted-foreground">
-          No hay tenants registrados.
-        </div>
+        <EmptyState
+          icon={Pencil}
+          title="No hay tenants registrados"
+          description="Cuando existan organizaciones, aparecerán listadas aquí para su administración."
+        />
       ) : (
         <>
           <div className="space-y-3 md:hidden">
@@ -164,7 +171,7 @@ export function TenantsTable({ tenants }: TenantsTableProps) {
                           Editar
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => handleDelete(tenant.id)}
+                          onClick={() => setTenantToDelete(tenant)}
                           className="text-destructive"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
@@ -260,7 +267,7 @@ export function TenantsTable({ tenants }: TenantsTableProps) {
                                   Editar
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                  onClick={() => handleDelete(tenant.id)}
+                                  onClick={() => setTenantToDelete(tenant)}
                                   className="text-destructive"
                                 >
                                   <Trash2 className="mr-2 h-4 w-4" />
@@ -287,6 +294,22 @@ export function TenantsTable({ tenants }: TenantsTableProps) {
           onOpenChange={setIsEditOpen}
         />
       )}
+
+      <ConfirmDialog
+        open={!!tenantToDelete}
+        onOpenChange={(open) => {
+          if (!open) setTenantToDelete(null)
+        }}
+        onConfirm={handleDelete}
+        title="Eliminar tenant"
+        description={
+          tenantToDelete
+            ? `Se eliminará \"${tenantToDelete.name}\" de forma permanente. Esta acción no se puede deshacer.`
+            : 'Esta acción no se puede deshacer.'
+        }
+        confirmLabel="Eliminar"
+        isLoading={isDeleting}
+      />
     </>
   )
 }

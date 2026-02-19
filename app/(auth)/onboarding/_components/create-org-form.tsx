@@ -93,8 +93,9 @@ export function CreateOrgForm() {
   };
 
   const nextStep = async () => {
-    const fields = step === 1 ? ['name', 'rut'] : step === 2 ? ['businessType', 'plan'] : [];
-    const isValid = await form.trigger(fields as any);
+    const fields: Array<'name' | 'rut' | 'businessType' | 'plan'> =
+      step === 1 ? ['name', 'rut'] : step === 2 ? ['businessType', 'plan'] : [];
+    const isValid = await form.trigger(fields);
     
     if (isValid && step < 3) {
       setStep((step + 1) as WizardStep);

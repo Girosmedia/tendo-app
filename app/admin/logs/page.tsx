@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import { AuditLogTable } from './_components/audit-log-table'
+import { PageHeader } from '@/components/ui/page-header'
 
 async function getLogs() {
   const cookieStore = await cookies()
@@ -30,12 +31,11 @@ export default async function LogsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">Registro de Auditorías</h2>
-        <p className="text-muted-foreground">
-          Historial de acciones administrativas en el sistema
-        </p>
-      </div>
+      <PageHeader
+        title="Registro de Auditorías"
+        description="Historial de acciones administrativas en el sistema"
+        breadcrumbs={['Admin', 'Logs']}
+      />
 
       <div className="rounded-lg border bg-card p-6">
         <div className="mb-4 flex items-center justify-between">

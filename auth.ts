@@ -89,6 +89,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.email = dbUser?.email ?? user.email;
         token.picture = dbUser?.image ?? null;
         token.jobTitle = dbUser?.jobTitle ?? null;
+
+        // Obtener el rol del miembro si tiene organización
+        if (dbUser?.currentOrganizationId) {
+          const member = await db.member.findUnique({
+            where: {
+              userId_organizationId: {
+                userId: user.id,
+                organizationId: dbUser.currentOrganizationId,
+              },
+            },
+            select: { role: true },
+          });
+          token.memberRole = member?.role ?? null;
+        } else {
+          token.memberRole = null;
+        }
       }
       
       // Si hay un update manual de la sesión O si el token no tiene organizationId
@@ -108,7 +124,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         
         if (dbUser?.currentOrganizationId) {
           token.organizationId = dbUser.currentOrganizationId;
+
+          // Actualizar el rol del miembro
+          const member = await db.member.findUnique({
+            where: {
+              userId_organizationId: {
+                userId: token.id as string,
+                organizationId: dbUser.currentOrganizationId,
+              },
+            },
+            select: { role: true },
+          });
+          token.memberRole = member?.role ?? null;
+        } else {
+          token.memberRole = null;
         }
+        
         if (dbUser?.isSuperAdmin !== undefined) {
           token.isSuperAdmin = dbUser.isSuperAdmin;
         }
@@ -158,6 +189,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.id = token.id as string;
         session.user.organizationId = token.organizationId as string | null;
         session.user.isSuperAdmin = token.isSuperAdmin as boolean;
+        session.user.memberRole = token.memberRole as typeof token.memberRole;
         session.user.impersonationSessionId = token.impersonationSessionId as string | undefined;
         session.user.name = (token.name as string | null | undefined) ?? session.user.name;
         session.user.email = (token.email as string | null | undefined) ?? session.user.email;

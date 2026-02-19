@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { getCurrentOrganization } from '@/lib/organization';
+import { requireAdmin } from '@/lib/utils/permissions';
 import { logAuditAction, AUDIT_ACTIONS } from '@/lib/audit';
 import {
   openCashRegisterSchema,
@@ -254,6 +255,12 @@ export async function POST(request: Request) {
     const organization = await getCurrentOrganization();
     if (!organization) {
       return NextResponse.json({ error: 'Organización no encontrada' }, { status: 404 });
+    }
+
+    // Solo ADMIN o OWNER pueden abrir caja
+    const { error: permissionError } = await requireAdmin();
+    if (permissionError) {
+      return permissionError;
     }
 
     const body = await request.json();

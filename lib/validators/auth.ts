@@ -128,12 +128,8 @@ export const createOrganizationSchema = z.object({
   logoUrl: z.string().url({ message: 'URL de logo inválida' }).optional(),
   
   // Paso 2: Giro y plan
-  businessType: z.enum(['RETAIL', 'SERVICES', 'MIXED'], {
-    required_error: 'Debes seleccionar el giro de tu negocio',
-  }).optional(),
-  plan: z.enum(['BASIC', 'PRO'], {
-    required_error: 'Debes seleccionar un plan',
-  }).optional(),
+  businessType: z.enum(['RETAIL', 'SERVICES', 'MIXED']).optional(),
+  plan: z.enum(['BASIC', 'PRO']).optional(),
   
   // Paso 3: Invitaciones de equipo (opcional)
   teamInvites: z.array(

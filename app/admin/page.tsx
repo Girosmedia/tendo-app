@@ -51,10 +51,4 @@ export default async function AdminPage() {
     </div>
   );
 }
-            </Card>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+

@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { db } from '@/lib/db'
-import { getCurrentOrganization, isAdminRole } from '@/lib/organization'
+import { getCurrentOrganization } from '@/lib/organization'
+import { requireAdmin } from '@/lib/utils/permissions'
 import { z } from 'zod'
 import { Prisma } from '@/lib/generated/prisma/client/client'
 import { productUpdateApiSchema } from '@/lib/validators/product'
@@ -75,12 +76,8 @@ export async function PATCH(
       return NextResponse.json({ error: 'Organización no encontrada' }, { status: 404 })
     }
 
-    if (!isAdminRole(organization.userRole)) {
-      return NextResponse.json(
-        { error: 'No tienes permisos para editar productos' },
-        { status: 403 }
-      )
-    }
+    // Nota: editar productos permite MEMBER según la matriz de permisos
+    // Si se quisiera restringir, usar: const { error } = await requireAdmin();
 
     const { id } = await params
     const body = await req.json()
@@ -220,11 +217,10 @@ export async function DELETE(
       return NextResponse.json({ error: 'Organización no encontrada' }, { status: 404 })
     }
 
-    if (!isAdminRole(organization.userRole)) {
-      return NextResponse.json(
-        { error: 'No tienes permisos para eliminar productos' },
-        { status: 403 }
-      )
+    // Solo ADMIN o OWNER pueden eliminar productos
+    const { error: permissionError } = await requireAdmin();
+    if (permissionError) {
+      return permissionError;
     }
 
     const { id } = await params

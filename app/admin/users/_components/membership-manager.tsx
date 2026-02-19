@@ -21,12 +21,23 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 
 interface Organization {
   id: string
   name: string
   slug: string
   role: string
+}
+
+interface TenantOption {
+  id: string
+  name: string
+}
+
+interface UserMembership {
+  id: string
+  organizationId: string
 }
 
 interface MembershipManagerProps {
@@ -38,9 +49,11 @@ export function MembershipManager({ userId, organizations }: MembershipManagerPr
   const router = useRouter()
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [allOrganizations, setAllOrganizations] = useState<any[]>([])
+  const [isRemoving, setIsRemoving] = useState(false)
+  const [allOrganizations, setAllOrganizations] = useState<TenantOption[]>([])
   const [selectedOrgId, setSelectedOrgId] = useState<string>('')
   const [selectedRole, setSelectedRole] = useState<string>('MEMBER')
+  const [membershipToRemove, setMembershipToRemove] = useState<Organization | null>(null)
 
   // Cargar todas las organizaciones para el selector
   useEffect(() => {
@@ -99,16 +112,16 @@ export function MembershipManager({ userId, organizations }: MembershipManagerPr
     }
   }
 
-  const handleRemoveMembership = async (org: Organization) => {
-    if (!confirm(`¿Eliminar al usuario de "${org.name}"?`)) return
-
+  const handleRemoveMembership = async () => {
+    if (!membershipToRemove) return
+    setIsRemoving(true)
     try {
       // Necesitamos el ID de la membresía, lo buscaremos
       const response = await fetch(`/api/admin/users/${userId}`)
       const userData = await response.json()
       
       const membership = userData.user?.memberships?.find(
-        (m: any) => m.organizationId === org.id
+        (membershipItem: UserMembership) => membershipItem.organizationId === membershipToRemove.id
       )
 
       if (!membership) {
@@ -130,6 +143,9 @@ export function MembershipManager({ userId, organizations }: MembershipManagerPr
     } catch (error) {
       console.error('Error:', error)
       toast.error('Error al eliminar membresía')
+    } finally {
+      setIsRemoving(false)
+      setMembershipToRemove(null)
     }
   }
 
@@ -225,7 +241,7 @@ export function MembershipManager({ userId, organizations }: MembershipManagerPr
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={() => handleRemoveMembership(org)}
+                onClick={() => setMembershipToRemove(org)}
                 className="h-7 w-7 p-0 text-destructive hover:text-destructive"
               >
                 <Trash2 className="h-4 w-4" />
@@ -234,6 +250,22 @@ export function MembershipManager({ userId, organizations }: MembershipManagerPr
           ))
         )}
       </div>
+
+      <ConfirmDialog
+        open={!!membershipToRemove}
+        onOpenChange={(open) => {
+          if (!open) setMembershipToRemove(null)
+        }}
+        onConfirm={handleRemoveMembership}
+        title="Eliminar membresía"
+        description={
+          membershipToRemove
+            ? `Se eliminará al usuario de la organización \"${membershipToRemove.name}\".`
+            : 'Esta acción no se puede deshacer.'
+        }
+        confirmLabel="Eliminar"
+        isLoading={isRemoving}
+      />
     </div>
   )
 }

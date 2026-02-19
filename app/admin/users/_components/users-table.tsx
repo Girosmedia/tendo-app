@@ -25,6 +25,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { EditUserSheet } from './edit-user-sheet'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { EmptyState } from '@/components/ui/empty-state'
 
 interface Organization {
   id: string
@@ -51,19 +53,21 @@ export function UsersTable({ users }: UsersTableProps) {
   const router = useRouter()
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [isEditOpen, setIsEditOpen] = useState(false)
+  const [userToDelete, setUserToDelete] = useState<User | null>(null)
+  const [userToResetPassword, setUserToResetPassword] = useState<User | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isResettingPassword, setIsResettingPassword] = useState(false)
 
   const handleEdit = (user: User) => {
     setSelectedUser(user)
     setIsEditOpen(true)
   }
 
-  const handleDelete = async (id: string, email: string) => {
-    if (!confirm(`¿Estás seguro de eliminar el usuario ${email}? Esta acción no se puede deshacer.`)) {
-      return
-    }
-
+  const handleDelete = async () => {
+    if (!userToDelete) return
+    setIsDeleting(true)
     try {
-      const response = await fetch(`/api/admin/users/${id}`, {
+      const response = await fetch(`/api/admin/users/${userToDelete.id}`, {
         method: 'DELETE',
       })
 
@@ -77,16 +81,17 @@ export function UsersTable({ users }: UsersTableProps) {
     } catch (error) {
       console.error('Error:', error)
       toast.error('Error al eliminar el usuario')
+    } finally {
+      setIsDeleting(false)
+      setUserToDelete(null)
     }
   }
 
-  const handleResetPassword = async (id: string, email: string) => {
-    if (!confirm(`¿Resetear contraseña para ${email}? Se enviará una nueva clave temporal al correo del usuario.`)) {
-      return
-    }
-
+  const handleResetPassword = async () => {
+    if (!userToResetPassword) return
+    setIsResettingPassword(true)
     try {
-      const response = await fetch(`/api/admin/users/${id}/reset-password`, {
+      const response = await fetch(`/api/admin/users/${userToResetPassword.id}/reset-password`, {
         method: 'POST',
       })
 
@@ -98,23 +103,27 @@ export function UsersTable({ users }: UsersTableProps) {
       }
 
       if (body.temporaryPassword) {
-        toast.success('Contraseña restablecida. Revisa el mensaje para compartir clave temporal manualmente.')
-        alert(`No se pudo enviar correo. Contraseña temporal para ${email}: ${body.temporaryPassword}`)
+        toast.error(`No se pudo enviar correo. Clave temporal para ${userToResetPassword.email}: ${body.temporaryPassword}`)
       } else {
         toast.success('Contraseña restablecida y enviada por correo')
       }
     } catch (error) {
       console.error('Error:', error)
       toast.error('Error al resetear la contraseña')
+    } finally {
+      setIsResettingPassword(false)
+      setUserToResetPassword(null)
     }
   }
 
   return (
     <>
       {users.length === 0 ? (
-        <div className="rounded-md border p-6 text-center text-sm text-muted-foreground">
-          No hay usuarios registrados.
-        </div>
+        <EmptyState
+          icon={Shield}
+          title="No hay usuarios registrados"
+          description="Cuando existan usuarios en la plataforma aparecerán listados aquí."
+        />
       ) : (
         <>
           <div className="space-y-3 md:hidden">
@@ -184,12 +193,12 @@ export function UsersTable({ users }: UsersTableProps) {
                         <Pencil className="mr-2 h-4 w-4" />
                         Editar
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleResetPassword(user.id, user.email)}>
+                      <DropdownMenuItem onClick={() => setUserToResetPassword(user)}>
                         <KeyRound className="mr-2 h-4 w-4" />
                         Resetear contraseña
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => handleDelete(user.id, user.email)}
+                        onClick={() => setUserToDelete(user)}
                         className="text-destructive"
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
@@ -277,12 +286,12 @@ export function UsersTable({ users }: UsersTableProps) {
                                 <Pencil className="mr-2 h-4 w-4" />
                                 Editar
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleResetPassword(user.id, user.email)}>
+                                  <DropdownMenuItem onClick={() => setUserToResetPassword(user)}>
                                 <KeyRound className="mr-2 h-4 w-4" />
                                 Resetear contraseña
                               </DropdownMenuItem>
                               <DropdownMenuItem
-                                onClick={() => handleDelete(user.id, user.email)}
+                                    onClick={() => setUserToDelete(user)}
                                 className="text-destructive"
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />
@@ -308,6 +317,39 @@ export function UsersTable({ users }: UsersTableProps) {
           onOpenChange={setIsEditOpen}
         />
       )}
+
+      <ConfirmDialog
+        open={!!userToDelete}
+        onOpenChange={(open) => {
+          if (!open) setUserToDelete(null)
+        }}
+        onConfirm={handleDelete}
+        title="Eliminar usuario"
+        description={
+          userToDelete
+            ? `Se eliminará ${userToDelete.email} de forma permanente. Esta acción no se puede deshacer.`
+            : 'Esta acción no se puede deshacer.'
+        }
+        confirmLabel="Eliminar"
+        isLoading={isDeleting}
+      />
+
+      <ConfirmDialog
+        open={!!userToResetPassword}
+        onOpenChange={(open) => {
+          if (!open) setUserToResetPassword(null)
+        }}
+        onConfirm={handleResetPassword}
+        title="Resetear contraseña"
+        description={
+          userToResetPassword
+            ? `Se reseteará la contraseña de ${userToResetPassword.email} y se intentará enviar una clave temporal por correo.`
+            : 'Se intentará enviar una clave temporal por correo.'
+        }
+        confirmLabel="Resetear"
+        variant="default"
+        isLoading={isResettingPassword}
+      />
     </>
   )
 }
