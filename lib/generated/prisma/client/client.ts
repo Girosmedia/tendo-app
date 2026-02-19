@@ -65,6 +65,11 @@ export type VerificationToken = Prisma.VerificationTokenModel
  */
 export type Organization = Prisma.OrganizationModel
 /**
+ * Model Subscription
+ * 
+ */
+export type Subscription = Prisma.SubscriptionModel
+/**
  * Model Supplier
  * 
  */

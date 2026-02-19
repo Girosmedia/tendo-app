@@ -1,74 +1,20 @@
 import { auth } from '@/auth';
-import { db } from '@/lib/db';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Building2, Users, Shield } from 'lucide-react';
+import { AdminMetricsDashboard } from '@/app/admin/_components/admin-metrics-dashboard';
 
 export default async function AdminPage() {
   const session = await auth();
-
-  // Obtener métricas globales
-  const [totalOrganizations, totalUsers, activeOrganizations] = await Promise.all([
-    db.organization.count(),
-    db.user.count(),
-    db.organization.count({
-      where: { status: 'ACTIVE' },
-    }),
-  ]);
-
-  const stats = [
-    {
-      title: 'Total Tenants',
-      value: totalOrganizations,
-      description: `${activeOrganizations} activos`,
-      icon: Building2,
-      color: 'text-primary',
-    },
-    {
-      title: 'Total Usuarios',
-      value: totalUsers,
-      description: 'Usuarios registrados',
-      icon: Users,
-      color: 'text-success',
-    },
-    {
-      title: 'Sesión Activa',
-      value: session?.user.name || 'Admin',
-      description: session?.user.email || '',
-      icon: Shield,
-      color: 'text-destructive',
-    },
-  ];
 
   return (
     <div className="space-y-8">
       <div>
         <h2 className="text-3xl font-bold tracking-tight">Resumen Global</h2>
         <p className="text-muted-foreground">
-          Vista general del sistema Tendo
+          Métricas SaaS y vista general del sistema Tendo
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        {stats.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={stat.title}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {stat.title}
-                </CardTitle>
-                <Icon className={`h-4 w-4 ${stat.color}`} />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <p className="text-xs text-muted-foreground">
-                  {stat.description}
-                </p>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      <AdminMetricsDashboard />
 
       <Card>
         <CardHeader>
@@ -98,6 +44,13 @@ export default async function AdminPage() {
                   Administrar usuarios, permisos y accesos globales
                 </p>
               </CardContent>
+            </Card>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
             </Card>
           </div>
         </CardContent>

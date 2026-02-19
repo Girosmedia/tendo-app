@@ -27,6 +27,16 @@ export const OrganizationStatus = {
 export type OrganizationStatus = (typeof OrganizationStatus)[keyof typeof OrganizationStatus]
 
 
+export const SubscriptionStatus = {
+  TRIAL: 'TRIAL',
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  CANCELED: 'CANCELED'
+} as const
+
+export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus]
+
+
 export const SupplierStatus = {
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE'

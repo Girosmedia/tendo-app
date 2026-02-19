@@ -110,6 +110,7 @@ export const registerSchema = z
 // ============================================
 
 export const createOrganizationSchema = z.object({
+  // Paso 1: Datos de la empresa
   name: z
     .string()
     .min(1, { message: 'El nombre de la empresa es requerido' })
@@ -125,6 +126,22 @@ export const createOrganizationSchema = z.object({
       message: 'RUT inválido. Verifique el dígito verificador',
     }),
   logoUrl: z.string().url({ message: 'URL de logo inválida' }).optional(),
+  
+  // Paso 2: Giro y plan
+  businessType: z.enum(['RETAIL', 'SERVICES', 'MIXED'], {
+    required_error: 'Debes seleccionar el giro de tu negocio',
+  }).optional(),
+  plan: z.enum(['BASIC', 'PRO'], {
+    required_error: 'Debes seleccionar un plan',
+  }).optional(),
+  
+  // Paso 3: Invitaciones de equipo (opcional)
+  teamInvites: z.array(
+    z.object({
+      email: z.string().email({ message: 'Email inválido' }),
+      role: z.enum(['ADMIN', 'MEMBER']),
+    })
+  ).max(2, { message: 'Máximo 2 invitaciones en onboarding' }).optional(),
 });
 
 export const updateOrganizationSchema = z.object({

@@ -56,6 +56,7 @@ export const ModelName = {
   User: 'User',
   VerificationToken: 'VerificationToken',
   Organization: 'Organization',
+  Subscription: 'Subscription',
   Supplier: 'Supplier',
   AccountPayable: 'AccountPayable',
   Member: 'Member',
@@ -164,6 +165,23 @@ export const OrganizationScalarFieldEnum = {
 } as const
 
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
+
+
+export const SubscriptionScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  planId: 'planId',
+  status: 'status',
+  currentPeriodStart: 'currentPeriodStart',
+  currentPeriodEnd: 'currentPeriodEnd',
+  trialEndsAt: 'trialEndsAt',
+  mrr: 'mrr',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  canceledAt: 'canceledAt'
+} as const
+
+export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
 
 
 export const SupplierScalarFieldEnum = {

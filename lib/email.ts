@@ -51,6 +51,7 @@ interface QuoteApprovedCustomerEmailInput {
   toEmail: string;
   customerName?: string | null;
   organizationName: string;
+  organizationLogoUrl?: string | null;
   quoteCode: string;
   total: number;
   organizationEmail?: string | null;
@@ -64,6 +65,9 @@ interface EmailTemplateInput {
   ctaLabel: string;
   ctaUrl: string;
   supportMessage?: string;
+  brandName?: string;
+  brandLogoUrl?: string | null;
+  showPoweredByTendo?: boolean;
 }
 
 function getBaseUrl() {
@@ -73,6 +77,10 @@ function getBaseUrl() {
 function getEmailLogoUrl() {
   const explicitLogo = process.env.MARKETING_EMAIL_LOGO_URL;
   if (explicitLogo) {
+    if (/\.svg(\?.*)?$/i.test(explicitLogo)) {
+      return explicitLogo.replace(/\.svg(\?.*)?$/i, '.png$1');
+    }
+
     return explicitLogo;
   }
 
@@ -81,7 +89,15 @@ function getEmailLogoUrl() {
     return null;
   }
 
-  return `${baseUrl}/tendo_sin_fondo/logo_negativo.svg`;
+  return `${baseUrl}/tendo_sin_fondo/logo_negativo.png`;
+}
+
+function normalizeBrandLogoUrl(logoUrl?: string | null) {
+  if (!logoUrl) return null;
+  if (/\.svg(\?.*)?$/i.test(logoUrl)) {
+    return logoUrl.replace(/\.svg(\?.*)?$/i, '.png$1');
+  }
+  return logoUrl;
 }
 
 function getSender() {
@@ -128,7 +144,9 @@ async function sendWithResend(payload: ResendEmailRequest) {
 }
 
 function renderEmailTemplate(input: EmailTemplateInput) {
-  const logoUrl = getEmailLogoUrl();
+  const logoUrl = normalizeBrandLogoUrl(input.brandLogoUrl) || getEmailLogoUrl();
+  const brandName = input.brandName || 'Tendo';
+  const showPoweredByTendo = input.showPoweredByTendo ?? false;
   const supportMessage =
     input.supportMessage ||
     'Si necesitas ayuda, responde este correo y nuestro equipo te apoyará.';
@@ -140,7 +158,7 @@ function renderEmailTemplate(input: EmailTemplateInput) {
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:620px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
         <tr>
           <td style="padding:16px 24px;background:#221f47;border-bottom:1px solid #1c193b;">
-            ${logoUrl ? `<img src="${logoUrl}" alt="Tendo" style="width:150px;max-width:100%;height:auto;display:block;" />` : `<p style="margin:0;color:#f7f7f8;font-size:22px;font-weight:700;letter-spacing:-0.02em;line-height:1;">Tendo</p>`}
+            ${logoUrl ? `<img src="${logoUrl}" alt="${escapeHtml(brandName)}" style="width:150px;max-width:100%;height:auto;display:block;" />` : `<p style="margin:0;color:#f7f7f8;font-size:22px;font-weight:700;letter-spacing:-0.02em;line-height:1;">${escapeHtml(brandName)}</p>`}
           </td>
         </tr>
         <tr>
@@ -154,6 +172,7 @@ function renderEmailTemplate(input: EmailTemplateInput) {
               </a>
             </div>
             <p style="margin:0;color:#6b7280;font-size:13px;line-height:1.5;">${supportMessage}</p>
+            ${showPoweredByTendo ? '<p style="margin:10px 0 0 0;color:#9ca3af;font-size:12px;line-height:1.4;">Enviado con Tendo</p>' : ''}
           </td>
         </tr>
       </table>
@@ -345,6 +364,9 @@ export async function sendQuoteApprovedCustomerEmail(input: QuoteApprovedCustome
     html: renderEmailTemplate({
       title: '¡Qué buena noticia! 🎉',
       greeting: `${firstName}, muchísimas gracias por confiar en <strong>${input.organizationName}</strong>.`,
+      brandName: input.organizationName,
+      brandLogoUrl: input.organizationLogoUrl,
+      showPoweredByTendo: true,
       paragraphs: [
         `Confirmamos que tu cotización <strong>${input.quoteCode}</strong> fue aprobada exitosamente por un total de <strong>${formattedTotal}</strong>.`,
         'Estamos muy felices de avanzar contigo en este proyecto. Dentro de poco nos pondremos en contacto para coordinar los próximos pasos.',

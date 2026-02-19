@@ -7,6 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
+    "logo:email": "tsx scripts/generate-email-logo-png.ts",
     "smoke:api": "tsx scripts/smoke-api.ts",
     "smoke:security": "tsx scripts/smoke-security.ts",
     "seed": "tsx prisma/seed.ts",

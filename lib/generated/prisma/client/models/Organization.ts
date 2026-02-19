@@ -220,6 +220,7 @@ export type OrganizationWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   members?: Prisma.MemberListRelationFilter
   settings?: Prisma.XOR<Prisma.OrganizationSettingsNullableScalarRelationFilter, Prisma.OrganizationSettingsWhereInput> | null
+  subscription?: Prisma.XOR<Prisma.SubscriptionNullableScalarRelationFilter, Prisma.SubscriptionWhereInput> | null
   categories?: Prisma.CategoryListRelationFilter
   products?: Prisma.ProductListRelationFilter
   customers?: Prisma.CustomerListRelationFilter
@@ -251,6 +252,7 @@ export type OrganizationOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   members?: Prisma.MemberOrderByRelationAggregateInput
   settings?: Prisma.OrganizationSettingsOrderByWithRelationInput
+  subscription?: Prisma.SubscriptionOrderByWithRelationInput
   categories?: Prisma.CategoryOrderByRelationAggregateInput
   products?: Prisma.ProductOrderByRelationAggregateInput
   customers?: Prisma.CustomerOrderByRelationAggregateInput
@@ -285,6 +287,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   members?: Prisma.MemberListRelationFilter
   settings?: Prisma.XOR<Prisma.OrganizationSettingsNullableScalarRelationFilter, Prisma.OrganizationSettingsWhereInput> | null
+  subscription?: Prisma.XOR<Prisma.SubscriptionNullableScalarRelationFilter, Prisma.SubscriptionWhereInput> | null
   categories?: Prisma.CategoryListRelationFilter
   products?: Prisma.ProductListRelationFilter
   customers?: Prisma.CustomerListRelationFilter
@@ -348,6 +351,7 @@ export type OrganizationCreateInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -379,6 +383,7 @@ export type OrganizationUncheckedCreateInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -410,6 +415,7 @@ export type OrganizationUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -441,6 +447,7 @@ export type OrganizationUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -559,6 +566,20 @@ export type EnumOrganizationStatusFieldUpdateOperationsInput = {
 export type OrganizationUpdatemodulesInput = {
   set?: string[]
   push?: string | string[]
+}
+
+export type OrganizationCreateNestedOneWithoutSubscriptionInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutSubscriptionInput, Prisma.OrganizationUncheckedCreateWithoutSubscriptionInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutSubscriptionInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutSubscriptionNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutSubscriptionInput, Prisma.OrganizationUncheckedCreateWithoutSubscriptionInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutSubscriptionInput
+  upsert?: Prisma.OrganizationUpsertWithoutSubscriptionInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutSubscriptionInput, Prisma.OrganizationUpdateWithoutSubscriptionInput>, Prisma.OrganizationUncheckedUpdateWithoutSubscriptionInput>
 }
 
 export type OrganizationCreateNestedOneWithoutSuppliersInput = {
@@ -813,6 +834,146 @@ export type OrganizationUpdateOneRequiredWithoutPaymentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutPaymentsInput, Prisma.OrganizationUpdateWithoutPaymentsInput>, Prisma.OrganizationUncheckedUpdateWithoutPaymentsInput>
 }
 
+export type OrganizationCreateWithoutSubscriptionInput = {
+  id?: string
+  name: string
+  slug: string
+  rut: string
+  logoUrl?: string | null
+  status?: $Enums.OrganizationStatus
+  plan?: string
+  modules?: Prisma.OrganizationCreatemodulesInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
+  settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
+  products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
+  projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
+  projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
+  cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
+  operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
+  credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
+  accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutSubscriptionInput = {
+  id?: string
+  name: string
+  slug: string
+  rut: string
+  logoUrl?: string | null
+  status?: $Enums.OrganizationStatus
+  plan?: string
+  modules?: Prisma.OrganizationCreatemodulesInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
+  settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+  projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
+  cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
+  operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
+  credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
+  accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutSubscriptionInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutSubscriptionInput, Prisma.OrganizationUncheckedCreateWithoutSubscriptionInput>
+}
+
+export type OrganizationUpsertWithoutSubscriptionInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutSubscriptionInput, Prisma.OrganizationUncheckedUpdateWithoutSubscriptionInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutSubscriptionInput, Prisma.OrganizationUncheckedCreateWithoutSubscriptionInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutSubscriptionInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutSubscriptionInput, Prisma.OrganizationUncheckedUpdateWithoutSubscriptionInput>
+}
+
+export type OrganizationUpdateWithoutSubscriptionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  rut?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  modules?: Prisma.OrganizationUpdatemodulesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
+  settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
+  products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
+  projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
+  projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
+  cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
+  operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
+  credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
+  accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutSubscriptionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  rut?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  modules?: Prisma.OrganizationUpdatemodulesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+  cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
+  operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+  credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
+  accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
 export type OrganizationCreateWithoutSuppliersInput = {
   id?: string
   name: string
@@ -826,6 +987,7 @@ export type OrganizationCreateWithoutSuppliersInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -856,6 +1018,7 @@ export type OrganizationUncheckedCreateWithoutSuppliersInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -902,6 +1065,7 @@ export type OrganizationUpdateWithoutSuppliersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -932,6 +1096,7 @@ export type OrganizationUncheckedUpdateWithoutSuppliersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -962,6 +1127,7 @@ export type OrganizationCreateWithoutAccountsPayableInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -992,6 +1158,7 @@ export type OrganizationUncheckedCreateWithoutAccountsPayableInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1038,6 +1205,7 @@ export type OrganizationUpdateWithoutAccountsPayableInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -1068,6 +1236,7 @@ export type OrganizationUncheckedUpdateWithoutAccountsPayableInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1097,6 +1266,7 @@ export type OrganizationCreateWithoutMembersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -1127,6 +1297,7 @@ export type OrganizationUncheckedCreateWithoutMembersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1173,6 +1344,7 @@ export type OrganizationUpdateWithoutMembersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -1203,6 +1375,7 @@ export type OrganizationUncheckedUpdateWithoutMembersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1233,6 +1406,7 @@ export type OrganizationCreateWithoutSettingsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -1263,6 +1437,7 @@ export type OrganizationUncheckedCreateWithoutSettingsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1309,6 +1484,7 @@ export type OrganizationUpdateWithoutSettingsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -1339,6 +1515,7 @@ export type OrganizationUncheckedUpdateWithoutSettingsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1370,6 +1547,7 @@ export type OrganizationCreateWithoutCategoriesInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
   documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
@@ -1400,6 +1578,7 @@ export type OrganizationUncheckedCreateWithoutCategoriesInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1446,6 +1625,7 @@ export type OrganizationUpdateWithoutCategoriesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
@@ -1476,6 +1656,7 @@ export type OrganizationUncheckedUpdateWithoutCategoriesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1506,6 +1687,7 @@ export type OrganizationCreateWithoutProductsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
   documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
@@ -1536,6 +1718,7 @@ export type OrganizationUncheckedCreateWithoutProductsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1582,6 +1765,7 @@ export type OrganizationUpdateWithoutProductsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
@@ -1612,6 +1796,7 @@ export type OrganizationUncheckedUpdateWithoutProductsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1642,6 +1827,7 @@ export type OrganizationCreateWithoutCustomersInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
@@ -1672,6 +1858,7 @@ export type OrganizationUncheckedCreateWithoutCustomersInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1718,6 +1905,7 @@ export type OrganizationUpdateWithoutCustomersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
@@ -1748,6 +1936,7 @@ export type OrganizationUncheckedUpdateWithoutCustomersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1778,6 +1967,7 @@ export type OrganizationCreateWithoutDocumentsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -1808,6 +1998,7 @@ export type OrganizationUncheckedCreateWithoutDocumentsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1854,6 +2045,7 @@ export type OrganizationUpdateWithoutDocumentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -1884,6 +2076,7 @@ export type OrganizationUncheckedUpdateWithoutDocumentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1914,6 +2107,7 @@ export type OrganizationCreateWithoutProjectsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -1944,6 +2138,7 @@ export type OrganizationUncheckedCreateWithoutProjectsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1990,6 +2185,7 @@ export type OrganizationUpdateWithoutProjectsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -2020,6 +2216,7 @@ export type OrganizationUncheckedUpdateWithoutProjectsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2050,6 +2247,7 @@ export type OrganizationCreateWithoutProjectPaymentsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -2080,6 +2278,7 @@ export type OrganizationUncheckedCreateWithoutProjectPaymentsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2126,6 +2325,7 @@ export type OrganizationUpdateWithoutProjectPaymentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -2156,6 +2356,7 @@ export type OrganizationUncheckedUpdateWithoutProjectPaymentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2186,6 +2387,7 @@ export type OrganizationCreateWithoutProjectResourcesInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -2216,6 +2418,7 @@ export type OrganizationUncheckedCreateWithoutProjectResourcesInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2262,6 +2465,7 @@ export type OrganizationUpdateWithoutProjectResourcesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -2292,6 +2496,7 @@ export type OrganizationUncheckedUpdateWithoutProjectResourcesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2322,6 +2527,7 @@ export type OrganizationCreateWithoutProjectMilestonesInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -2352,6 +2558,7 @@ export type OrganizationUncheckedCreateWithoutProjectMilestonesInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2398,6 +2605,7 @@ export type OrganizationUpdateWithoutProjectMilestonesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -2428,6 +2636,7 @@ export type OrganizationUncheckedUpdateWithoutProjectMilestonesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2458,6 +2667,7 @@ export type OrganizationCreateWithoutProjectExpensesInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -2488,6 +2698,7 @@ export type OrganizationUncheckedCreateWithoutProjectExpensesInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2534,6 +2745,7 @@ export type OrganizationUpdateWithoutProjectExpensesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -2564,6 +2776,7 @@ export type OrganizationUncheckedUpdateWithoutProjectExpensesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2594,6 +2807,7 @@ export type OrganizationCreateWithoutCashRegistersInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -2624,6 +2838,7 @@ export type OrganizationUncheckedCreateWithoutCashRegistersInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2670,6 +2885,7 @@ export type OrganizationUpdateWithoutCashRegistersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -2700,6 +2916,7 @@ export type OrganizationUncheckedUpdateWithoutCashRegistersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2730,6 +2947,7 @@ export type OrganizationCreateWithoutOperationalExpensesInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -2760,6 +2978,7 @@ export type OrganizationUncheckedCreateWithoutOperationalExpensesInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2806,6 +3025,7 @@ export type OrganizationUpdateWithoutOperationalExpensesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -2836,6 +3056,7 @@ export type OrganizationUncheckedUpdateWithoutOperationalExpensesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2866,6 +3087,7 @@ export type OrganizationCreateWithoutTreasuryMovementsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -2896,6 +3118,7 @@ export type OrganizationUncheckedCreateWithoutTreasuryMovementsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2942,6 +3165,7 @@ export type OrganizationUpdateWithoutTreasuryMovementsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -2972,6 +3196,7 @@ export type OrganizationUncheckedUpdateWithoutTreasuryMovementsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -3002,6 +3227,7 @@ export type OrganizationCreateWithoutCreditsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -3032,6 +3258,7 @@ export type OrganizationUncheckedCreateWithoutCreditsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -3078,6 +3305,7 @@ export type OrganizationUpdateWithoutCreditsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -3108,6 +3336,7 @@ export type OrganizationUncheckedUpdateWithoutCreditsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -3138,6 +3367,7 @@ export type OrganizationCreateWithoutPaymentsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
@@ -3168,6 +3398,7 @@ export type OrganizationUncheckedCreateWithoutPaymentsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
   settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
@@ -3214,6 +3445,7 @@ export type OrganizationUpdateWithoutPaymentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
@@ -3244,6 +3476,7 @@ export type OrganizationUncheckedUpdateWithoutPaymentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
   settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -3449,6 +3682,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   updatedAt?: boolean
   members?: boolean | Prisma.Organization$membersArgs<ExtArgs>
   settings?: boolean | Prisma.Organization$settingsArgs<ExtArgs>
+  subscription?: boolean | Prisma.Organization$subscriptionArgs<ExtArgs>
   categories?: boolean | Prisma.Organization$categoriesArgs<ExtArgs>
   products?: boolean | Prisma.Organization$productsArgs<ExtArgs>
   customers?: boolean | Prisma.Organization$customersArgs<ExtArgs>
@@ -3511,6 +3745,7 @@ export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   members?: boolean | Prisma.Organization$membersArgs<ExtArgs>
   settings?: boolean | Prisma.Organization$settingsArgs<ExtArgs>
+  subscription?: boolean | Prisma.Organization$subscriptionArgs<ExtArgs>
   categories?: boolean | Prisma.Organization$categoriesArgs<ExtArgs>
   products?: boolean | Prisma.Organization$productsArgs<ExtArgs>
   customers?: boolean | Prisma.Organization$customersArgs<ExtArgs>
@@ -3537,6 +3772,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
   objects: {
     members: Prisma.$MemberPayload<ExtArgs>[]
     settings: Prisma.$OrganizationSettingsPayload<ExtArgs> | null
+    subscription: Prisma.$SubscriptionPayload<ExtArgs> | null
     categories: Prisma.$CategoryPayload<ExtArgs>[]
     products: Prisma.$ProductPayload<ExtArgs>[]
     customers: Prisma.$CustomerPayload<ExtArgs>[]
@@ -3961,6 +4197,7 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   readonly [Symbol.toStringTag]: "PrismaPromise"
   members<T extends Prisma.Organization$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   settings<T extends Prisma.Organization$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$settingsArgs<ExtArgs>>): Prisma.Prisma__OrganizationSettingsClient<runtime.Types.Result.GetResult<Prisma.$OrganizationSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  subscription<T extends Prisma.Organization$subscriptionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$subscriptionArgs<ExtArgs>>): Prisma.Prisma__SubscriptionClient<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   categories<T extends Prisma.Organization$categoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   products<T extends Prisma.Organization$productsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$productsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   customers<T extends Prisma.Organization$customersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$customersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4444,6 +4681,25 @@ export type Organization$settingsArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   include?: Prisma.OrganizationSettingsInclude<ExtArgs> | null
   where?: Prisma.OrganizationSettingsWhereInput
+}
+
+/**
+ * Organization.subscription
+ */
+export type Organization$subscriptionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Subscription
+   */
+  select?: Prisma.SubscriptionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Subscription
+   */
+  omit?: Prisma.SubscriptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionInclude<ExtArgs> | null
+  where?: Prisma.SubscriptionWhereInput
 }
 
 /**

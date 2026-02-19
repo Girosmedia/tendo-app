@@ -150,6 +150,7 @@ export async function PATCH(
           toEmail: updatedQuote.customer.email,
           customerName: updatedQuote.customer.name,
           organizationName: organization.settings?.businessName || organization.name,
+          organizationLogoUrl: organization.settings?.logoUrl || organization.logoUrl,
           quoteCode,
           total: Number(updatedQuote.total),
           organizationEmail: organization.settings?.email || null,

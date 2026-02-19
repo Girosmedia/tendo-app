@@ -33,10 +33,19 @@ export async function POST(request: Request) {
       );
     }
 
-    const { name, rut, logoUrl } = validatedFields.data;
+    const { name, rut, logoUrl, businessType, plan, teamInvites } = validatedFields.data;
 
     // Limpiar y validar RUT
     const cleanedRUT = cleanRUT(rut);
+
+    // Mapear businessType a modules
+    const modules: string[] = [];
+    if (businessType === 'RETAIL' || businessType === 'MIXED') {
+      modules.push('pos', 'inventory', 'customers');
+    }
+    if (businessType === 'SERVICES' || businessType === 'MIXED') {
+      modules.push('projects', 'quotes');
+    }
 
     // Verificar si el RUT ya está registrado
     const existingOrg = await db.organization.findUnique({
@@ -68,6 +77,8 @@ export async function POST(request: Request) {
           slug,
           rut: cleanedRUT,
           logoUrl,
+          plan: plan || 'BASIC',
+          modules,
         },
       });
 
@@ -112,6 +123,41 @@ export async function POST(request: Request) {
         });
       } catch (emailError) {
         console.error('Error enviando email de organización creada:', emailError);
+      }
+    }
+
+    // Procesar invitaciones de equipo si existen
+    if (teamInvites && teamInvites.length > 0) {
+      const { randomBytes } = await import('crypto');
+      const { sendTeamInvitationEmail } = await import('@/lib/email');
+      
+      for (const invite of teamInvites) {
+        try {
+          const token = randomBytes(32).toString('hex');
+          const expiresAt = new Date();
+          expiresAt.setDate(expiresAt.getDate() + 7);
+
+          await db.teamInvitation.create({
+            data: {
+              organizationId: result.id,
+              email: invite.email,
+              role: invite.role,
+              token,
+              invitedBy: session.user.id,
+              expiresAt,
+            },
+          });
+
+          await sendTeamInvitationEmail({
+            toEmail: invite.email,
+            organizationName: result.name,
+            role: invite.role,
+            invitationToken: token,
+            expiresAt,
+          });
+        } catch (inviteError) {
+          console.error('Error enviando invitación:', inviteError);
+        }
       }
     }
 

@@ -22,6 +22,7 @@ import { es } from 'date-fns/locale';
 import Link from 'next/link';
 import { ProjectsStatusChart } from '@/app/dashboard/_components/projects-status-chart';
 import { DashboardZimpleCharts } from '@/app/dashboard/_components/dashboard-zimple-charts';
+import { SetupChecklist } from '@/app/dashboard/_components/setup-checklist';
 
 interface TopProduct {
   productId: string;
@@ -347,6 +348,9 @@ export default async function DashboardPage() {
           Entiende tu negocio en segundos: caja, rentabilidad, cobranza e inventario.
         </p>
       </div>
+
+      {/* Checklist de activación para organizaciones nuevas */}
+      <SetupChecklist />
 
       <div className='grid grid-cols-1 gap-4 lg:grid-cols-12'>
         <Card className='lg:col-span-8'>
