@@ -47,6 +47,16 @@ interface AdminBroadcastEmailInput {
   isHtml?: boolean;
 }
 
+interface QuoteApprovedCustomerEmailInput {
+  toEmail: string;
+  customerName?: string | null;
+  organizationName: string;
+  quoteCode: string;
+  total: number;
+  organizationEmail?: string | null;
+  organizationPhone?: string | null;
+}
+
 interface EmailTemplateInput {
   title: string;
   greeting: string;
@@ -166,6 +176,14 @@ function normalizeMessageToParagraphs(message: string) {
     .map((paragraph) => paragraph.trim())
     .filter((paragraph) => paragraph.length > 0)
     .map((paragraph) => escapeHtml(paragraph).replace(/\n/g, '<br />'));
+}
+
+function formatCurrencyCLP(amount: number) {
+  return new Intl.NumberFormat('es-CL', {
+    style: 'currency',
+    currency: 'CLP',
+    maximumFractionDigits: 0,
+  }).format(amount);
 }
 
 export async function sendTeamInvitationEmail(input: TeamInvitationEmailInput) {
@@ -306,6 +324,35 @@ export async function sendAdminBroadcastEmail(input: AdminBroadcastEmailInput) {
       paragraphs,
       ctaLabel: 'Ir al panel de administración',
       ctaUrl: dashboardUrl,
+    }),
+  });
+}
+
+export async function sendQuoteApprovedCustomerEmail(input: QuoteApprovedCustomerEmailInput) {
+  const firstName = input.customerName?.trim().split(' ')[0] || 'Hola';
+  const formattedTotal = formatCurrencyCLP(input.total);
+  const ctaUrl = input.organizationEmail
+    ? `mailto:${input.organizationEmail}`
+    : getBaseUrl();
+  const ctaLabel = input.organizationEmail
+    ? 'Escribir por correo'
+    : 'Conocer más de Tendo';
+
+  return sendWithResend({
+    from: getSender(),
+    to: [input.toEmail],
+    subject: `¡Gracias por aprobar tu cotización ${input.quoteCode}!`,
+    html: renderEmailTemplate({
+      title: '¡Qué buena noticia! 🎉',
+      greeting: `${firstName}, muchísimas gracias por confiar en <strong>${input.organizationName}</strong>.`,
+      paragraphs: [
+        `Confirmamos que tu cotización <strong>${input.quoteCode}</strong> fue aprobada exitosamente por un total de <strong>${formattedTotal}</strong>.`,
+        'Estamos muy felices de avanzar contigo en este proyecto. Dentro de poco nos pondremos en contacto para coordinar los próximos pasos.',
+        `Si tienes cualquier duda, nos puedes escribir${input.organizationEmail ? ` a <strong>${input.organizationEmail}</strong>` : ''}${input.organizationPhone ? ` o llamar al <strong>${input.organizationPhone}</strong>` : ''}.`,
+      ],
+      ctaLabel,
+      ctaUrl,
+      supportMessage: 'Gracias nuevamente por elegirnos. ¡Vamos con todo! 💪',
     }),
   });
 }

@@ -3,6 +3,7 @@ import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { getCurrentOrganization } from '@/lib/organization';
 import { logAuditAction } from '@/lib/audit';
+import { sendQuoteApprovedCustomerEmail } from '@/lib/email';
 import { updateQuoteSchema } from '@/lib/validators/document';
 import { z } from 'zod';
 
@@ -130,12 +131,38 @@ export async function PATCH(
             id: true,
             name: true,
             rut: true,
+            email: true,
             company: true,
           },
         },
         items: true,
       },
     });
+
+    const quoteWasJustApproved =
+      existingQuote.status !== 'APPROVED' && updatedQuote.status === 'APPROVED';
+
+    if (quoteWasJustApproved && updatedQuote.customer?.email) {
+      const quoteCode = `${updatedQuote.docPrefix || 'COT'}-${updatedQuote.docNumber}`;
+
+      try {
+        await sendQuoteApprovedCustomerEmail({
+          toEmail: updatedQuote.customer.email,
+          customerName: updatedQuote.customer.name,
+          organizationName: organization.settings?.businessName || organization.name,
+          quoteCode,
+          total: Number(updatedQuote.total),
+          organizationEmail: organization.settings?.email || null,
+          organizationPhone: organization.settings?.phone || null,
+        });
+      } catch (emailError) {
+        console.error('Error sending quote approval confirmation email:', {
+          quoteId: updatedQuote.id,
+          customerEmail: updatedQuote.customer.email,
+          error: emailError,
+        });
+      }
+    }
 
     await logAuditAction({
       userId: session.user.id,
