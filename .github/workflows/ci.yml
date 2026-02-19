@@ -70,6 +70,20 @@ jobs:
   e2e:
     name: E2E Tests (Playwright)
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: tendo_ci
+          POSTGRES_PASSWORD: tendo_ci
+          POSTGRES_DB: tendo_ci
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
     steps:
       - uses: actions/checkout@v4
       
@@ -89,8 +103,6 @@ jobs:
         run: |
           npx prisma generate
           npx prisma db push --skip-generate
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
       
       - name: Build Next.js
         run: npm run build
@@ -100,8 +112,8 @@ jobs:
       - name: Run Playwright Tests
         run: npm run test:e2e
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          DATABASE_URL: postgresql://tendo_ci:tendo_ci@localhost:5432/tendo_ci
+          NEXTAUTH_SECRET: ci-local-secret
           NEXTAUTH_URL: http://localhost:3000
       
       - name: Upload Playwright Report
