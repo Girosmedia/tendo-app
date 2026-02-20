@@ -15,8 +15,15 @@ export default async function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <RegisterForm />
+    <div className="relative flex min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-primary/5 px-4 py-6 sm:px-6 lg:px-8">
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
+        <div className="absolute -left-[10%] top-[20%] h-[60vh] w-[60vh] rounded-full bg-primary/5 blur-[140px]" />
+        <div className="absolute -right-[10%] bottom-[20%] h-[60vh] w-[60vh] rounded-full bg-indigo-500/5 blur-[140px]" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-7xl">
+        <RegisterForm />
+      </div>
     </div>
   );
 }

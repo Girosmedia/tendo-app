@@ -56,12 +56,14 @@ export const ModelName = {
   User: 'User',
   VerificationToken: 'VerificationToken',
   Organization: 'Organization',
+  SupportTicket: 'SupportTicket',
   Subscription: 'Subscription',
   Supplier: 'Supplier',
   AccountPayable: 'AccountPayable',
   Member: 'Member',
   TeamInvitation: 'TeamInvitation',
   OrganizationSettings: 'OrganizationSettings',
+  SystemSettings: 'SystemSettings',
   AuditLog: 'AuditLog',
   ImpersonationSession: 'ImpersonationSession',
   Category: 'Category',
@@ -167,11 +169,31 @@ export const OrganizationScalarFieldEnum = {
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
 
 
+export const SupportTicketScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  createdBy: 'createdBy',
+  subject: 'subject',
+  message: 'message',
+  status: 'status',
+  priority: 'priority',
+  category: 'category',
+  adminReply: 'adminReply',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SupportTicketScalarFieldEnum = (typeof SupportTicketScalarFieldEnum)[keyof typeof SupportTicketScalarFieldEnum]
+
+
 export const SubscriptionScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
   planId: 'planId',
   status: 'status',
+  isFounderPartner: 'isFounderPartner',
+  discountPercent: 'discountPercent',
   currentPeriodStart: 'currentPeriodStart',
   currentPeriodEnd: 'currentPeriodEnd',
   trialEndsAt: 'trialEndsAt',
@@ -281,6 +303,19 @@ export const OrganizationSettingsScalarFieldEnum = {
 } as const
 
 export type OrganizationSettingsScalarFieldEnum = (typeof OrganizationSettingsScalarFieldEnum)[keyof typeof OrganizationSettingsScalarFieldEnum]
+
+
+export const SystemSettingsScalarFieldEnum = {
+  id: 'id',
+  trialDays: 'trialDays',
+  founderProgramEnabled: 'founderProgramEnabled',
+  founderTrialDays: 'founderTrialDays',
+  founderDiscountPercent: 'founderDiscountPercent',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SystemSettingsScalarFieldEnum = (typeof SystemSettingsScalarFieldEnum)[keyof typeof SystemSettingsScalarFieldEnum]
 
 
 export const AuditLogScalarFieldEnum = {

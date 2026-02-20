@@ -32,6 +32,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { MoreHorizontal, Crown, Shield, User, Trash2, Mail, XCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import {
+  canChangeMemberRole,
+  canRemoveMember,
+  canRevokeInvitations,
+  canToggleMemberStatus,
+  type TeamRole,
+} from '@/lib/utils/team-permissions';
 
 interface Member {
   id: string;
@@ -56,9 +63,10 @@ interface TeamListProps {
   members: Member[];
   invitations: Invitation[];
   currentUserId: string;
+  currentUserRole: TeamRole | null;
 }
 
-export function TeamList({ members, invitations, currentUserId }: TeamListProps) {
+export function TeamList({ members, invitations, currentUserId, currentUserRole }: TeamListProps) {
   const router = useRouter();
   const [loadingMemberId, setLoadingMemberId] = useState<string | null>(null);
   const [loadingInvitationId, setLoadingInvitationId] = useState<string | null>(null);
@@ -202,6 +210,31 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
     }
   };
 
+  const canManageMember = (member: Member) => {
+    const isSelf = member.userId === currentUserId;
+    const targetRole = member.role as TeamRole;
+
+    return {
+      canChangeRole: canChangeMemberRole({
+        actorRole: currentUserRole,
+        targetRole,
+        isSelf,
+      }),
+      canToggleStatus: canToggleMemberStatus({
+        actorRole: currentUserRole,
+        targetRole,
+        isSelf,
+      }),
+      canRemove: canRemoveMember({
+        actorRole: currentUserRole,
+        targetRole,
+        isSelf,
+      }),
+    };
+  };
+
+  const canManageInvitations = canRevokeInvitations(currentUserRole);
+
   return (
     <div className="space-y-6">
       {/* Miembros Activos */}
@@ -254,7 +287,15 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
                     </p>
 
                     {/* Acciones */}
-                    {member.userId !== currentUserId && (
+                    {(() => {
+                      const permissions = canManageMember(member);
+                      const hasAnyAction = permissions.canChangeRole || permissions.canToggleStatus || permissions.canRemove;
+
+                      if (!hasAnyAction) {
+                        return null;
+                      }
+
+                      return (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button 
@@ -268,7 +309,7 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="center" className="w-56">
-                          {member.role !== 'OWNER' && (
+                          {permissions.canChangeRole && (
                             <>
                               <DropdownMenuItem
                                 onClick={() => handleUpdateRole(member.id, 'ADMIN')}
@@ -281,6 +322,10 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
                                 Hacer Miembro
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
+                            </>
+                          )}
+                          {permissions.canToggleStatus && (
+                            <>
                               <DropdownMenuItem
                                 onClick={() => handleToggleActive(member.id, member.isActive)}
                               >
@@ -289,16 +334,19 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
                               <DropdownMenuSeparator />
                             </>
                           )}
-                          <DropdownMenuItem
-                            onClick={() => handleRemoveMember(member.id)}
-                            className="text-destructive"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Eliminar
-                          </DropdownMenuItem>
+                          {permissions.canRemove && (
+                            <DropdownMenuItem
+                              onClick={() => handleRemoveMember(member.id)}
+                              className="text-destructive"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Eliminar
+                            </DropdownMenuItem>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
-                    )}
+                      );
+                    })()}
                   </div>
                 </CardContent>
               </Card>
@@ -351,7 +399,15 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
                     {format(new Date(member.joinedAt), "d 'de' MMMM, yyyy", { locale: es })}
                   </TableCell>
                   <TableCell className="text-right">
-                    {member.userId !== currentUserId && (
+                    {(() => {
+                      const permissions = canManageMember(member);
+                      const hasAnyAction = permissions.canChangeRole || permissions.canToggleStatus || permissions.canRemove;
+
+                      if (!hasAnyAction) {
+                        return null;
+                      }
+
+                      return (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
@@ -363,7 +419,7 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          {member.role !== 'OWNER' && (
+                          {permissions.canChangeRole && (
                             <>
                               <DropdownMenuItem
                                 onClick={() => handleUpdateRole(member.id, 'ADMIN')}
@@ -376,6 +432,10 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
                                 Hacer Miembro
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
+                            </>
+                          )}
+                          {permissions.canToggleStatus && (
+                            <>
                               <DropdownMenuItem
                                 onClick={() => handleToggleActive(member.id, member.isActive)}
                               >
@@ -384,16 +444,19 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
                               <DropdownMenuSeparator />
                             </>
                           )}
-                          <DropdownMenuItem
-                            onClick={() => handleRemoveMember(member.id)}
-                            className="text-destructive"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Eliminar
-                          </DropdownMenuItem>
+                          {permissions.canRemove && (
+                            <DropdownMenuItem
+                              onClick={() => handleRemoveMember(member.id)}
+                              className="text-destructive"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Eliminar
+                            </DropdownMenuItem>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
-                    )}
+                      );
+                    })()}
                   </TableCell>
                 </TableRow>
               ))}
@@ -449,16 +512,18 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
                       </div>
 
                       {/* Botón Revocar */}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full h-11"
-                        onClick={() => handleRevokeInvitation(invitation.id)}
-                        disabled={loadingInvitationId === invitation.id}
-                      >
-                        <XCircle className="mr-2 h-4 w-4" />
-                        Revocar Invitación
-                      </Button>
+                      {canManageInvitations && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full h-11"
+                          onClick={() => handleRevokeInvitation(invitation.id)}
+                          disabled={loadingInvitationId === invitation.id}
+                        >
+                          <XCircle className="mr-2 h-4 w-4" />
+                          Revocar Invitación
+                        </Button>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -491,15 +556,17 @@ export function TeamList({ members, invitations, currentUserId }: TeamListProps)
                       {format(new Date(invitation.expiresAt), "d 'de' MMMM, yyyy", { locale: es })}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleRevokeInvitation(invitation.id)}
-                        disabled={loadingInvitationId === invitation.id}
-                      >
-                        <XCircle className="mr-2 h-4 w-4" />
-                        Revocar
-                      </Button>
+                      {canManageInvitations && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRevokeInvitation(invitation.id)}
+                          disabled={loadingInvitationId === invitation.id}
+                        >
+                          <XCircle className="mr-2 h-4 w-4" />
+                          Revocar
+                        </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}

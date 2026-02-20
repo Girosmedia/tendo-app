@@ -5,6 +5,7 @@ import { getCurrentOrganization, isAdminRole } from '@/lib/organization'
 import { z } from 'zod'
 import { Prisma } from '@/lib/generated/prisma/client/client'
 import { productApiSchema } from '@/lib/validators/product'
+import { hasModuleAccess } from '@/lib/entitlements'
 
 /**
  * GET /api/products
@@ -20,6 +21,14 @@ export async function GET(req: Request) {
     const organization = await getCurrentOrganization()
     if (!organization) {
       return NextResponse.json({ error: 'Organización no encontrada' }, { status: 404 })
+    }
+
+    if (!hasModuleAccess({
+      organizationPlan: organization.plan,
+      subscriptionPlanId: organization.subscription?.planId,
+      organizationModules: organization.modules,
+    }, 'INVENTORY')) {
+      return NextResponse.json({ error: 'Módulo Inventario no habilitado para tu plan' }, { status: 403 })
     }
 
     const { searchParams } = new URL(req.url)
@@ -91,6 +100,14 @@ export async function POST(req: Request) {
     const organization = await getCurrentOrganization()
     if (!organization) {
       return NextResponse.json({ error: 'Organización no encontrada' }, { status: 404 })
+    }
+
+    if (!hasModuleAccess({
+      organizationPlan: organization.plan,
+      subscriptionPlanId: organization.subscription?.planId,
+      organizationModules: organization.modules,
+    }, 'INVENTORY')) {
+      return NextResponse.json({ error: 'Módulo Inventario no habilitado para tu plan' }, { status: 403 })
     }
 
     if (!isAdminRole(organization.userRole)) {

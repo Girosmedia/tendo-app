@@ -58,6 +58,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   memberships   Member[]
+  supportTickets SupportTicket[] @relation("SupportTicketCreator")
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
 
@@ -120,8 +121,46 @@ model Organization {
   payments      Payment[]
   suppliers     Supplier[]
   accountsPayable AccountPayable[]
+  supportTickets SupportTicket[]
 
   @@map("organizations")
+}
+
+enum SupportTicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum SupportTicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model SupportTicket {
+  id             String                @id @default(cuid())
+  organizationId String                @map("organization_id")
+  createdBy      String                @map("created_by")
+  subject        String
+  message        String                @db.Text
+  status         SupportTicketStatus   @default(OPEN)
+  priority       SupportTicketPriority @default(MEDIUM)
+  category       String?
+  adminReply     String?               @map("admin_reply") @db.Text
+  resolvedAt     DateTime?             @map("resolved_at")
+  createdAt      DateTime              @default(now()) @map("created_at")
+  updatedAt      DateTime              @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  creator      User         @relation("SupportTicketCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([status])
+  @@index([priority])
+  @@index([createdAt])
+  @@map("support_tickets")
 }
 
 enum SubscriptionStatus {
@@ -135,8 +174,12 @@ model Subscription {
   id             String             @id @default(cuid())
   organizationId String             @unique @map("organization_id")
   
-  planId         String             @map("plan_id") // "BASIC" | "PRO"
+  planId         String             @map("plan_id") // "BASIC" | "PRO" | "ENTERPRISE"
   status         SubscriptionStatus @default(TRIAL)
+
+  // Campaña de lanzamiento
+  isFounderPartner Boolean          @default(false) @map("is_founder_partner")
+  discountPercent  Int              @default(0) @map("discount_percent")
   
   // Período actual
   currentPeriodStart DateTime        @map("current_period_start")
@@ -338,6 +381,20 @@ model OrganizationSettings {
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@map("organization_settings")
+}
+
+model SystemSettings {
+  id String @id @default("global")
+
+  trialDays             Int     @default(15) @map("trial_days")
+  founderProgramEnabled Boolean @default(false) @map("founder_program_enabled")
+  founderTrialDays      Int     @default(60) @map("founder_trial_days")
+  founderDiscountPercent Int    @default(50) @map("founder_discount_percent")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("system_settings")
 }
 
 // ============================================

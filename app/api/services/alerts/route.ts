@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { getCurrentOrganization } from '@/lib/organization';
+import { hasModuleAccess } from '@/lib/entitlements';
 
 interface ServiceAlert {
   id: string;
@@ -31,6 +32,14 @@ export async function GET(req: NextRequest) {
         { error: 'Organización no encontrada' },
         { status: 404 }
       );
+    }
+
+    if (!hasModuleAccess({
+      organizationPlan: organization.plan,
+      subscriptionPlanId: organization.subscription?.planId,
+      organizationModules: organization.modules,
+    }, 'PROJECTS')) {
+      return NextResponse.json({ error: 'Módulo Proyectos no habilitado para tu plan' }, { status: 403 });
     }
 
     const projects = await db.project.findMany({

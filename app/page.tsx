@@ -122,11 +122,11 @@ export default function LandingPage() {
                 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight mb-6"
                 variants={fadeInUp}
               >
-                <span className="bg-gradient-to-br from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent">
+                <span className="text-foreground">
                   Gestiona tu Pyme
                 </span>
                 <br />
-                <span className="bg-gradient-to-r from-primary via-primary to-success bg-clip-text text-transparent animate-pulse">
+                <span className="bg-gradient-to-r from-brand-primary via-brand-primary to-brand-success bg-clip-text text-transparent dark:from-white dark:via-white dark:to-brand-success">
                   sin complicaciones
                 </span>
               </motion.h1>
@@ -312,7 +312,7 @@ export default function LandingPage() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
               >
-                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-br from-primary to-success bg-clip-text text-transparent">
+                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-br from-brand-primary to-brand-success bg-clip-text text-transparent dark:from-white dark:to-brand-success">
                   {stat.value}
                 </div>
                 <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
@@ -415,7 +415,7 @@ export default function LandingPage() {
               La Solución
             </Badge>
             <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-6">
-              Un sistema que <span className="bg-gradient-to-r from-primary via-primary to-success bg-clip-text text-transparent">crece</span> contigo
+              Un sistema que <span className="bg-gradient-to-r from-brand-success to-brand-primary bg-clip-text text-transparent dark:from-brand-success dark:to-white">crece</span> contigo
             </h2>
             <p className="text-lg text-muted-foreground">
               Tendo se adapta a tu negocio. Activa solo los módulos que necesitas hoy,
@@ -609,7 +609,7 @@ export default function LandingPage() {
               Precios Transparentes
             </Badge>
             <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-6">
-              Empieza <span className="bg-gradient-to-r from-success via-success to-primary bg-clip-text text-transparent">gratis</span>, crece cuando quieras
+              Empieza <span className="bg-gradient-to-r from-brand-success to-brand-primary bg-clip-text text-transparent dark:from-brand-success dark:to-white">gratis</span>, crece cuando quieras
             </h2>
             <p className="text-lg text-muted-foreground">
               Sin contratos, sin letra chica. Paga solo por lo que uses.
@@ -631,7 +631,7 @@ export default function LandingPage() {
               <div className="mb-6">
                 <h3 className="text-2xl font-bold mb-2">Gratis</h3>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl md:text-6xl font-bold bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
+                  <span className="text-5xl md:text-6xl font-bold bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent dark:from-white dark:to-white/70">
                     $0
                   </span>
                   <span className="text-muted-foreground text-lg">/mes</span>
@@ -685,7 +685,7 @@ export default function LandingPage() {
                   <h3 className="text-2xl font-bold mb-2">Pro</h3>
                   <div className="flex items-baseline gap-2">
                     <span 
-                      className="text-5xl md:text-6xl font-bold bg-gradient-to-br from-primary via-primary to-success bg-clip-text text-transparent"
+                      className="text-5xl md:text-6xl font-bold bg-gradient-to-br from-primary via-primary to-success bg-clip-text text-transparent dark:from-white dark:via-white dark:to-brand-success"
                       style={{
                         textShadow: '0 0 40px hsl(var(--primary) / 0.3)'
                       }}
@@ -740,7 +740,7 @@ export default function LandingPage() {
               {...fadeInUp}
             >
               Empieza a gestionar tu negocio{' '}
-              <span className="bg-gradient-to-r from-primary to-success bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-brand-primary to-brand-success bg-clip-text text-transparent dark:from-white dark:to-brand-success">
                 hoy
               </span>
             </motion.h2>

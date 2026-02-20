@@ -7,6 +7,7 @@ import { MobileTabBar } from './_components/mobile-tabbar';
 import { Toaster } from '@/components/ui/sonner';
 import { db } from '@/lib/db';
 import { getActiveImpersonation } from '@/app/actions/impersonation';
+import { resolveEntitlements } from '@/lib/entitlements';
 
 export default async function DashboardLayout({
   children,
@@ -38,6 +39,14 @@ export default async function DashboardLayout({
       select: {
         name: true,
         logoUrl: true,
+        status: true,
+        plan: true,
+        modules: true,
+        subscription: {
+          select: {
+            planId: true,
+          },
+        },
         settings: {
           select: {
             logoUrl: true,
@@ -58,6 +67,18 @@ export default async function DashboardLayout({
   ]);
 
   const organizationLogo = organization?.settings?.logoUrl || organization?.logoUrl || null;
+  const entitlements = organization
+    ? resolveEntitlements({
+        organizationPlan: organization.plan,
+        subscriptionPlanId: organization.subscription?.planId,
+        organizationModules: organization.modules,
+      })
+    : null;
+  const enabledModules = entitlements?.effectiveModules ?? [];
+
+  if (!session.user.isSuperAdmin && organization?.status === 'SUSPENDED') {
+    redirect('/suspended');
+  }
 
   return (
     <SidebarProvider>
@@ -75,6 +96,7 @@ export default async function DashboardLayout({
           }}
           organizationName={organization?.name}
           organizationLogo={organizationLogo}
+          enabledModules={enabledModules}
         />
         <main className="flex-1">
           <div className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -90,7 +112,7 @@ export default async function DashboardLayout({
           <div className="flex-1 space-y-4 md:space-y-8 p-3 md:p-8 pb-20 md:pb-8">{children}</div>
         </main>
       </div>
-      <MobileTabBar />
+      <MobileTabBar enabledModules={enabledModules} />
       <Toaster />
     </SidebarProvider>
   );

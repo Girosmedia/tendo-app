@@ -7,15 +7,23 @@ import { cleanRUT } from '@/lib/utils/rut-validator';
 import { generateUniqueSlug } from '@/lib/utils/slugify';
 import { logAuditAction, AUDIT_ACTIONS } from '@/lib/audit';
 import { sendTenantWelcomeEmail } from '@/lib/email';
+import {
+  buildInitialSubscription,
+  mapOrganizationStatusToSubscriptionStatus,
+} from '@/lib/utils/subscription';
+import { getSubscriptionSystemConfig } from '@/lib/system-settings';
+import { buildModulesForTrack, inferTrackFromModules, normalizeModules } from '@/lib/constants/modules';
 
 const createTenantSchema = z.object({
   name: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
   rut: z.string().min(8, 'RUT inválido'),
   ownerEmail: z.string().email('Email inválido'),
   ownerName: z.string().optional(),
-  plan: z.enum(['BASIC', 'PRO', 'ENTERPRISE']),
+  plan: z.enum(['BASIC', 'PRO']),
+  businessTrack: z.enum(['RETAIL', 'SERVICES', 'MIXED']).optional(),
   status: z.enum(['ACTIVE', 'TRIAL', 'SUSPENDED']).default('ACTIVE'),
   modules: z.array(z.string()).default([]),
+  additionalModules: z.array(z.string()).optional(),
 });
 
 export async function GET() {
@@ -40,6 +48,21 @@ export async function GET() {
     // Obtener todas las organizaciones con sus miembros propietarios
     const organizations = await db.organization.findMany({
       include: {
+        subscription: {
+          select: {
+            id: true,
+            planId: true,
+            status: true,
+            currentPeriodStart: true,
+            currentPeriodEnd: true,
+            trialEndsAt: true,
+            mrr: true,
+            isFounderPartner: true,
+            discountPercent: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
         members: {
           where: { role: 'OWNER' },
           include: {
@@ -72,9 +95,26 @@ export async function GET() {
       logoUrl: org.logoUrl,
       status: org.status,
       plan: org.plan,
-      modules: org.modules,
+      modules: normalizeModules(org.modules),
+      businessTrack: inferTrackFromModules(org.modules),
       owner: org.members[0]?.user || null,
       membersCount: org._count.members,
+      subscription: org.subscription
+        ? {
+            id: org.subscription.id,
+            planId: org.subscription.planId,
+            status: org.subscription.status,
+            currentPeriodStart: org.subscription.currentPeriodStart,
+            currentPeriodEnd: org.subscription.currentPeriodEnd,
+            trialStartedAt: org.subscription.createdAt,
+            trialEndsAt: org.subscription.trialEndsAt,
+            mrr: Number(org.subscription.mrr),
+            isFounderPartner: org.subscription.isFounderPartner,
+            discountPercent: org.subscription.discountPercent,
+            createdAt: org.subscription.createdAt,
+            updatedAt: org.subscription.updatedAt,
+          }
+        : null,
       createdAt: org.createdAt,
       updatedAt: org.updatedAt,
     }));
@@ -126,7 +166,18 @@ export async function POST(request: Request) {
       );
     }
 
-    const { name, rut, ownerEmail, ownerName, plan, status, modules } = validatedFields.data;
+    const { name, rut, ownerEmail, ownerName, plan, businessTrack, status, modules, additionalModules } = validatedFields.data;
+    if (plan === 'BASIC' && businessTrack === 'MIXED') {
+      return NextResponse.json(
+        { error: 'El plan Basic permite solo un track: Retail o Servicios' },
+        { status: 400 }
+      );
+    }
+
+    const normalizedModules = businessTrack
+      ? buildModulesForTrack(businessTrack, additionalModules ?? modules)
+      : normalizeModules(modules);
+    const subscriptionStatus = mapOrganizationStatusToSubscriptionStatus(status);
 
     // Limpiar y validar RUT
     const cleanedRUT = cleanRUT(rut);
@@ -158,6 +209,8 @@ export async function POST(request: Request) {
     });
     let temporaryPassword: string | null = null;
 
+    const subscriptionConfig = await getSubscriptionSystemConfig();
+
     // Crear organización con owner en una transacción
     const result = await db.$transaction(async (tx: any) => {
       // Si el usuario no existe, crearlo con password temporal
@@ -184,7 +237,27 @@ export async function POST(request: Request) {
           rut: cleanedRUT,
           status,
           plan,
-          modules,
+          modules: normalizedModules,
+        },
+      });
+
+      const subscriptionData = buildInitialSubscription({
+        planId: plan,
+        status: subscriptionStatus,
+        config: subscriptionConfig,
+      });
+
+      await tx.subscription.create({
+        data: {
+          organizationId: organization.id,
+          planId: subscriptionData.planId,
+          status: subscriptionData.status,
+          currentPeriodStart: subscriptionData.currentPeriodStart,
+          currentPeriodEnd: subscriptionData.currentPeriodEnd,
+          trialEndsAt: subscriptionData.trialEndsAt,
+          mrr: subscriptionData.mrr,
+          isFounderPartner: subscriptionData.isFounderPartner,
+          discountPercent: subscriptionData.discountPercent,
         },
       });
 
@@ -218,7 +291,8 @@ export async function POST(request: Request) {
         rut: cleanedRUT, 
         status, 
         plan, 
-        modules,
+        modules: normalizedModules,
+        businessTrack,
         ownerId: result.owner.id,
         ownerEmail: result.owner.email,
       },

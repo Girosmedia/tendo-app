@@ -27,10 +27,12 @@ export type AggregateSubscription = {
 }
 
 export type SubscriptionAvgAggregateOutputType = {
+  discountPercent: number | null
   mrr: runtime.Decimal | null
 }
 
 export type SubscriptionSumAggregateOutputType = {
+  discountPercent: number | null
   mrr: runtime.Decimal | null
 }
 
@@ -39,6 +41,8 @@ export type SubscriptionMinAggregateOutputType = {
   organizationId: string | null
   planId: string | null
   status: $Enums.SubscriptionStatus | null
+  isFounderPartner: boolean | null
+  discountPercent: number | null
   currentPeriodStart: Date | null
   currentPeriodEnd: Date | null
   trialEndsAt: Date | null
@@ -53,6 +57,8 @@ export type SubscriptionMaxAggregateOutputType = {
   organizationId: string | null
   planId: string | null
   status: $Enums.SubscriptionStatus | null
+  isFounderPartner: boolean | null
+  discountPercent: number | null
   currentPeriodStart: Date | null
   currentPeriodEnd: Date | null
   trialEndsAt: Date | null
@@ -67,6 +73,8 @@ export type SubscriptionCountAggregateOutputType = {
   organizationId: number
   planId: number
   status: number
+  isFounderPartner: number
+  discountPercent: number
   currentPeriodStart: number
   currentPeriodEnd: number
   trialEndsAt: number
@@ -79,10 +87,12 @@ export type SubscriptionCountAggregateOutputType = {
 
 
 export type SubscriptionAvgAggregateInputType = {
+  discountPercent?: true
   mrr?: true
 }
 
 export type SubscriptionSumAggregateInputType = {
+  discountPercent?: true
   mrr?: true
 }
 
@@ -91,6 +101,8 @@ export type SubscriptionMinAggregateInputType = {
   organizationId?: true
   planId?: true
   status?: true
+  isFounderPartner?: true
+  discountPercent?: true
   currentPeriodStart?: true
   currentPeriodEnd?: true
   trialEndsAt?: true
@@ -105,6 +117,8 @@ export type SubscriptionMaxAggregateInputType = {
   organizationId?: true
   planId?: true
   status?: true
+  isFounderPartner?: true
+  discountPercent?: true
   currentPeriodStart?: true
   currentPeriodEnd?: true
   trialEndsAt?: true
@@ -119,6 +133,8 @@ export type SubscriptionCountAggregateInputType = {
   organizationId?: true
   planId?: true
   status?: true
+  isFounderPartner?: true
+  discountPercent?: true
   currentPeriodStart?: true
   currentPeriodEnd?: true
   trialEndsAt?: true
@@ -220,6 +236,8 @@ export type SubscriptionGroupByOutputType = {
   organizationId: string
   planId: string
   status: $Enums.SubscriptionStatus
+  isFounderPartner: boolean
+  discountPercent: number
   currentPeriodStart: Date
   currentPeriodEnd: Date
   trialEndsAt: Date | null
@@ -257,6 +275,8 @@ export type SubscriptionWhereInput = {
   organizationId?: Prisma.StringFilter<"Subscription"> | string
   planId?: Prisma.StringFilter<"Subscription"> | string
   status?: Prisma.EnumSubscriptionStatusFilter<"Subscription"> | $Enums.SubscriptionStatus
+  isFounderPartner?: Prisma.BoolFilter<"Subscription"> | boolean
+  discountPercent?: Prisma.IntFilter<"Subscription"> | number
   currentPeriodStart?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   currentPeriodEnd?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   trialEndsAt?: Prisma.DateTimeNullableFilter<"Subscription"> | Date | string | null
@@ -272,6 +292,8 @@ export type SubscriptionOrderByWithRelationInput = {
   organizationId?: Prisma.SortOrder
   planId?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isFounderPartner?: Prisma.SortOrder
+  discountPercent?: Prisma.SortOrder
   currentPeriodStart?: Prisma.SortOrder
   currentPeriodEnd?: Prisma.SortOrder
   trialEndsAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -290,6 +312,8 @@ export type SubscriptionWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.SubscriptionWhereInput | Prisma.SubscriptionWhereInput[]
   planId?: Prisma.StringFilter<"Subscription"> | string
   status?: Prisma.EnumSubscriptionStatusFilter<"Subscription"> | $Enums.SubscriptionStatus
+  isFounderPartner?: Prisma.BoolFilter<"Subscription"> | boolean
+  discountPercent?: Prisma.IntFilter<"Subscription"> | number
   currentPeriodStart?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   currentPeriodEnd?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   trialEndsAt?: Prisma.DateTimeNullableFilter<"Subscription"> | Date | string | null
@@ -305,6 +329,8 @@ export type SubscriptionOrderByWithAggregationInput = {
   organizationId?: Prisma.SortOrder
   planId?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isFounderPartner?: Prisma.SortOrder
+  discountPercent?: Prisma.SortOrder
   currentPeriodStart?: Prisma.SortOrder
   currentPeriodEnd?: Prisma.SortOrder
   trialEndsAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -327,6 +353,8 @@ export type SubscriptionScalarWhereWithAggregatesInput = {
   organizationId?: Prisma.StringWithAggregatesFilter<"Subscription"> | string
   planId?: Prisma.StringWithAggregatesFilter<"Subscription"> | string
   status?: Prisma.EnumSubscriptionStatusWithAggregatesFilter<"Subscription"> | $Enums.SubscriptionStatus
+  isFounderPartner?: Prisma.BoolWithAggregatesFilter<"Subscription"> | boolean
+  discountPercent?: Prisma.IntWithAggregatesFilter<"Subscription"> | number
   currentPeriodStart?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
   currentPeriodEnd?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
   trialEndsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Subscription"> | Date | string | null
@@ -340,6 +368,8 @@ export type SubscriptionCreateInput = {
   id?: string
   planId: string
   status?: $Enums.SubscriptionStatus
+  isFounderPartner?: boolean
+  discountPercent?: number
   currentPeriodStart: Date | string
   currentPeriodEnd: Date | string
   trialEndsAt?: Date | string | null
@@ -355,6 +385,8 @@ export type SubscriptionUncheckedCreateInput = {
   organizationId: string
   planId: string
   status?: $Enums.SubscriptionStatus
+  isFounderPartner?: boolean
+  discountPercent?: number
   currentPeriodStart: Date | string
   currentPeriodEnd: Date | string
   trialEndsAt?: Date | string | null
@@ -368,6 +400,8 @@ export type SubscriptionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   planId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  isFounderPartner?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  discountPercent?: Prisma.IntFieldUpdateOperationsInput | number
   currentPeriodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   currentPeriodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -383,6 +417,8 @@ export type SubscriptionUncheckedUpdateInput = {
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   planId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  isFounderPartner?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  discountPercent?: Prisma.IntFieldUpdateOperationsInput | number
   currentPeriodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   currentPeriodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -397,6 +433,8 @@ export type SubscriptionCreateManyInput = {
   organizationId: string
   planId: string
   status?: $Enums.SubscriptionStatus
+  isFounderPartner?: boolean
+  discountPercent?: number
   currentPeriodStart: Date | string
   currentPeriodEnd: Date | string
   trialEndsAt?: Date | string | null
@@ -410,6 +448,8 @@ export type SubscriptionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   planId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  isFounderPartner?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  discountPercent?: Prisma.IntFieldUpdateOperationsInput | number
   currentPeriodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   currentPeriodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -424,6 +464,8 @@ export type SubscriptionUncheckedUpdateManyInput = {
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   planId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  isFounderPartner?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  discountPercent?: Prisma.IntFieldUpdateOperationsInput | number
   currentPeriodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   currentPeriodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -443,6 +485,8 @@ export type SubscriptionCountOrderByAggregateInput = {
   organizationId?: Prisma.SortOrder
   planId?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isFounderPartner?: Prisma.SortOrder
+  discountPercent?: Prisma.SortOrder
   currentPeriodStart?: Prisma.SortOrder
   currentPeriodEnd?: Prisma.SortOrder
   trialEndsAt?: Prisma.SortOrder
@@ -453,6 +497,7 @@ export type SubscriptionCountOrderByAggregateInput = {
 }
 
 export type SubscriptionAvgOrderByAggregateInput = {
+  discountPercent?: Prisma.SortOrder
   mrr?: Prisma.SortOrder
 }
 
@@ -461,6 +506,8 @@ export type SubscriptionMaxOrderByAggregateInput = {
   organizationId?: Prisma.SortOrder
   planId?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isFounderPartner?: Prisma.SortOrder
+  discountPercent?: Prisma.SortOrder
   currentPeriodStart?: Prisma.SortOrder
   currentPeriodEnd?: Prisma.SortOrder
   trialEndsAt?: Prisma.SortOrder
@@ -475,6 +522,8 @@ export type SubscriptionMinOrderByAggregateInput = {
   organizationId?: Prisma.SortOrder
   planId?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isFounderPartner?: Prisma.SortOrder
+  discountPercent?: Prisma.SortOrder
   currentPeriodStart?: Prisma.SortOrder
   currentPeriodEnd?: Prisma.SortOrder
   trialEndsAt?: Prisma.SortOrder
@@ -485,6 +534,7 @@ export type SubscriptionMinOrderByAggregateInput = {
 }
 
 export type SubscriptionSumOrderByAggregateInput = {
+  discountPercent?: Prisma.SortOrder
   mrr?: Prisma.SortOrder
 }
 
@@ -524,6 +574,14 @@ export type EnumSubscriptionStatusFieldUpdateOperationsInput = {
   set?: $Enums.SubscriptionStatus
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type DecimalFieldUpdateOperationsInput = {
   set?: runtime.Decimal | runtime.DecimalJsLike | number | string
   increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -536,6 +594,8 @@ export type SubscriptionCreateWithoutOrganizationInput = {
   id?: string
   planId: string
   status?: $Enums.SubscriptionStatus
+  isFounderPartner?: boolean
+  discountPercent?: number
   currentPeriodStart: Date | string
   currentPeriodEnd: Date | string
   trialEndsAt?: Date | string | null
@@ -549,6 +609,8 @@ export type SubscriptionUncheckedCreateWithoutOrganizationInput = {
   id?: string
   planId: string
   status?: $Enums.SubscriptionStatus
+  isFounderPartner?: boolean
+  discountPercent?: number
   currentPeriodStart: Date | string
   currentPeriodEnd: Date | string
   trialEndsAt?: Date | string | null
@@ -578,6 +640,8 @@ export type SubscriptionUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   planId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  isFounderPartner?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  discountPercent?: Prisma.IntFieldUpdateOperationsInput | number
   currentPeriodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   currentPeriodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -591,6 +655,8 @@ export type SubscriptionUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   planId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  isFounderPartner?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  discountPercent?: Prisma.IntFieldUpdateOperationsInput | number
   currentPeriodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   currentPeriodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -607,6 +673,8 @@ export type SubscriptionSelect<ExtArgs extends runtime.Types.Extensions.Internal
   organizationId?: boolean
   planId?: boolean
   status?: boolean
+  isFounderPartner?: boolean
+  discountPercent?: boolean
   currentPeriodStart?: boolean
   currentPeriodEnd?: boolean
   trialEndsAt?: boolean
@@ -622,6 +690,8 @@ export type SubscriptionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   organizationId?: boolean
   planId?: boolean
   status?: boolean
+  isFounderPartner?: boolean
+  discountPercent?: boolean
   currentPeriodStart?: boolean
   currentPeriodEnd?: boolean
   trialEndsAt?: boolean
@@ -637,6 +707,8 @@ export type SubscriptionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   organizationId?: boolean
   planId?: boolean
   status?: boolean
+  isFounderPartner?: boolean
+  discountPercent?: boolean
   currentPeriodStart?: boolean
   currentPeriodEnd?: boolean
   trialEndsAt?: boolean
@@ -652,6 +724,8 @@ export type SubscriptionSelectScalar = {
   organizationId?: boolean
   planId?: boolean
   status?: boolean
+  isFounderPartner?: boolean
+  discountPercent?: boolean
   currentPeriodStart?: boolean
   currentPeriodEnd?: boolean
   trialEndsAt?: boolean
@@ -661,7 +735,7 @@ export type SubscriptionSelectScalar = {
   canceledAt?: boolean
 }
 
-export type SubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "planId" | "status" | "currentPeriodStart" | "currentPeriodEnd" | "trialEndsAt" | "mrr" | "createdAt" | "updatedAt" | "canceledAt", ExtArgs["result"]["subscription"]>
+export type SubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "planId" | "status" | "isFounderPartner" | "discountPercent" | "currentPeriodStart" | "currentPeriodEnd" | "trialEndsAt" | "mrr" | "createdAt" | "updatedAt" | "canceledAt", ExtArgs["result"]["subscription"]>
 export type SubscriptionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
@@ -682,6 +756,8 @@ export type $SubscriptionPayload<ExtArgs extends runtime.Types.Extensions.Intern
     organizationId: string
     planId: string
     status: $Enums.SubscriptionStatus
+    isFounderPartner: boolean
+    discountPercent: number
     currentPeriodStart: Date
     currentPeriodEnd: Date
     trialEndsAt: Date | null
@@ -1117,6 +1193,8 @@ export interface SubscriptionFieldRefs {
   readonly organizationId: Prisma.FieldRef<"Subscription", 'String'>
   readonly planId: Prisma.FieldRef<"Subscription", 'String'>
   readonly status: Prisma.FieldRef<"Subscription", 'SubscriptionStatus'>
+  readonly isFounderPartner: Prisma.FieldRef<"Subscription", 'Boolean'>
+  readonly discountPercent: Prisma.FieldRef<"Subscription", 'Int'>
   readonly currentPeriodStart: Prisma.FieldRef<"Subscription", 'DateTime'>
   readonly currentPeriodEnd: Prisma.FieldRef<"Subscription", 'DateTime'>
   readonly trialEndsAt: Prisma.FieldRef<"Subscription", 'DateTime'>

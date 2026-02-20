@@ -237,6 +237,7 @@ export type OrganizationWhereInput = {
   payments?: Prisma.PaymentListRelationFilter
   suppliers?: Prisma.SupplierListRelationFilter
   accountsPayable?: Prisma.AccountPayableListRelationFilter
+  supportTickets?: Prisma.SupportTicketListRelationFilter
 }
 
 export type OrganizationOrderByWithRelationInput = {
@@ -269,6 +270,7 @@ export type OrganizationOrderByWithRelationInput = {
   payments?: Prisma.PaymentOrderByRelationAggregateInput
   suppliers?: Prisma.SupplierOrderByRelationAggregateInput
   accountsPayable?: Prisma.AccountPayableOrderByRelationAggregateInput
+  supportTickets?: Prisma.SupportTicketOrderByRelationAggregateInput
 }
 
 export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -304,6 +306,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   payments?: Prisma.PaymentListRelationFilter
   suppliers?: Prisma.SupplierListRelationFilter
   accountsPayable?: Prisma.AccountPayableListRelationFilter
+  supportTickets?: Prisma.SupportTicketListRelationFilter
 }, "id" | "slug" | "rut">
 
 export type OrganizationOrderByWithAggregationInput = {
@@ -368,6 +371,7 @@ export type OrganizationCreateInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateInput = {
@@ -400,6 +404,7 @@ export type OrganizationUncheckedCreateInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUpdateInput = {
@@ -432,6 +437,7 @@ export type OrganizationUpdateInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateInput = {
@@ -464,6 +470,7 @@ export type OrganizationUncheckedUpdateInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateManyInput = {
@@ -566,6 +573,20 @@ export type EnumOrganizationStatusFieldUpdateOperationsInput = {
 export type OrganizationUpdatemodulesInput = {
   set?: string[]
   push?: string | string[]
+}
+
+export type OrganizationCreateNestedOneWithoutSupportTicketsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutSupportTicketsInput, Prisma.OrganizationUncheckedCreateWithoutSupportTicketsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutSupportTicketsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutSupportTicketsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutSupportTicketsInput, Prisma.OrganizationUncheckedCreateWithoutSupportTicketsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutSupportTicketsInput
+  upsert?: Prisma.OrganizationUpsertWithoutSupportTicketsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutSupportTicketsInput, Prisma.OrganizationUpdateWithoutSupportTicketsInput>, Prisma.OrganizationUncheckedUpdateWithoutSupportTicketsInput>
 }
 
 export type OrganizationCreateNestedOneWithoutSubscriptionInput = {
@@ -834,6 +855,150 @@ export type OrganizationUpdateOneRequiredWithoutPaymentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutPaymentsInput, Prisma.OrganizationUpdateWithoutPaymentsInput>, Prisma.OrganizationUncheckedUpdateWithoutPaymentsInput>
 }
 
+export type OrganizationCreateWithoutSupportTicketsInput = {
+  id?: string
+  name: string
+  slug: string
+  rut: string
+  logoUrl?: string | null
+  status?: $Enums.OrganizationStatus
+  plan?: string
+  modules?: Prisma.OrganizationCreatemodulesInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
+  settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutOrganizationInput
+  products?: Prisma.ProductCreateNestedManyWithoutOrganizationInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  projectExpenses?: Prisma.ProjectExpenseCreateNestedManyWithoutOrganizationInput
+  projectMilestones?: Prisma.ProjectMilestoneCreateNestedManyWithoutOrganizationInput
+  projectResources?: Prisma.ProjectResourceCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentCreateNestedManyWithoutOrganizationInput
+  cashRegisters?: Prisma.CashRegisterCreateNestedManyWithoutOrganizationInput
+  operationalExpenses?: Prisma.OperationalExpenseCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutOrganizationInput
+  credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
+  accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutSupportTicketsInput = {
+  id?: string
+  name: string
+  slug: string
+  rut: string
+  logoUrl?: string | null
+  status?: $Enums.OrganizationStatus
+  plan?: string
+  modules?: Prisma.OrganizationCreatemodulesInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
+  settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutOrganizationInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  projectExpenses?: Prisma.ProjectExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  projectMilestones?: Prisma.ProjectMilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+  projectResources?: Prisma.ProjectResourceUncheckedCreateNestedManyWithoutOrganizationInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedCreateNestedManyWithoutOrganizationInput
+  cashRegisters?: Prisma.CashRegisterUncheckedCreateNestedManyWithoutOrganizationInput
+  operationalExpenses?: Prisma.OperationalExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutOrganizationInput
+  credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
+  accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutSupportTicketsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutSupportTicketsInput, Prisma.OrganizationUncheckedCreateWithoutSupportTicketsInput>
+}
+
+export type OrganizationUpsertWithoutSupportTicketsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutSupportTicketsInput, Prisma.OrganizationUncheckedUpdateWithoutSupportTicketsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutSupportTicketsInput, Prisma.OrganizationUncheckedCreateWithoutSupportTicketsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutSupportTicketsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutSupportTicketsInput, Prisma.OrganizationUncheckedUpdateWithoutSupportTicketsInput>
+}
+
+export type OrganizationUpdateWithoutSupportTicketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  rut?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  modules?: Prisma.OrganizationUpdatemodulesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
+  settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutOrganizationNestedInput
+  products?: Prisma.ProductUpdateManyWithoutOrganizationNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  projectExpenses?: Prisma.ProjectExpenseUpdateManyWithoutOrganizationNestedInput
+  projectMilestones?: Prisma.ProjectMilestoneUpdateManyWithoutOrganizationNestedInput
+  projectResources?: Prisma.ProjectResourceUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUpdateManyWithoutOrganizationNestedInput
+  cashRegisters?: Prisma.CashRegisterUpdateManyWithoutOrganizationNestedInput
+  operationalExpenses?: Prisma.OperationalExpenseUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutOrganizationNestedInput
+  credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
+  accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutSupportTicketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  rut?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  modules?: Prisma.OrganizationUpdatemodulesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutOrganizationNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectExpenses?: Prisma.ProjectExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectMilestones?: Prisma.ProjectMilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectResources?: Prisma.ProjectResourceUncheckedUpdateManyWithoutOrganizationNestedInput
+  projectPayments?: Prisma.ProjectPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+  cashRegisters?: Prisma.CashRegisterUncheckedUpdateManyWithoutOrganizationNestedInput
+  operationalExpenses?: Prisma.OperationalExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+  credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
+  accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
 export type OrganizationCreateWithoutSubscriptionInput = {
   id?: string
   name: string
@@ -863,6 +1028,7 @@ export type OrganizationCreateWithoutSubscriptionInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutSubscriptionInput = {
@@ -894,6 +1060,7 @@ export type OrganizationUncheckedCreateWithoutSubscriptionInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutSubscriptionInput = {
@@ -941,6 +1108,7 @@ export type OrganizationUpdateWithoutSubscriptionInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutSubscriptionInput = {
@@ -972,6 +1140,7 @@ export type OrganizationUncheckedUpdateWithoutSubscriptionInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutSuppliersInput = {
@@ -1003,6 +1172,7 @@ export type OrganizationCreateWithoutSuppliersInput = {
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutSuppliersInput = {
@@ -1034,6 +1204,7 @@ export type OrganizationUncheckedCreateWithoutSuppliersInput = {
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutSuppliersInput = {
@@ -1081,6 +1252,7 @@ export type OrganizationUpdateWithoutSuppliersInput = {
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutSuppliersInput = {
@@ -1112,6 +1284,7 @@ export type OrganizationUncheckedUpdateWithoutSuppliersInput = {
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAccountsPayableInput = {
@@ -1143,6 +1316,7 @@ export type OrganizationCreateWithoutAccountsPayableInput = {
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAccountsPayableInput = {
@@ -1174,6 +1348,7 @@ export type OrganizationUncheckedCreateWithoutAccountsPayableInput = {
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAccountsPayableInput = {
@@ -1221,6 +1396,7 @@ export type OrganizationUpdateWithoutAccountsPayableInput = {
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAccountsPayableInput = {
@@ -1252,6 +1428,7 @@ export type OrganizationUncheckedUpdateWithoutAccountsPayableInput = {
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutMembersInput = {
@@ -1283,6 +1460,7 @@ export type OrganizationCreateWithoutMembersInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutMembersInput = {
@@ -1314,6 +1492,7 @@ export type OrganizationUncheckedCreateWithoutMembersInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutMembersInput = {
@@ -1361,6 +1540,7 @@ export type OrganizationUpdateWithoutMembersInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutMembersInput = {
@@ -1392,6 +1572,7 @@ export type OrganizationUncheckedUpdateWithoutMembersInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutSettingsInput = {
@@ -1423,6 +1604,7 @@ export type OrganizationCreateWithoutSettingsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutSettingsInput = {
@@ -1454,6 +1636,7 @@ export type OrganizationUncheckedCreateWithoutSettingsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutSettingsInput = {
@@ -1501,6 +1684,7 @@ export type OrganizationUpdateWithoutSettingsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutSettingsInput = {
@@ -1532,6 +1716,7 @@ export type OrganizationUncheckedUpdateWithoutSettingsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutCategoriesInput = {
@@ -1563,6 +1748,7 @@ export type OrganizationCreateWithoutCategoriesInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutCategoriesInput = {
@@ -1594,6 +1780,7 @@ export type OrganizationUncheckedCreateWithoutCategoriesInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutCategoriesInput = {
@@ -1641,6 +1828,7 @@ export type OrganizationUpdateWithoutCategoriesInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutCategoriesInput = {
@@ -1672,6 +1860,7 @@ export type OrganizationUncheckedUpdateWithoutCategoriesInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutProductsInput = {
@@ -1703,6 +1892,7 @@ export type OrganizationCreateWithoutProductsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutProductsInput = {
@@ -1734,6 +1924,7 @@ export type OrganizationUncheckedCreateWithoutProductsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutProductsInput = {
@@ -1781,6 +1972,7 @@ export type OrganizationUpdateWithoutProductsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutProductsInput = {
@@ -1812,6 +2004,7 @@ export type OrganizationUncheckedUpdateWithoutProductsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutCustomersInput = {
@@ -1843,6 +2036,7 @@ export type OrganizationCreateWithoutCustomersInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutCustomersInput = {
@@ -1874,6 +2068,7 @@ export type OrganizationUncheckedCreateWithoutCustomersInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutCustomersInput = {
@@ -1921,6 +2116,7 @@ export type OrganizationUpdateWithoutCustomersInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutCustomersInput = {
@@ -1952,6 +2148,7 @@ export type OrganizationUncheckedUpdateWithoutCustomersInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutDocumentsInput = {
@@ -1983,6 +2180,7 @@ export type OrganizationCreateWithoutDocumentsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutDocumentsInput = {
@@ -2014,6 +2212,7 @@ export type OrganizationUncheckedCreateWithoutDocumentsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutDocumentsInput = {
@@ -2061,6 +2260,7 @@ export type OrganizationUpdateWithoutDocumentsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutDocumentsInput = {
@@ -2092,6 +2292,7 @@ export type OrganizationUncheckedUpdateWithoutDocumentsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutProjectsInput = {
@@ -2123,6 +2324,7 @@ export type OrganizationCreateWithoutProjectsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutProjectsInput = {
@@ -2154,6 +2356,7 @@ export type OrganizationUncheckedCreateWithoutProjectsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutProjectsInput = {
@@ -2201,6 +2404,7 @@ export type OrganizationUpdateWithoutProjectsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutProjectsInput = {
@@ -2232,6 +2436,7 @@ export type OrganizationUncheckedUpdateWithoutProjectsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutProjectPaymentsInput = {
@@ -2263,6 +2468,7 @@ export type OrganizationCreateWithoutProjectPaymentsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutProjectPaymentsInput = {
@@ -2294,6 +2500,7 @@ export type OrganizationUncheckedCreateWithoutProjectPaymentsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutProjectPaymentsInput = {
@@ -2341,6 +2548,7 @@ export type OrganizationUpdateWithoutProjectPaymentsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutProjectPaymentsInput = {
@@ -2372,6 +2580,7 @@ export type OrganizationUncheckedUpdateWithoutProjectPaymentsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutProjectResourcesInput = {
@@ -2403,6 +2612,7 @@ export type OrganizationCreateWithoutProjectResourcesInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutProjectResourcesInput = {
@@ -2434,6 +2644,7 @@ export type OrganizationUncheckedCreateWithoutProjectResourcesInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutProjectResourcesInput = {
@@ -2481,6 +2692,7 @@ export type OrganizationUpdateWithoutProjectResourcesInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutProjectResourcesInput = {
@@ -2512,6 +2724,7 @@ export type OrganizationUncheckedUpdateWithoutProjectResourcesInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutProjectMilestonesInput = {
@@ -2543,6 +2756,7 @@ export type OrganizationCreateWithoutProjectMilestonesInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutProjectMilestonesInput = {
@@ -2574,6 +2788,7 @@ export type OrganizationUncheckedCreateWithoutProjectMilestonesInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutProjectMilestonesInput = {
@@ -2621,6 +2836,7 @@ export type OrganizationUpdateWithoutProjectMilestonesInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutProjectMilestonesInput = {
@@ -2652,6 +2868,7 @@ export type OrganizationUncheckedUpdateWithoutProjectMilestonesInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutProjectExpensesInput = {
@@ -2683,6 +2900,7 @@ export type OrganizationCreateWithoutProjectExpensesInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutProjectExpensesInput = {
@@ -2714,6 +2932,7 @@ export type OrganizationUncheckedCreateWithoutProjectExpensesInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutProjectExpensesInput = {
@@ -2761,6 +2980,7 @@ export type OrganizationUpdateWithoutProjectExpensesInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutProjectExpensesInput = {
@@ -2792,6 +3012,7 @@ export type OrganizationUncheckedUpdateWithoutProjectExpensesInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutCashRegistersInput = {
@@ -2823,6 +3044,7 @@ export type OrganizationCreateWithoutCashRegistersInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutCashRegistersInput = {
@@ -2854,6 +3076,7 @@ export type OrganizationUncheckedCreateWithoutCashRegistersInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutCashRegistersInput = {
@@ -2901,6 +3124,7 @@ export type OrganizationUpdateWithoutCashRegistersInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutCashRegistersInput = {
@@ -2932,6 +3156,7 @@ export type OrganizationUncheckedUpdateWithoutCashRegistersInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutOperationalExpensesInput = {
@@ -2963,6 +3188,7 @@ export type OrganizationCreateWithoutOperationalExpensesInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutOperationalExpensesInput = {
@@ -2994,6 +3220,7 @@ export type OrganizationUncheckedCreateWithoutOperationalExpensesInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutOperationalExpensesInput = {
@@ -3041,6 +3268,7 @@ export type OrganizationUpdateWithoutOperationalExpensesInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutOperationalExpensesInput = {
@@ -3072,6 +3300,7 @@ export type OrganizationUncheckedUpdateWithoutOperationalExpensesInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutTreasuryMovementsInput = {
@@ -3103,6 +3332,7 @@ export type OrganizationCreateWithoutTreasuryMovementsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutTreasuryMovementsInput = {
@@ -3134,6 +3364,7 @@ export type OrganizationUncheckedCreateWithoutTreasuryMovementsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutTreasuryMovementsInput = {
@@ -3181,6 +3412,7 @@ export type OrganizationUpdateWithoutTreasuryMovementsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutTreasuryMovementsInput = {
@@ -3212,6 +3444,7 @@ export type OrganizationUncheckedUpdateWithoutTreasuryMovementsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutCreditsInput = {
@@ -3243,6 +3476,7 @@ export type OrganizationCreateWithoutCreditsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutCreditsInput = {
@@ -3274,6 +3508,7 @@ export type OrganizationUncheckedCreateWithoutCreditsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutCreditsInput = {
@@ -3321,6 +3556,7 @@ export type OrganizationUpdateWithoutCreditsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutCreditsInput = {
@@ -3352,6 +3588,7 @@ export type OrganizationUncheckedUpdateWithoutCreditsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutPaymentsInput = {
@@ -3383,6 +3620,7 @@ export type OrganizationCreateWithoutPaymentsInput = {
   credits?: Prisma.CreditCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutPaymentsInput = {
@@ -3414,6 +3652,7 @@ export type OrganizationUncheckedCreateWithoutPaymentsInput = {
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutOrganizationInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutOrganizationInput
   accountsPayable?: Prisma.AccountPayableUncheckedCreateNestedManyWithoutOrganizationInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutPaymentsInput = {
@@ -3461,6 +3700,7 @@ export type OrganizationUpdateWithoutPaymentsInput = {
   credits?: Prisma.CreditUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutPaymentsInput = {
@@ -3492,6 +3732,7 @@ export type OrganizationUncheckedUpdateWithoutPaymentsInput = {
   credits?: Prisma.CreditUncheckedUpdateManyWithoutOrganizationNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutOrganizationNestedInput
   accountsPayable?: Prisma.AccountPayableUncheckedUpdateManyWithoutOrganizationNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 
@@ -3517,6 +3758,7 @@ export type OrganizationCountOutputType = {
   payments: number
   suppliers: number
   accountsPayable: number
+  supportTickets: number
 }
 
 export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3537,6 +3779,7 @@ export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   payments?: boolean | OrganizationCountOutputTypeCountPaymentsArgs
   suppliers?: boolean | OrganizationCountOutputTypeCountSuppliersArgs
   accountsPayable?: boolean | OrganizationCountOutputTypeCountAccountsPayableArgs
+  supportTickets?: boolean | OrganizationCountOutputTypeCountSupportTicketsArgs
 }
 
 /**
@@ -3668,6 +3911,13 @@ export type OrganizationCountOutputTypeCountAccountsPayableArgs<ExtArgs extends 
   where?: Prisma.AccountPayableWhereInput
 }
 
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountSupportTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupportTicketWhereInput
+}
+
 
 export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3699,6 +3949,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   payments?: boolean | Prisma.Organization$paymentsArgs<ExtArgs>
   suppliers?: boolean | Prisma.Organization$suppliersArgs<ExtArgs>
   accountsPayable?: boolean | Prisma.Organization$accountsPayableArgs<ExtArgs>
+  supportTickets?: boolean | Prisma.Organization$supportTicketsArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organization"]>
 
@@ -3762,6 +4013,7 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   payments?: boolean | Prisma.Organization$paymentsArgs<ExtArgs>
   suppliers?: boolean | Prisma.Organization$suppliersArgs<ExtArgs>
   accountsPayable?: boolean | Prisma.Organization$accountsPayableArgs<ExtArgs>
+  supportTickets?: boolean | Prisma.Organization$supportTicketsArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -3789,6 +4041,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     payments: Prisma.$PaymentPayload<ExtArgs>[]
     suppliers: Prisma.$SupplierPayload<ExtArgs>[]
     accountsPayable: Prisma.$AccountPayablePayload<ExtArgs>[]
+    supportTickets: Prisma.$SupportTicketPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -4214,6 +4467,7 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   payments<T extends Prisma.Organization$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   suppliers<T extends Prisma.Organization$suppliersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$suppliersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupplierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accountsPayable<T extends Prisma.Organization$accountsPayableArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$accountsPayableArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  supportTickets<T extends Prisma.Organization$supportTicketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$supportTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5084,6 +5338,30 @@ export type Organization$accountsPayableArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.AccountPayableScalarFieldEnum | Prisma.AccountPayableScalarFieldEnum[]
+}
+
+/**
+ * Organization.supportTickets
+ */
+export type Organization$supportTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupportTicket
+   */
+  select?: Prisma.SupportTicketSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupportTicket
+   */
+  omit?: Prisma.SupportTicketOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupportTicketInclude<ExtArgs> | null
+  where?: Prisma.SupportTicketWhereInput
+  orderBy?: Prisma.SupportTicketOrderByWithRelationInput | Prisma.SupportTicketOrderByWithRelationInput[]
+  cursor?: Prisma.SupportTicketWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupportTicketScalarFieldEnum | Prisma.SupportTicketScalarFieldEnum[]
 }
 
 /**

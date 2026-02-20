@@ -15,6 +15,11 @@ export async function getCurrentOrganization() {
   const organization = await db.organization.findUnique({
     where: { id: session.user.organizationId },
     include: {
+      subscription: {
+        select: {
+          planId: true,
+        },
+      },
       settings: true,
       members: {
         where: { userId: session.user.id },

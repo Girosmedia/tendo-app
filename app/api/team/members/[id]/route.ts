@@ -3,6 +3,12 @@ import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { getCurrentOrganization, isAdmin } from '@/lib/organization';
 import { logAuditAction } from '@/lib/audit';
+import {
+  canChangeMemberRole,
+  canRemoveMember,
+  canToggleMemberStatus,
+  type TeamRole,
+} from '@/lib/utils/team-permissions';
 import { z } from 'zod';
 
 const updateMemberSchema = z.object({
@@ -42,6 +48,8 @@ export async function PATCH(
       );
     }
 
+    const actorRole = (organization.userRole ?? null) as TeamRole | null;
+
     const { id } = await params;
     const body = await request.json();
     const validatedFields = updateMemberSchema.safeParse(body);
@@ -78,8 +86,11 @@ export async function PATCH(
       );
     }
 
+    const isSelfTarget = member.userId === session.user.id;
+    const targetRole = member.role as TeamRole;
+
     // No permitir que se desactive a sí mismo
-    if (member.userId === session.user.id && validatedFields.data.isActive === false) {
+    if (isSelfTarget && validatedFields.data.isActive === false) {
       return NextResponse.json(
         { error: 'No puedes desactivarte a ti mismo' },
         { status: 400 }
@@ -87,11 +98,41 @@ export async function PATCH(
     }
 
     // No permitir que cambie su propio rol
-    if (member.userId === session.user.id && validatedFields.data.role) {
+    if (isSelfTarget && validatedFields.data.role) {
       return NextResponse.json(
         { error: 'No puedes cambiar tu propio rol' },
         { status: 400 }
       );
+    }
+
+    if (validatedFields.data.role) {
+      const canChangeRole = canChangeMemberRole({
+        actorRole,
+        targetRole,
+        isSelf: isSelfTarget,
+      });
+
+      if (!canChangeRole) {
+        return NextResponse.json(
+          { error: 'No tienes permisos para cambiar el rol de este miembro' },
+          { status: 403 }
+        );
+      }
+    }
+
+    if (typeof validatedFields.data.isActive === 'boolean') {
+      const canToggleStatus = canToggleMemberStatus({
+        actorRole,
+        targetRole,
+        isSelf: isSelfTarget,
+      });
+
+      if (!canToggleStatus) {
+        return NextResponse.json(
+          { error: 'No tienes permisos para activar/desactivar este miembro' },
+          { status: 403 }
+        );
+      }
     }
 
     const updatedMember = await db.member.update({
@@ -164,6 +205,8 @@ export async function DELETE(
       );
     }
 
+    const actorRole = (organization.userRole ?? null) as TeamRole | null;
+
     const { id } = await params;
 
     // Verificar que el miembro existe y pertenece a la organización
@@ -188,11 +231,27 @@ export async function DELETE(
       );
     }
 
+    const isSelfTarget = member.userId === session.user.id;
+    const targetRole = member.role as TeamRole;
+
     // No permitir que se elimine a sí mismo
-    if (member.userId === session.user.id) {
+    if (isSelfTarget) {
       return NextResponse.json(
         { error: 'No puedes eliminarte a ti mismo' },
         { status: 400 }
+      );
+    }
+
+    const canDeleteMember = canRemoveMember({
+      actorRole,
+      targetRole,
+      isSelf: isSelfTarget,
+    });
+
+    if (!canDeleteMember) {
+      return NextResponse.json(
+        { error: 'No tienes permisos para eliminar este miembro' },
+        { status: 403 }
       );
     }
 

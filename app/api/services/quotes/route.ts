@@ -5,6 +5,7 @@ import { getCurrentOrganization } from '@/lib/organization';
 import { logAuditAction } from '@/lib/audit';
 import { createQuoteSchema } from '@/lib/validators/document';
 import { z } from 'zod';
+import { hasModuleAccess } from '@/lib/entitlements';
 
 // GET /api/services/quotes - Listar cotizaciones
 export async function GET(req: NextRequest) {
@@ -20,6 +21,14 @@ export async function GET(req: NextRequest) {
         { error: 'Organización no encontrada' },
         { status: 404 }
       );
+    }
+
+    if (!hasModuleAccess({
+      organizationPlan: organization.plan,
+      subscriptionPlanId: organization.subscription?.planId,
+      organizationModules: organization.modules,
+    }, 'QUOTES')) {
+      return NextResponse.json({ error: 'Módulo Cotizaciones no habilitado para tu plan' }, { status: 403 });
     }
 
     const { searchParams } = new URL(req.url);
@@ -86,6 +95,14 @@ export async function POST(req: NextRequest) {
         { error: 'Organización no encontrada' },
         { status: 404 }
       );
+    }
+
+    if (!hasModuleAccess({
+      organizationPlan: organization.plan,
+      subscriptionPlanId: organization.subscription?.planId,
+      organizationModules: organization.modules,
+    }, 'QUOTES')) {
+      return NextResponse.json({ error: 'Módulo Cotizaciones no habilitado para tu plan' }, { status: 403 });
     }
 
     const body = await req.json();

@@ -65,6 +65,11 @@ export type VerificationToken = Prisma.VerificationTokenModel
  */
 export type Organization = Prisma.OrganizationModel
 /**
+ * Model SupportTicket
+ * 
+ */
+export type SupportTicket = Prisma.SupportTicketModel
+/**
  * Model Subscription
  * 
  */
@@ -94,6 +99,11 @@ export type TeamInvitation = Prisma.TeamInvitationModel
  * 
  */
 export type OrganizationSettings = Prisma.OrganizationSettingsModel
+/**
+ * Model SystemSettings
+ * 
+ */
+export type SystemSettings = Prisma.SystemSettingsModel
 /**
  * Model AuditLog
  * 

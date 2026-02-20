@@ -786,14 +786,6 @@ export type EnumProductTypeFieldUpdateOperationsInput = {
   set?: $Enums.ProductType
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type ProductCreateNestedOneWithoutDocumentItemsInput = {
   create?: Prisma.XOR<Prisma.ProductCreateWithoutDocumentItemsInput, Prisma.ProductUncheckedCreateWithoutDocumentItemsInput>
   connectOrCreate?: Prisma.ProductCreateOrConnectWithoutDocumentItemsInput

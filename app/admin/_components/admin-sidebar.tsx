@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { LayoutDashboard, Building2, Users, LogOut, ChevronDown, FileText, Mail } from 'lucide-react';
+import { LayoutDashboard, Building2, Users, LogOut, ChevronDown, FileText, Mail, Settings, LifeBuoy } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
@@ -58,9 +58,19 @@ const navigationItems = [
     icon: Mail,
   },
   {
+    title: 'Soporte',
+    href: '/admin/support',
+    icon: LifeBuoy,
+  },
+  {
     title: 'Registro de Auditoría',
     href: '/admin/logs',
     icon: FileText,
+  },
+  {
+    title: 'Parámetros Sistema',
+    href: '/admin/settings',
+    icon: Settings,
   },
 ];
 

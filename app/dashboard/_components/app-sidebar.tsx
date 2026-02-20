@@ -1,24 +1,22 @@
 'use client';
 
 import * as React from 'react';
-import { 
-  LayoutDashboard, 
-  Settings, 
-  Package, 
-  Users, 
-  FileText, 
-  LogOut, 
+import {
+  LayoutDashboard,
+  Settings,
+  Package,
+  Users,
+  FileText,
+  LogOut,
   ChevronDown,
   Building2,
   UsersRound,
   ShoppingCart,
-  Calculator,
-  Tag,
   HandCoins,
-  Coins,
   WalletCards,
   Landmark,
   UserRound,
+  LifeBuoy,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -48,6 +46,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { type ModuleKey } from '../../../lib/constants/modules';
 
 interface AppSidebarProps {
   user: {
@@ -59,6 +58,7 @@ interface AppSidebarProps {
   };
   organizationName?: string | null;
   organizationLogo?: string | null;
+  enabledModules?: ModuleKey[];
 }
 
 interface NavigationSubItem {
@@ -182,6 +182,12 @@ const navigationSections: NavigationSection[] = [
     label: 'Cuenta',
     items: [
       {
+        title: 'Soporte',
+        href: '/dashboard/support',
+        icon: LifeBuoy,
+        match: (path) => path.startsWith('/dashboard/support'),
+      },
+      {
         title: 'Mi Perfil',
         href: '/dashboard/profile',
         icon: UserRound,
@@ -214,27 +220,57 @@ const navigationSections: NavigationSection[] = [
   },
 ];
 
-export function AppSidebar({ user, organizationName, organizationLogo }: AppSidebarProps) {
+const navItemModuleMap: Record<string, ModuleKey[]> = {
+  '/dashboard/pos': ['POS'],
+  '/dashboard/products': ['INVENTORY'],
+  '/dashboard/customers': ['CUSTOMERS', 'CRM'],
+  '/dashboard/fiados': ['CREDITS', 'CRM'],
+  '/dashboard/por-pagar': ['ACCOUNTING', 'FINANCE'],
+  '/dashboard/services/quotes': ['QUOTES'],
+  '/dashboard/services/projects': ['PROJECTS'],
+  '/dashboard/contabilidad': ['ACCOUNTING', 'FINANCE'],
+  '/dashboard/cash-register': ['CASH_REGISTER', 'FINANCE'],
+  '/dashboard/documents': ['DOCUMENTS', 'POS'],
+};
+
+export function AppSidebar({ user, organizationName, organizationLogo, enabledModules = [] }: AppSidebarProps) {
   const pathname = usePathname();
   const { isMobile, setOpenMobile } = useSidebar();
 
-  // Auto-cerrar sidebar en móvil al cambiar de ruta
   React.useEffect(() => {
     if (isMobile) {
       setOpenMobile(false);
     }
   }, [pathname, isMobile, setOpenMobile]);
 
+  const enabledModuleSet = React.useMemo(() => new Set<ModuleKey>(enabledModules), [enabledModules]);
+
+  const filteredSections = React.useMemo(
+    () =>
+      navigationSections
+        .map((section) => ({
+          ...section,
+          items: section.items.filter((item) => {
+            const requiredModules = navItemModuleMap[item.href];
+            if (!requiredModules || requiredModules.length === 0) {
+              return true;
+            }
+            return requiredModules.some((module) => enabledModuleSet.has(module));
+          }),
+        }))
+        .filter((section) => section.items.length > 0),
+    [enabledModuleSet]
+  );
+
   const handleLogout = async () => {
     await signOut({ callbackUrl: '/login' });
   };
 
-  // Obtener iniciales del nombre para el avatar
   const getInitials = (name: string | null | undefined) => {
     if (!name) return 'U';
     return name
       .split(' ')
-      .map((n) => n[0])
+      .map((part) => part[0])
       .join('')
       .toUpperCase()
       .slice(0, 2);
@@ -268,9 +304,7 @@ export function AppSidebar({ user, organizationName, organizationLogo }: AppSide
           )}
           {!organizationLogo && (
             <div className="flex-1 overflow-hidden">
-              <h2 className="truncate text-sm font-semibold">
-                {organizationName || 'Mi Empresa'}
-              </h2>
+              <h2 className="truncate text-sm font-semibold">{organizationName || 'Mi Empresa'}</h2>
               <p className="text-xs text-muted-foreground">Tendo</p>
             </div>
           )}
@@ -278,7 +312,7 @@ export function AppSidebar({ user, organizationName, organizationLogo }: AppSide
       </SidebarHeader>
 
       <SidebarContent className="gap-1 py-1">
-        {navigationSections.map((section) => (
+        {filteredSections.map((section) => (
           <SidebarGroup key={section.label} className="px-2 py-1">
             <SidebarGroupLabel className="h-6 px-2 text-[11px] uppercase tracking-wide text-sidebar-foreground/60">
               {section.label}
@@ -323,24 +357,14 @@ export function AppSidebar({ user, organizationName, organizationLogo }: AppSide
       <SidebarFooter className="border-t border-sidebar-border p-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="w-full justify-start gap-3 px-2"
-              suppressHydrationWarning
-            >
+            <Button variant="ghost" className="w-full justify-start gap-3 px-2" suppressHydrationWarning>
               <Avatar className="h-8 w-8 border-2 border-primary">
                 <AvatarImage src={user.image || undefined} alt={user.name || ''} />
-                <AvatarFallback className="bg-primary/10 text-primary">
-                  {getInitials(user.name)}
-                </AvatarFallback>
+                <AvatarFallback className="bg-primary/10 text-primary">{getInitials(user.name)}</AvatarFallback>
               </Avatar>
               <div className="flex flex-1 flex-col items-start overflow-hidden text-left">
-                <span className="truncate text-sm font-medium">
-                  {user.name || 'Usuario'}
-                </span>
-                <span className="truncate text-xs text-muted-foreground">
-                  {user.jobTitle || user.email}
-                </span>
+                <span className="truncate text-sm font-medium">{user.name || 'Usuario'}</span>
+                <span className="truncate text-xs text-muted-foreground">{user.jobTitle || user.email}</span>
               </div>
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
             </Button>

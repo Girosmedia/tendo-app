@@ -5,6 +5,9 @@ import { createOrganizationSchema } from '@/lib/validators/auth';
 import { generateUniqueSlug } from '@/lib/utils/slugify';
 import { cleanRUT } from '@/lib/utils/rut-validator';
 import { sendOrganizationCreatedEmail } from '@/lib/email';
+import { buildInitialSubscription } from '@/lib/utils/subscription';
+import { getSubscriptionSystemConfig } from '@/lib/system-settings';
+import { buildModulesForTrack } from '@/lib/constants/modules';
 
 export async function POST(request: Request) {
   try {
@@ -38,14 +41,8 @@ export async function POST(request: Request) {
     // Limpiar y validar RUT
     const cleanedRUT = cleanRUT(rut);
 
-    // Mapear businessType a modules
-    const modules: string[] = [];
-    if (businessType === 'RETAIL' || businessType === 'MIXED') {
-      modules.push('pos', 'inventory', 'customers');
-    }
-    if (businessType === 'SERVICES' || businessType === 'MIXED') {
-      modules.push('projects', 'quotes');
-    }
+    // Resolver módulos iniciales según track operativo
+    const normalizedModules = buildModulesForTrack(businessType);
 
     // Verificar si el RUT ya está registrado
     const existingOrg = await db.organization.findUnique({
@@ -68,6 +65,8 @@ export async function POST(request: Request) {
       existingSlugs.map((org: { slug: string }) => org.slug)
     );
 
+    const subscriptionConfig = await getSubscriptionSystemConfig();
+
     // Crear organización y asignar usuario como OWNER en una transacción
     const result = await db.$transaction(async (tx: any) => {
       // Crear la organización
@@ -77,8 +76,28 @@ export async function POST(request: Request) {
           slug,
           rut: cleanedRUT,
           logoUrl,
-          plan: plan || 'BASIC',
-          modules,
+          plan,
+          modules: normalizedModules,
+        },
+      });
+
+      const subscriptionData = buildInitialSubscription({
+        planId: plan,
+        status: 'TRIAL',
+        config: subscriptionConfig,
+      });
+
+      await tx.subscription.create({
+        data: {
+          organizationId: organization.id,
+          planId: subscriptionData.planId,
+          status: subscriptionData.status,
+          currentPeriodStart: subscriptionData.currentPeriodStart,
+          currentPeriodEnd: subscriptionData.currentPeriodEnd,
+          trialEndsAt: subscriptionData.trialEndsAt,
+          mrr: subscriptionData.mrr,
+          isFounderPartner: subscriptionData.isFounderPartner,
+          discountPercent: subscriptionData.discountPercent,
         },
       });
 

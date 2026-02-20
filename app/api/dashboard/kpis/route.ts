@@ -14,6 +14,7 @@ import {
   decimalToNumber,
   calculateGrowth,
 } from '@/lib/utils/dashboard-helpers';
+import { hasModuleAccess } from '@/lib/entitlements';
 
 /**
  * GET /api/dashboard/kpis
@@ -32,7 +33,11 @@ export async function GET() {
     }
 
     const organizationId = organization.id;
-    const hasProjectsModule = organization.modules.includes('PROJECTS');
+    const hasProjectsModule = hasModuleAccess({
+      organizationPlan: organization.plan,
+      subscriptionPlanId: organization.subscription?.planId,
+      organizationModules: organization.modules,
+    }, 'PROJECTS');
 
     // Fechas de referencia
     const startToday = getStartOfToday();

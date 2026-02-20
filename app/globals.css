@@ -15,7 +15,7 @@
   
   /* Superficies y Fondos */
   --color-slate-50: #F8FAFC;         /* Fondo App (Light Mode) */
-  --color-slate-900: #0F172A;        /* Fondo App (Dark Mode/Sidebars) */
+  --color-slate-900: #221f47;        /* Fondo App (Dark Mode/Sidebars) */
   
   /* Geometría Zimple */
   --radius-tendo: 1rem;              /* 16px: Bordes suaves y amigables */
@@ -145,10 +145,10 @@
 }
 
 .dark {
-  /* Backgrounds - Slate rico (no negro puro) */
-  --background: oklch(0.16 0.01 264);
-  --card: oklch(0.20 0.01 264);
-  --popover: oklch(0.20 0.01 264);
+  /* Backgrounds - Tendo Navy (alineado a marca) */
+  --background: #221f47;
+  --card: #2a2755;
+  --popover: #2a2755;
   
   /* Foreground */
   --foreground: oklch(0.985 0 0);
@@ -165,31 +165,31 @@
   
   /* Destructive - Rose suave */
   --destructive: oklch(0.68 0.16 15);
-  --destructive-foreground: oklch(0.16 0.01 264);
+  --destructive-foreground: #221f47;
   
   /* Warning - Ámbar adaptado */
   --warning: oklch(0.75 0.15 65);
-  --warning-foreground: oklch(0.16 0.01 264);
+  --warning-foreground: #221f47;
   
   /* Info - Azul brillante */
   --info: oklch(0.65 0.13 230);
-  --info-foreground: oklch(0.16 0.01 264);
+  --info-foreground: #221f47;
   
   /* Superficies con tinte de marca */
-  --secondary: #27b7891f;
+  --secondary: #27b78924;
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: #27b78917;
+  --muted: #f7f7f814;
   --muted-foreground: oklch(0.68 0 0);
-  --accent: #27b7892b;
+  --accent: #27b78933;
   --accent-foreground: oklch(0.985 0 0);
   
   /* Borders con transparencia */
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 12%);
+  --border: oklch(1 0 0 / 14%);
+  --input: oklch(1 0 0 / 16%);
   
   /* Ring con color de marca */
   --ring: #27b789;
-  --ring-offset: oklch(0.16 0.01 264);
+  --ring-offset: #221f47;
   
   /* Charts - Mantener vibrantes */
   --chart-1: oklch(0.488 0.243 264.376);
@@ -199,13 +199,13 @@
   --chart-5: oklch(0.645 0.246 16.439);
   
   /* Sidebar dark */
-  --sidebar: oklch(0.20 0.01 264);
+  --sidebar: #1d1b3f;
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: #27b789;
   --sidebar-primary-foreground: #221f47;
   --sidebar-accent: #27b78933;
   --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-border: oklch(1 0 0 / 14%);
   --sidebar-ring: #27b789;
 
   /* Scrollbar (Dark) */

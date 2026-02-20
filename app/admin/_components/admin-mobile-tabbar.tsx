@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutDashboard, Building2, Users, Mail, Menu } from 'lucide-react';
+import { LayoutDashboard, Building2, Users, LifeBuoy, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -30,10 +30,10 @@ export function AdminMobileTabBar() {
       match: (path: string) => path.startsWith('/admin/users'),
     },
     {
-      icon: Mail,
-      label: 'Campañas',
-      href: '/admin/campaigns',
-      match: (path: string) => path.startsWith('/admin/campaigns'),
+      icon: LifeBuoy,
+      label: 'Soporte',
+      href: '/admin/support',
+      match: (path: string) => path.startsWith('/admin/support'),
     },
   ];
 

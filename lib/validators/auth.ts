@@ -128,8 +128,8 @@ export const createOrganizationSchema = z.object({
   logoUrl: z.string().url({ message: 'URL de logo inválida' }).optional(),
   
   // Paso 2: Giro y plan
-  businessType: z.enum(['RETAIL', 'SERVICES', 'MIXED']).optional(),
-  plan: z.enum(['BASIC', 'PRO']).optional(),
+  businessType: z.enum(['RETAIL', 'SERVICES', 'MIXED']),
+  plan: z.enum(['BASIC', 'PRO']),
   
   // Paso 3: Invitaciones de equipo (opcional)
   teamInvites: z.array(
@@ -138,6 +138,14 @@ export const createOrganizationSchema = z.object({
       role: z.enum(['ADMIN', 'MEMBER']),
     })
   ).max(2, { message: 'Máximo 2 invitaciones en onboarding' }).optional(),
+}).superRefine((data, ctx) => {
+  if (data.plan === 'BASIC' && data.businessType === 'MIXED') {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['businessType'],
+      message: 'El plan Basic permite elegir solo un track: Retail o Servicios',
+    });
+  }
 });
 
 export const updateOrganizationSchema = z.object({

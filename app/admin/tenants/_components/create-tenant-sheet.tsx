@@ -32,24 +32,28 @@ import {
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
+import {
+  MODULE_ADMIN_SELECTION_ORDER,
+  MODULE_CATALOG,
+  TRACK_MODULE_MATRIX,
+  type ModuleKey,
+  type BusinessTrack,
+} from '@/lib/constants/modules'
 
-const AVAILABLE_MODULES = [
-  { id: 'POS', label: 'Punto de Venta' },
-  { id: 'INVENTORY', label: 'Inventario' },
-  { id: 'FINANCE', label: 'Finanzas (Mi Caja)' },
-  { id: 'QUOTES', label: 'Cotizaciones' },
-  { id: 'PROJECTS', label: 'Proyectos' },
-  { id: 'CRM', label: 'Fiados (CRM)' },
-]
+const AVAILABLE_MODULES = MODULE_ADMIN_SELECTION_ORDER.map((moduleId) => ({
+  id: moduleId,
+  label: MODULE_CATALOG[moduleId].label,
+}))
 
 const createTenantSchema = z.object({
   name: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
   rut: z.string().min(8, 'RUT inválido'),
   ownerEmail: z.string().email('Email inválido'),
   ownerName: z.string().optional(),
-  plan: z.enum(['BASIC', 'PRO', 'ENTERPRISE'] as const),
+  plan: z.enum(['BASIC', 'PRO'] as const),
+  businessTrack: z.enum(['RETAIL', 'SERVICES', 'MIXED'] as const),
   status: z.enum(['ACTIVE', 'TRIAL', 'SUSPENDED'] as const),
-  modules: z.array(z.string()),
+  additionalModules: z.array(z.string()),
 })
 
 type CreateTenantFormData = z.infer<typeof createTenantSchema>
@@ -71,10 +75,24 @@ export function CreateTenantSheet({ open, onOpenChange }: CreateTenantSheetProps
       ownerEmail: '',
       ownerName: '',
       plan: 'BASIC',
+      businessTrack: 'RETAIL',
       status: 'ACTIVE',
-      modules: [],
+      additionalModules: [],
     },
   })
+
+  const selectedPlan = form.watch('plan')
+  const selectedTrack = form.watch('businessTrack')
+  const trackBaseModules = TRACK_MODULE_MATRIX[selectedTrack as BusinessTrack] ?? []
+
+  const handleTrackChange = (track: 'RETAIL' | 'SERVICES' | 'MIXED') => {
+    const baseModules = new Set(TRACK_MODULE_MATRIX[track])
+    const currentAdditional = form.getValues('additionalModules')
+    const nextAdditional = currentAdditional.filter((module) => !baseModules.has(module as ModuleKey))
+
+    form.setValue('businessTrack', track, { shouldValidate: true })
+    form.setValue('additionalModules', nextAdditional, { shouldValidate: true })
+  }
 
   const onSubmit = async (data: CreateTenantFormData) => {
     setIsLoading(true)
@@ -204,7 +222,15 @@ export function CreateTenantSheet({ open, onOpenChange }: CreateTenantSheetProps
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Estado</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value)
+                        if (value === 'BASIC' && form.getValues('businessTrack') === 'MIXED') {
+                          handleTrackChange('RETAIL')
+                        }
+                      }}
+                      defaultValue={field.value}
+                    >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Seleccionar estado" />
@@ -238,9 +264,8 @@ export function CreateTenantSheet({ open, onOpenChange }: CreateTenantSheetProps
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="BASIC">Básico (Gratis)</SelectItem>
-                      <SelectItem value="PRO">Pro</SelectItem>
-                      <SelectItem value="ENTERPRISE">Enterprise</SelectItem>
+                      <SelectItem value="BASIC">Basic ($19.990/mes)</SelectItem>
+                      <SelectItem value="PRO">Pro ($29.990/mes)</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormDescription>
@@ -251,16 +276,47 @@ export function CreateTenantSheet({ open, onOpenChange }: CreateTenantSheetProps
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="businessTrack"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Track Base</FormLabel>
+                  <Select
+                    onValueChange={(value) => handleTrackChange(value as 'RETAIL' | 'SERVICES' | 'MIXED')}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar track" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="RETAIL">Retail</SelectItem>
+                      <SelectItem value="SERVICES">Servicios</SelectItem>
+                      <SelectItem value="MIXED" disabled={selectedPlan === 'BASIC'}>
+                        Mixto (Retail + Servicios)
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Define el set base de módulos del tenant
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             {/* Módulos */}
             <FormField
               control={form.control}
-              name="modules"
+              name="additionalModules"
               render={() => (
                 <FormItem>
                   <div className="mb-4">
-                    <FormLabel>Módulos Activos</FormLabel>
+                    <FormLabel>Módulos Adicionales (Cross-sell)</FormLabel>
                     <FormDescription>
-                      Selecciona los módulos que estarán disponibles para este tenant
+                      Se suman al track base seleccionado
                     </FormDescription>
                   </div>
                   <div className="rounded-lg border p-4 space-y-3">
@@ -268,8 +324,9 @@ export function CreateTenantSheet({ open, onOpenChange }: CreateTenantSheetProps
                       <FormField
                         key={module.id}
                         control={form.control}
-                        name="modules"
+                        name="additionalModules"
                         render={({ field }) => {
+                          const isBaseModule = trackBaseModules.includes(module.id as ModuleKey)
                           return (
                             <FormItem
                               key={module.id}
@@ -277,7 +334,8 @@ export function CreateTenantSheet({ open, onOpenChange }: CreateTenantSheetProps
                             >
                               <FormControl>
                                 <Checkbox
-                                  checked={field.value?.includes(module.id)}
+                                  checked={isBaseModule || field.value?.includes(module.id)}
+                                  disabled={isBaseModule}
                                   onCheckedChange={(checked) => {
                                     return checked
                                       ? field.onChange([...field.value, module.id])
@@ -290,7 +348,7 @@ export function CreateTenantSheet({ open, onOpenChange }: CreateTenantSheetProps
                                 />
                               </FormControl>
                               <FormLabel className="font-normal cursor-pointer">
-                                {module.label}
+                                {module.label}{isBaseModule ? ' (base)' : ''}
                               </FormLabel>
                             </FormItem>
                           )

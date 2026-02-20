@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import { MoreHorizontal, Pencil, ReceiptText, Trash2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -24,8 +24,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { EmptyState } from '@/components/ui/empty-state'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { EditTenantSheet } from './edit-tenant-sheet'
 import { ImpersonateButton } from './impersonate-button'
+import { SubscriptionDetailsSheet } from './subscription-details-sheet'
 
 interface Tenant {
   id: string
@@ -41,6 +44,20 @@ interface Tenant {
     email: string | null
   } | null
   membersCount: number
+  subscription: {
+    id: string
+    planId: string
+    status: 'TRIAL' | 'ACTIVE' | 'SUSPENDED' | 'CANCELED'
+    currentPeriodStart: string
+    currentPeriodEnd: string
+    trialStartedAt: string
+    trialEndsAt: string | null
+    mrr: number
+    isFounderPartner: boolean
+    discountPercent: number
+    createdAt: string
+    updatedAt: string
+  } | null
   createdAt: Date
 }
 
@@ -53,13 +70,49 @@ const statusVariants = {
   SUSPENDED: { label: 'Suspendido', variant: 'destructive' as const },
   TRIAL: { label: 'Prueba', variant: 'secondary' as const },
 }
-import { EmptyState } from '@/components/ui/empty-state'
-import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+
+function getSubscriptionAlert(subscription: Tenant['subscription']) {
+  if (!subscription) {
+    return null
+  }
+
+  const now = new Date()
+
+  if (subscription.status === 'TRIAL' && subscription.trialEndsAt) {
+    const trialEndsAt = new Date(subscription.trialEndsAt)
+    const daysToEnd = Math.ceil((trialEndsAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+
+    if (daysToEnd < 0) {
+      return { label: 'Trial vencido', variant: 'destructive' as const }
+    }
+
+    if (daysToEnd <= 3) {
+      return { label: `Trial vence en ${daysToEnd} día(s)`, variant: 'secondary' as const }
+    }
+  }
+
+  if (subscription.status === 'ACTIVE') {
+    const periodEnd = new Date(subscription.currentPeriodEnd)
+    const daysToEnd = Math.ceil((periodEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+
+    if (daysToEnd < 0) {
+      return { label: 'Período vencido', variant: 'destructive' as const }
+    }
+
+    if (daysToEnd <= 3) {
+      return { label: `Renovación en ${daysToEnd} día(s)`, variant: 'secondary' as const }
+    }
+  }
+
+  return null
+}
 
 export function TenantsTable({ tenants }: TenantsTableProps) {
   const router = useRouter()
   const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null)
+  const [selectedSubscriptionTenant, setSelectedSubscriptionTenant] = useState<Tenant | null>(null)
   const [isEditOpen, setIsEditOpen] = useState(false)
+  const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false)
   const [tenantToDelete, setTenantToDelete] = useState<Tenant | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
 
@@ -92,6 +145,11 @@ export function TenantsTable({ tenants }: TenantsTableProps) {
     }
   }
 
+  const handleViewSubscription = (tenant: Tenant) => {
+    setSelectedSubscriptionTenant(tenant)
+    setIsSubscriptionOpen(true)
+  }
+
   return (
     <>
       {tenants.length === 0 ? (
@@ -103,9 +161,12 @@ export function TenantsTable({ tenants }: TenantsTableProps) {
       ) : (
         <>
           <div className="space-y-3 md:hidden">
-            {tenants.map((tenant) => (
-              <Card key={tenant.id}>
-                <CardContent className="space-y-3 p-4">
+            {tenants.map((tenant) => {
+              const subscriptionAlert = getSubscriptionAlert(tenant.subscription)
+
+              return (
+                <Card key={tenant.id}>
+                  <CardContent className="space-y-3 p-4">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <p className="truncate text-base font-semibold">{tenant.name}</p>
@@ -124,6 +185,11 @@ export function TenantsTable({ tenants }: TenantsTableProps) {
                     <div>
                       <p className="text-xs text-muted-foreground">Plan</p>
                       <Badge variant="outline">{tenant.plan}</Badge>
+                      {subscriptionAlert && (
+                        <Badge variant={subscriptionAlert.variant} className="mt-1 block w-fit">
+                          {subscriptionAlert.label}
+                        </Badge>
+                      )}
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Miembros</p>
@@ -170,6 +236,10 @@ export function TenantsTable({ tenants }: TenantsTableProps) {
                           <Pencil className="mr-2 h-4 w-4" />
                           Editar
                         </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleViewSubscription(tenant)}>
+                          <ReceiptText className="mr-2 h-4 w-4" />
+                          Ver Suscripción
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => setTenantToDelete(tenant)}
                           className="text-destructive"
@@ -180,9 +250,10 @@ export function TenantsTable({ tenants }: TenantsTableProps) {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              )
+            })}
           </div>
 
           <div className="hidden md:block">
@@ -203,8 +274,11 @@ export function TenantsTable({ tenants }: TenantsTableProps) {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {tenants.map((tenant) => (
-                      <TableRow key={tenant.id}>
+                    {tenants.map((tenant) => {
+                      const subscriptionAlert = getSubscriptionAlert(tenant.subscription)
+
+                      return (
+                        <TableRow key={tenant.id}>
                         <TableCell className="font-medium">
                           <p className="max-w-[180px] truncate">{tenant.name}</p>
                         </TableCell>
@@ -225,6 +299,11 @@ export function TenantsTable({ tenants }: TenantsTableProps) {
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline">{tenant.plan}</Badge>
+                          {subscriptionAlert && (
+                            <div className="mt-1">
+                              <Badge variant={subscriptionAlert.variant}>{subscriptionAlert.label}</Badge>
+                            </div>
+                          )}
                         </TableCell>
                         <TableCell className="text-center">{tenant.membersCount}</TableCell>
                         <TableCell>
@@ -266,6 +345,10 @@ export function TenantsTable({ tenants }: TenantsTableProps) {
                                   <Pencil className="mr-2 h-4 w-4" />
                                   Editar
                                 </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleViewSubscription(tenant)}>
+                                  <ReceiptText className="mr-2 h-4 w-4" />
+                                  Ver Suscripción
+                                </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => setTenantToDelete(tenant)}
                                   className="text-destructive"
@@ -277,8 +360,9 @@ export function TenantsTable({ tenants }: TenantsTableProps) {
                             </DropdownMenu>
                           </div>
                         </TableCell>
-                      </TableRow>
-                    ))}
+                        </TableRow>
+                      )
+                    })}
                   </TableBody>
                 </Table>
               </div>
@@ -292,6 +376,20 @@ export function TenantsTable({ tenants }: TenantsTableProps) {
           tenant={selectedTenant}
           open={isEditOpen}
           onOpenChange={setIsEditOpen}
+        />
+      )}
+
+      {selectedSubscriptionTenant && (
+        <SubscriptionDetailsSheet
+          tenantName={selectedSubscriptionTenant.name}
+          subscription={selectedSubscriptionTenant.subscription}
+          open={isSubscriptionOpen}
+          onOpenChange={(open) => {
+            setIsSubscriptionOpen(open)
+            if (!open) {
+              setSelectedSubscriptionTenant(null)
+            }
+          }}
         />
       )}
 

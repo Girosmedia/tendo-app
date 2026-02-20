@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useSidebar } from '@/components/ui/sidebar'
+import { type ModuleKey } from '@/lib/constants/modules'
 
 /**
  * Bottom TabBar para navegación móvil (Mobile-First)
@@ -15,9 +16,14 @@ import { useSidebar } from '@/components/ui/sidebar'
  * 
  * @component
  */
-export function MobileTabBar() {
+interface MobileTabBarProps {
+  enabledModules?: ModuleKey[]
+}
+
+export function MobileTabBar({ enabledModules = [] }: MobileTabBarProps) {
   const pathname = usePathname()
   const { setOpenMobile } = useSidebar()
+  const enabledSet = new Set(enabledModules)
   
   const tabs = [
     { 
@@ -38,7 +44,11 @@ export function MobileTabBar() {
       href: '/dashboard/products',
       match: (path: string) => path.startsWith('/dashboard/products')
     },
-  ]
+  ].filter((tab) => {
+    if (tab.href === '/dashboard/pos') return enabledSet.has('POS')
+    if (tab.href === '/dashboard/products') return enabledSet.has('INVENTORY')
+    return true
+  })
   
   return (
     <nav 

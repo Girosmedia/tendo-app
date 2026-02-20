@@ -5,6 +5,7 @@ import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import { db } from '@/lib/db';
 import authConfig from '@/auth.config';
+import { resolveEntitlements } from '@/lib/entitlements';
 
 // Schema de validación para login
 const loginSchema = z.object({
@@ -102,8 +103,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             select: { role: true },
           });
           token.memberRole = member?.role ?? null;
+
+          const organization = await db.organization.findUnique({
+            where: { id: dbUser.currentOrganizationId },
+            select: {
+              status: true,
+              plan: true,
+              modules: true,
+              subscription: {
+                select: {
+                  planId: true,
+                },
+              },
+            },
+          });
+          token.organizationStatus = organization?.status ?? null;
+          token.enabledModules = organization
+            ? resolveEntitlements({
+                organizationPlan: organization.plan,
+                subscriptionPlanId: organization.subscription?.planId,
+                organizationModules: organization.modules,
+              }).effectiveModules
+            : [];
         } else {
           token.memberRole = null;
+          token.organizationStatus = null;
+          token.enabledModules = [];
         }
       }
       
@@ -136,8 +161,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             select: { role: true },
           });
           token.memberRole = member?.role ?? null;
+
+          const organization = await db.organization.findUnique({
+            where: { id: dbUser.currentOrganizationId },
+            select: {
+              status: true,
+              plan: true,
+              modules: true,
+              subscription: {
+                select: {
+                  planId: true,
+                },
+              },
+            },
+          });
+          token.organizationStatus = organization?.status ?? null;
+          token.enabledModules = organization
+            ? resolveEntitlements({
+                organizationPlan: organization.plan,
+                subscriptionPlanId: organization.subscription?.planId,
+                organizationModules: organization.modules,
+              }).effectiveModules
+            : [];
         } else {
           token.memberRole = null;
+          token.organizationStatus = null;
+          token.enabledModules = [];
         }
         
         if (dbUser?.isSuperAdmin !== undefined) {
@@ -169,6 +218,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           // Activar modo impersonation
           token.impersonationSessionId = activeImpersonation.id;
           token.organizationId = activeImpersonation.targetOrganizationId;
+          token.organizationStatus = null;
         } else if (token.impersonationSessionId) {
           // Limpiar impersonation si ya no está activa
           delete token.impersonationSessionId;
@@ -178,7 +228,61 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             select: { currentOrganizationId: true },
           });
           token.organizationId = dbUser?.currentOrganizationId ?? null;
+          if (dbUser?.currentOrganizationId) {
+            const organization = await db.organization.findUnique({
+              where: { id: dbUser.currentOrganizationId },
+              select: {
+                status: true,
+                plan: true,
+                modules: true,
+                subscription: {
+                  select: {
+                    planId: true,
+                  },
+                },
+              },
+            });
+            token.organizationStatus = organization?.status ?? null;
+            token.enabledModules = organization
+              ? resolveEntitlements({
+                  organizationPlan: organization.plan,
+                  subscriptionPlanId: organization.subscription?.planId,
+                  organizationModules: organization.modules,
+                }).effectiveModules
+              : [];
+          } else {
+            token.organizationStatus = null;
+            token.enabledModules = [];
+          }
         }
+      }
+
+      // Mantener el estado de organización actualizado para control centralizado de acceso a APIs
+      if (!token.isSuperAdmin && token.organizationId) {
+        const organization = await db.organization.findUnique({
+          where: { id: token.organizationId as string },
+          select: {
+            status: true,
+            plan: true,
+            modules: true,
+            subscription: {
+              select: {
+                planId: true,
+              },
+            },
+          },
+        });
+        token.organizationStatus = organization?.status ?? null;
+        token.enabledModules = organization
+          ? resolveEntitlements({
+              organizationPlan: organization.plan,
+              subscriptionPlanId: organization.subscription?.planId,
+              organizationModules: organization.modules,
+            }).effectiveModules
+          : [];
+      } else if (!token.organizationId) {
+        token.organizationStatus = null;
+        token.enabledModules = [];
       }
       
       return token;
@@ -188,9 +292,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         session.user.organizationId = token.organizationId as string | null;
+        session.user.organizationStatus = token.organizationStatus as 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | null;
         session.user.isSuperAdmin = token.isSuperAdmin as boolean;
         session.user.memberRole = token.memberRole as typeof token.memberRole;
         session.user.impersonationSessionId = token.impersonationSessionId as string | undefined;
+        session.user.enabledModules = (token.enabledModules as string[] | undefined) ?? [];
         session.user.name = (token.name as string | null | undefined) ?? session.user.name;
         session.user.email = (token.email as string | null | undefined) ?? session.user.email;
         session.user.image = (token.picture as string | null | undefined) ?? session.user.image;

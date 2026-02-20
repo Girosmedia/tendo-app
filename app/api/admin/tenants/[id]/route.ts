@@ -3,12 +3,15 @@ import { z } from 'zod';
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { logAuditAction, AUDIT_ACTIONS } from '@/lib/audit';
+import { buildModulesForTrack, normalizeModules } from '@/lib/constants/modules';
 
 // Schema de validación para actualizar organización
 const updateOrganizationSchema = z.object({
   status: z.enum(['ACTIVE', 'SUSPENDED', 'TRIAL']).optional(),
-  plan: z.string().optional(),
+  plan: z.enum(['BASIC', 'PRO']).optional(),
+  businessTrack: z.enum(['RETAIL', 'SERVICES', 'MIXED']).optional(),
   modules: z.array(z.string()).optional(),
+  additionalModules: z.array(z.string()).optional(),
 });
 
 export async function PATCH(
@@ -49,7 +52,7 @@ export async function PATCH(
       );
     }
 
-    const { status, plan, modules } = validatedFields.data;
+    const { status, plan, businessTrack, modules, additionalModules } = validatedFields.data;
 
     // Verificar que la organización existe
     const existingOrg = await db.organization.findUnique({
@@ -63,28 +66,56 @@ export async function PATCH(
       );
     }
 
-    // Actualizar organización
-    const updatedOrganization = await db.organization.update({
-      where: { id },
-      data: {
-        ...(status && { status }),
-        ...(plan && { plan }),
-        ...(modules !== undefined && { modules }),
-      },
-      include: {
-        members: {
-          where: { role: 'OWNER' },
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
+    if ((plan ?? existingOrg.plan) === 'BASIC' && businessTrack === 'MIXED') {
+      return NextResponse.json(
+        { error: 'El plan Basic permite solo un track: Retail o Servicios' },
+        { status: 400 }
+      );
+    }
+
+    const normalizedModules = (() => {
+      if (businessTrack) {
+        return buildModulesForTrack(businessTrack, additionalModules ?? modules ?? []);
+      }
+      if (modules !== undefined) {
+        return normalizeModules(modules);
+      }
+      return undefined;
+    })();
+
+    // Actualizar organización (y suscripción cuando cambia el plan)
+    const updatedOrganization = await db.$transaction(async (tx) => {
+      const organization = await tx.organization.update({
+        where: { id },
+        data: {
+          ...(status && { status }),
+          ...(plan && { plan }),
+          ...(normalizedModules !== undefined && { modules: normalizedModules }),
+        },
+        include: {
+          members: {
+            where: { role: 'OWNER' },
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
               },
             },
           },
         },
-      },
+      });
+
+      if (plan) {
+        await tx.subscription.updateMany({
+          where: { organizationId: id },
+          data: { planId: plan },
+        });
+      }
+
+      return organization;
     });
 
     // Registrar cambios en audit log
@@ -95,7 +126,7 @@ export async function PATCH(
       resourceId: id,
       changes: {
         from: { status: existingOrg.status, plan: existingOrg.plan, modules: existingOrg.modules },
-        to: { status, plan, modules },
+        to: { status, plan, modules: normalizedModules },
       },
     });
 

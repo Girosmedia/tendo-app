@@ -58,6 +58,17 @@ interface QuoteApprovedCustomerEmailInput {
   organizationPhone?: string | null;
 }
 
+interface SupportTicketNotificationEmailInput {
+  ticketId: string;
+  organizationName: string;
+  reporterName?: string | null;
+  reporterEmail?: string | null;
+  subject: string;
+  message: string;
+  priority: 'LOW' | 'MEDIUM' | 'HIGH';
+  category?: string | null;
+}
+
 interface EmailTemplateInput {
   title: string;
   greeting: string;
@@ -323,6 +334,32 @@ export async function sendOrganizationCreatedEmail(input: OrganizationCreatedEma
       ],
       ctaLabel: 'Ir al dashboard',
       ctaUrl: dashboardUrl,
+    }),
+  });
+}
+
+export async function sendSupportTicketNotificationEmail(input: SupportTicketNotificationEmailInput) {
+  const supportInbox = process.env.SUPPORT_EMAIL || 'soporte@tendo.cl';
+  const adminUrl = `${getBaseUrl()}/admin/support`;
+
+  return sendWithResend({
+    from: getSender(),
+    to: [supportInbox],
+    subject: `[Soporte] Ticket ${input.ticketId} - ${input.organizationName}`,
+    html: renderEmailTemplate({
+      title: 'Nuevo ticket de soporte',
+      greeting: `Se registró un ticket nuevo desde ${input.organizationName}.`,
+      paragraphs: [
+        `<strong>Ticket:</strong> ${escapeHtml(input.ticketId)}`,
+        `<strong>Asunto:</strong> ${escapeHtml(input.subject)}`,
+        `<strong>Prioridad:</strong> ${escapeHtml(input.priority)}`,
+        `<strong>Categoría:</strong> ${escapeHtml(input.category || 'General')}`,
+        `<strong>Reporta:</strong> ${escapeHtml(input.reporterName || 'Usuario')} (${escapeHtml(input.reporterEmail || 'sin email')})`,
+        `<strong>Mensaje:</strong><br/>${escapeHtml(input.message).replace(/\n/g, '<br />')}`,
+      ],
+      ctaLabel: 'Abrir bandeja de soporte',
+      ctaUrl: adminUrl,
+      supportMessage: 'Este correo se envía automáticamente desde Tendo.',
     }),
   });
 }

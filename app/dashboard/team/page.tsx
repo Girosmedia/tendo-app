@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { TeamList } from './_components/team-list';
 import { TeamHeader } from './_components/team-header';
+import { type TeamRole } from '@/lib/utils/team-permissions';
 
 async function getTeamMembers() {
   const cookieStore = await cookies();
@@ -73,8 +74,13 @@ export default async function TeamPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <TeamHeader />
-      <TeamList members={members} invitations={invitations} currentUserId={session.user.id} />
+      <TeamHeader currentUserRole={(session.user.memberRole as TeamRole | null) ?? null} />
+      <TeamList
+        members={members}
+        invitations={invitations}
+        currentUserId={session.user.id}
+        currentUserRole={(session.user.memberRole as TeamRole | null) ?? null}
+      />
     </div>
   );
 }

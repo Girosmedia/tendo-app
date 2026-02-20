@@ -4,9 +4,15 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
 import { InviteDialog } from './invite-dialog';
+import { canInviteMembers, type TeamRole } from '@/lib/utils/team-permissions';
 
-export function TeamHeader() {
+interface TeamHeaderProps {
+  currentUserRole: TeamRole | null;
+}
+
+export function TeamHeader({ currentUserRole }: TeamHeaderProps) {
   const [showInviteDialog, setShowInviteDialog] = useState(false);
+  const canInvite = canInviteMembers(currentUserRole);
 
   return (
     <>
@@ -17,20 +23,24 @@ export function TeamHeader() {
             Administra los miembros de tu organización
           </p>
         </div>
-        <Button 
-          size="default"
-          className="w-full md:w-auto md:size-lg" 
-          onClick={() => setShowInviteDialog(true)}
-        >
-          <UserPlus className="mr-2 h-4 w-4" strokeWidth={1.75} />
-          Invitar Miembro
-        </Button>
+        {canInvite && (
+          <Button 
+            size="default"
+            className="w-full md:w-auto md:size-lg" 
+            onClick={() => setShowInviteDialog(true)}
+          >
+            <UserPlus className="mr-2 h-4 w-4" strokeWidth={1.75} />
+            Invitar Miembro
+          </Button>
+        )}
       </div>
 
-      <InviteDialog 
-        open={showInviteDialog} 
-        onOpenChange={setShowInviteDialog} 
-      />
+      {canInvite && (
+        <InviteDialog 
+          open={showInviteDialog} 
+          onOpenChange={setShowInviteDialog} 
+        />
+      )}
     </>
   );
 }
