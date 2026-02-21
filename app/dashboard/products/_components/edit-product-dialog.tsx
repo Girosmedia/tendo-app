@@ -322,7 +322,7 @@ export function EditProductDialog({
                     <FormLabel>URL de Imagen (Opcional)</FormLabel>
                     <FormControl>
                       <Input
-                        type="url"
+                        type="text"
                         placeholder="https://ejemplo.com/imagen.jpg"
                         {...field}
                         value={field.value || ''}
@@ -346,7 +346,8 @@ export function EditProductDialog({
                           type="number"
                           placeholder="1500"
                           {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
+                          value={field.value ?? ''}
+                          onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
                         />
                       </FormControl>
                       <FormMessage />
@@ -389,7 +390,8 @@ export function EditProductDialog({
                           type="number"
                           placeholder="19"
                           {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
+                          value={field.value ?? ''}
+                          onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
                         />
                       </FormControl>
                       <FormMessage />
@@ -438,7 +440,8 @@ export function EditProductDialog({
                                 type="number"
                                 placeholder="100"
                                 {...field}
-                                onChange={(e) => field.onChange(Number(e.target.value))}
+                                value={field.value ?? ''}
+                                onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
                               />
                             </FormControl>
                             <FormMessage />
@@ -457,7 +460,8 @@ export function EditProductDialog({
                                 type="number"
                                 placeholder="10"
                                 {...field}
-                                onChange={(e) => field.onChange(Number(e.target.value))}
+                                value={field.value ?? ''}
+                                onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
                               />
                             </FormControl>
                             <FormDescription>

@@ -60,6 +60,16 @@ export default function POSPage() {
         e.preventDefault();
         setIsPaymentOpen(true);
       }
+
+      // F4 - Limpiar carrito
+      if (e.key === 'F4' && items.length > 0) {
+        e.preventDefault();
+        const confirmed = window.confirm('¿Deseas limpiar todo el carrito? Esta acción no se puede deshacer.');
+        if (confirmed) {
+          clearCart();
+          toast.success('Carrito limpiado');
+        }
+      }
       
       // F3 - Focus en búsqueda
       if (e.key === 'F3') {
@@ -76,7 +86,7 @@ export default function POSPage() {
     
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [items.length, hasActiveCashRegister]);
+  }, [items.length, hasActiveCashRegister, clearCart]);
   
   const handlePaymentSuccess = () => {
     setIsPaymentOpen(false);
@@ -93,24 +103,32 @@ export default function POSPage() {
   };
   
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col">
-      {/* Header */}
-      <div className="border-b bg-background p-4">
-        <h1 className="text-2xl font-bold">Punto de Venta</h1>
-        <p className="text-sm text-muted-foreground">
-          F2: Cobrar • F3: Buscar • Esc: Cancelar
+    // Tab bar mobile → md:hidden (visible solo < 768px)
+    //
+    // < md  : cancelamos px + pt pero NO pb → el pb-20 del layout protege el contenido
+    //         de la tab bar. La página scrollea normalmente en 1 columna.
+    //
+    // >= md : tab bar oculta → cancelamos todo el padding del layout padre.
+    //         Tomamos h-[calc(100dvh-3.5rem)] y overflow-hidden → layout fijo,
+    //         sin scroll de página, TotalsPanel siempre visible al fondo.
+    <div className="-mx-3 -mt-3 flex flex-col md:-mx-8 md:-mt-8 md:-mb-8 md:h-[calc(100dvh-3.5rem)] md:overflow-hidden">
+      {/* Header — altura fija */}
+      <div className="shrink-0 border-b bg-background px-4 py-3">
+        <h1 className="text-xl font-bold">Punto de Venta</h1>
+        <p className="text-xs text-muted-foreground">
+          F2: Cobrar · F3: Buscar · F4: Limpiar carrito · Esc: Cancelar
         </p>
       </div>
 
       {/* Alerta si no hay caja abierta */}
       {!isCheckingCashRegister && hasActiveCashRegister === false && (
-        <Alert variant="destructive" className="m-4 mb-0">
+        <Alert variant="destructive" className="shrink-0 rounded-none border-x-0 border-t-0">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription className="flex items-center justify-between">
             <span>
               <strong>No tienes una caja abierta.</strong> Debes abrir una caja registradora antes de procesar ventas.
             </span>
-            <Button asChild variant="outline" size="sm" className="ml-4">
+            <Button asChild variant="outline" size="sm" className="ml-4 shrink-0">
               <Link href="/dashboard/cash-register">
                 <Calculator className="mr-2 h-4 w-4" />
                 Abrir Caja
@@ -119,28 +137,37 @@ export default function POSPage() {
           </AlertDescription>
         </Alert>
       )}
-      
-      {/* Main Content */}
-      <div className="flex-1 overflow-hidden">
-        <div className="h-full grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
-          {/* Left Column: Product Search */}
-          <div className="flex flex-col gap-4 overflow-hidden">
+
+      {/* Contenido principal */}
+      {/* < md : scrollea normalmente (1 columna, tab bar visible) */}
+      {/* >= md: min-h-0 + overflow-hidden → altura fija, no scroll de página */}
+      <div className="flex-1 overflow-y-auto md:min-h-0 md:overflow-hidden">
+        <div className="grid grid-cols-1 md:h-full md:grid-cols-[minmax(0,1fr)_minmax(320px,400px)] lg:grid-cols-[minmax(0,1fr)_minmax(360px,440px)]">
+
+          {/* ── Columna izquierda: Búsqueda de productos ── */}
+          <div className="flex flex-col border-b p-3 md:h-full md:overflow-hidden md:border-b-0 md:border-r md:p-4">
             <ProductSearch />
           </div>
-          
-          {/* Right Column: Cart & Totals */}
-          <div className="flex flex-col gap-4 overflow-hidden">
-            <ShoppingCart />
-            <TotalsPanel 
-              onCheckout={handleCheckout}
-              disabled={!hasActiveCashRegister || isCheckingCashRegister}
-            />
+
+          {/* ── Columna derecha: Carrito + Totales ── */}
+          {/* < md : flujo natural en columna, la página scrollea */}
+          {/* >= md: h-full flex-col → carrito (flex-1 min-h-0) scrollea interno, totales (shrink-0) siempre visible */}
+          <div className="flex flex-col md:h-full md:overflow-hidden">
+            <div className="p-2 md:min-h-0 md:flex-1 md:overflow-hidden">
+              <ShoppingCart />
+            </div>
+            <div className="shrink-0">
+              <TotalsPanel
+                onCheckout={handleCheckout}
+                disabled={!hasActiveCashRegister || isCheckingCashRegister}
+              />
+            </div>
           </div>
+
         </div>
       </div>
-      
-      {/* Payment Dialog */}
-      <PaymentDialog 
+
+      <PaymentDialog
         isOpen={isPaymentOpen}
         onClose={() => setIsPaymentOpen(false)}
         onSuccess={handlePaymentSuccess}

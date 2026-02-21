@@ -440,8 +440,8 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
               <Label htmlFor="cashReceived">Efectivo Recibido</Label>
               <CurrencyInput
                 id="cashReceived"
-                value={cashReceived ? parseFloat(cashReceived) : 0}
-                onChange={(value) => setCashReceived(value.toString())}
+                value={cashReceived ? parseFloat(cashReceived) : undefined}
+                onChange={(value) => setCashReceived(value === undefined ? '' : value.toString())}
                 className="h-14"
                 autoFocus
                 placeholder="$ 0"
@@ -568,7 +568,7 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
             size="lg"
             onClick={handleConfirm}
             disabled={!canConfirm || isSubmitting}
-            className="min-w-[180px]"
+            className="min-w-45"
           >
             {isSubmitting ? (
               <>

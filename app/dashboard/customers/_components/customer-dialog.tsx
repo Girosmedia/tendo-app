@@ -341,7 +341,7 @@ export function CustomerDialog({ open, onOpenChange, customer }: CustomerDialogP
                     <FormLabel>Límite de Crédito</FormLabel>
                     <FormControl>
                       <CurrencyInput
-                        value={field.value ?? 0}
+                        value={field.value}
                         onChange={field.onChange}
                         min={0}
                         placeholder="0"
@@ -385,7 +385,7 @@ export function CustomerDialog({ open, onOpenChange, customer }: CustomerDialogP
                     <FormControl>
                       <Textarea
                         placeholder="Notas internas sobre el cliente..."
-                        className="min-h-[100px]"
+                        className="min-h-25"
                         {...field}
                       />
                     </FormControl>

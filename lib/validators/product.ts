@@ -1,5 +1,12 @@
 import { z } from 'zod'
 
+const imageUrlSchema = z.union([
+  z.string().url('Debe ser una URL válida'),
+  z.string().startsWith('/', 'Debe ser una URL válida o ruta relativa iniciada con /'),
+  z.literal(''),
+  z.null(),
+])
+
 /**
  * Schema base para validación de productos en API (backend)
  * Usa tipos numéricos directos
@@ -10,7 +17,7 @@ export const productApiSchema = z.object({
   sku: z.string().min(1, 'El SKU es requerido').max(50),
   name: z.string().min(1, 'El nombre es requerido').max(200),
   description: z.string().optional(),
-  imageUrl: z.string().url().optional().or(z.literal('')),
+  imageUrl: imageUrlSchema.optional(),
   price: z.number().min(0, 'El precio debe ser mayor o igual a 0'),
   cost: z.number().min(0).optional(),
   taxRate: z.number().min(0).max(100).default(19),
@@ -56,7 +63,7 @@ export const productEditFormSchema = z.object({
   sku: z.string().min(1, 'El SKU es requerido').max(50),
   name: z.string().min(1, 'El nombre es requerido').max(200),
   description: z.string().nullable(),
-  imageUrl: z.string().url('Debe ser una URL válida').nullable().or(z.literal('')),
+  imageUrl: imageUrlSchema,
   price: z.number().min(0, 'El precio debe ser mayor o igual a 0'),
   cost: z.number().min(0).nullable(),
   taxRate: z.number().min(0).max(100),

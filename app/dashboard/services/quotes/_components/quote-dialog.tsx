@@ -300,8 +300,8 @@ export function QuoteDialog({ open, onOpenChange, initialCustomers = [] }: Quote
                               type="number"
                               min={0.001}
                               step={0.001}
-                              value={field.value}
-                              onChange={(e) => field.onChange(Number(e.target.value))}
+                              value={field.value ?? ''}
+                              onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
                             />
                           </FormControl>
                           <FormMessage />
@@ -319,8 +319,8 @@ export function QuoteDialog({ open, onOpenChange, initialCustomers = [] }: Quote
                               type="number"
                               min={0}
                               step={1}
-                              value={field.value}
-                              onChange={(e) => field.onChange(Number(e.target.value))}
+                              value={field.value ?? ''}
+                              onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
                             />
                           </FormControl>
                           <FormMessage />

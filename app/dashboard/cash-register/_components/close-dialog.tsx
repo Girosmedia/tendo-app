@@ -121,7 +121,7 @@ export function CloseDialog({ cashRegister, open, onOpenChange, onSuccess }: Clo
 
   return (
     <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
-      <ResponsiveDialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <ResponsiveDialogContent className="sm:max-w-150 max-h-[90vh] overflow-y-auto">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>Cerrar Caja - Arqueo de Efectivo</ResponsiveDialogTitle>
           <ResponsiveDialogDescription>
@@ -214,7 +214,7 @@ export function CloseDialog({ cashRegister, open, onOpenChange, onSuccess }: Clo
                   </FormLabel>
                   <FormControl>
                     <CurrencyInput
-                      value={field.value ?? 0}
+                      value={field.value}
                       onChange={field.onChange}
                       min={0}
                       placeholder="0"

@@ -20,8 +20,8 @@ import { cn } from '@/lib/utils'
  */
 
 interface NumericInputProps extends Omit<React.ComponentProps<typeof Input>, 'onChange' | 'value'> {
-  value?: number | string
-  onChange?: (value: number) => void
+  value?: number | string | null
+  onChange?: (value: number | undefined) => void
   format?: 'currency' | 'number' | 'decimal'
   min?: number
   max?: number
@@ -81,7 +81,12 @@ export function NumericInput({
     }
 
     // Convertir a número
-    const numValue = inputValue === '' || inputValue === '-' ? 0 : parseFloat(inputValue)
+    const numValue = inputValue === '' || inputValue === '-' ? undefined : parseFloat(inputValue)
+
+    if (numValue === undefined) {
+      onChange?.(undefined)
+      return
+    }
 
     // Validar rango
     if (min !== undefined && numValue < min) return

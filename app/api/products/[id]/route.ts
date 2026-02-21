@@ -140,7 +140,7 @@ export async function PATCH(
       sku: validated.sku,
       name: validated.name,
       description: validated.description,
-      imageUrl: validated.imageUrl,
+      imageUrl: validated.imageUrl === '' ? null : validated.imageUrl,
       trackInventory,
       unit: validated.unit,
       isActive: validated.isActive,
