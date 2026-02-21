@@ -508,6 +508,17 @@
   background: transparent;
 }
 
+/* ─────────────────────────────────────────────
+   Sidebar offset bajo topbar (h-14 = 3.5rem)
+   El sidebar de shadcn usa fixed inset-y-0 h-svh
+   por defecto. Lo desplazamos para que quede
+   debajo del header full-width.
+   ───────────────────────────────────────────── */
+[data-slot="sidebar-container"] {
+  top: 3.5rem !important;
+  height: calc(100svh - 3.5rem) !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

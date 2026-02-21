@@ -28,7 +28,6 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -279,52 +278,7 @@ export function AppSidebar({ user, organizationName, organizationLogo, organizat
 
   return (
     <Sidebar>
-      <SidebarHeader className="border-b border-sidebar-border bg-primary/5 p-4">
-        <div className="flex items-center gap-3">
-          {organizationLogo ? (
-            <div className="flex h-10 max-w-35 items-center">
-              {/* Wrapper: en dark mode sin logo dark, fondo blanco pill como fallback */}
-              <div className={!organizationLogoDark ? 'dark:rounded-md dark:bg-white dark:px-1.5 dark:py-0.5' : ''}>
-                {/* Logo modo claro */}
-                <img
-                  src={organizationLogo}
-                  alt={organizationName || 'Logo'}
-                  className={organizationLogoDark ? 'h-9 w-auto max-w-35 object-contain dark:hidden' : 'h-9 w-auto max-w-35 object-contain'}
-                />
-                {/* Logo modo oscuro: solo si existe */}
-                {organizationLogoDark && (
-                  <img
-                    src={organizationLogoDark}
-                    alt={organizationName || 'Logo'}
-                    className="hidden h-9 w-auto max-w-35 object-contain dark:block"
-                  />
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="flex h-8 items-center">
-              <img
-                src="/tendo_sin_fondo/logo.svg"
-                alt="Tendo"
-                className="h-7 w-auto dark:hidden"
-              />
-              <img
-                src="/tendo_sin_fondo/logo_negativo.svg"
-                alt="Tendo"
-                className="hidden h-7 w-auto dark:block"
-              />
-            </div>
-          )}
-          {!organizationLogo && (
-            <div className="flex-1 overflow-hidden">
-              <h2 className="truncate text-sm font-semibold">{organizationName || 'Mi Empresa'}</h2>
-              <p className="text-xs text-muted-foreground">Tendo</p>
-            </div>
-          )}
-        </div>
-      </SidebarHeader>
-
-      <SidebarContent className="gap-1 py-1">
+      <SidebarContent className="gap-1 py-2">
         {filteredSections.map((section) => (
           <SidebarGroup key={section.label} className="px-2 py-1">
             <SidebarGroupLabel className="h-6 px-2 text-[11px] uppercase tracking-wide text-sidebar-foreground/60">

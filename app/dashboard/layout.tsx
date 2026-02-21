@@ -1,10 +1,11 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from './_components/app-sidebar';
 import { ImpersonationBanner } from './_components/impersonation-banner';
 import { MobileTabBar } from './_components/mobile-tabbar';
 import { TopbarActions } from './_components/topbar-actions';
+import { SidebarFloatingToggle } from './_components/sidebar-floating-toggle';
 import { Toaster } from '@/components/ui/sonner';
 import { db } from '@/lib/db';
 import { getActiveImpersonation } from '@/app/actions/impersonation';
@@ -88,36 +89,63 @@ export default async function DashboardLayout({
       {impersonation && (
         <ImpersonationBanner organizationName={organization?.name || 'Organización'} />
       )}
-      <div className="flex min-h-screen w-full bg-background" style={impersonation ? { marginTop: '48px' } : {}}>
-        <AppSidebar 
-          user={{
-            name: sidebarUser?.name ?? session.user.name,
-            email: sidebarUser?.email ?? session.user.email,
-            image: sidebarUser?.image ?? session.user.image,
-            jobTitle: sidebarUser?.jobTitle ?? session.user.jobTitle,
-            isSuperAdmin: sidebarUser?.isSuperAdmin ?? session.user.isSuperAdmin,
-          }}
-          organizationName={organization?.name}
-          organizationLogo={organizationLogo}
-          organizationLogoDark={organizationLogoDark}
-          enabledModules={enabledModules}
-        />
-        <main className="flex-1">
-          <div className="sticky top-0 z-10 border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-            <div className="flex h-14 items-center gap-4 px-4">
-              <SidebarTrigger />
-              <div className="flex items-center gap-2">
-                <h1 className="text-lg font-semibold">
-                  {organization?.name || 'Dashboard'}
-                </h1>
+      <div
+        className="flex min-h-screen w-full flex-col bg-background"
+        style={impersonation ? { marginTop: '48px' } : {}}
+      >
+        {/* ── Topbar full-width ── */}
+        <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-2 border-b border-border/40 bg-background/95 px-3 backdrop-blur supports-backdrop-filter:bg-background/60">
+          {/* Brand */}
+          <div className="flex shrink-0 items-center gap-2.5">
+            {organizationLogo ? (
+              <div className="flex h-8 max-w-32 items-center">
+                <div className={!organizationLogoDark ? 'dark:rounded-md dark:bg-white dark:px-1 dark:py-0.5' : ''}>
+                  <img
+                    src={organizationLogo}
+                    alt={organization?.name || 'Logo'}
+                    className={organizationLogoDark ? 'h-7 w-auto max-w-32 object-contain dark:hidden' : 'h-7 w-auto max-w-32 object-contain'}
+                  />
+                  {organizationLogoDark && (
+                    <img
+                      src={organizationLogoDark}
+                      alt={organization?.name || 'Logo'}
+                      className="hidden h-7 w-auto max-w-32 object-contain dark:block"
+                    />
+                  )}
+                </div>
               </div>
-              <TopbarActions />
-            </div>
+            ) : (
+              <span className="text-sm font-semibold tracking-tight">
+                {organization?.name || 'Dashboard'}
+              </span>
+            )}
           </div>
-          <div className="flex-1 space-y-4 md:space-y-8 p-3 md:p-8 pb-20 md:pb-8">{children}</div>
-        </main>
+
+          <TopbarActions />
+        </header>
+
+        {/* ── Contenido: sidebar + main ── */}
+        <div className="flex flex-1 overflow-hidden">
+          <AppSidebar
+            user={{
+              name: sidebarUser?.name ?? session.user.name,
+              email: sidebarUser?.email ?? session.user.email,
+              image: sidebarUser?.image ?? session.user.image,
+              jobTitle: sidebarUser?.jobTitle ?? session.user.jobTitle,
+              isSuperAdmin: sidebarUser?.isSuperAdmin ?? session.user.isSuperAdmin,
+            }}
+            organizationName={organization?.name}
+            organizationLogo={organizationLogo}
+            organizationLogoDark={organizationLogoDark}
+            enabledModules={enabledModules}
+          />
+          <main className="flex-1 overflow-y-auto">
+            <div className="space-y-4 p-3 pb-20 md:space-y-8 md:p-8 md:pb-8">{children}</div>
+          </main>
+        </div>
       </div>
       <MobileTabBar enabledModules={enabledModules} />
+      <SidebarFloatingToggle />
       <Toaster />
     </SidebarProvider>
   );
