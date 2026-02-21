@@ -13,6 +13,7 @@ const updateSettingsSchema = z.object({
   tradeName: z.string().optional().nullable(),
   rut: z.string().min(8, 'RUT inválido').optional(),
   logoUrl: z.string().url('URL de logo inválida').optional().nullable(),
+  logoDarkUrl: z.string().url('URL de logo dark inválida').optional().nullable(),
   
   address: z.string().optional().nullable(),
   city: z.string().optional().nullable(),

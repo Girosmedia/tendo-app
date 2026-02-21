@@ -58,6 +58,7 @@ interface AppSidebarProps {
   };
   organizationName?: string | null;
   organizationLogo?: string | null;
+  organizationLogoDark?: string | null;
   enabledModules?: ModuleKey[];
 }
 
@@ -233,7 +234,7 @@ const navItemModuleMap: Record<string, ModuleKey[]> = {
   '/dashboard/documents': ['DOCUMENTS', 'POS'],
 };
 
-export function AppSidebar({ user, organizationName, organizationLogo, enabledModules = [] }: AppSidebarProps) {
+export function AppSidebar({ user, organizationName, organizationLogo, organizationLogoDark, enabledModules = [] }: AppSidebarProps) {
   const pathname = usePathname();
   const { isMobile, setOpenMobile } = useSidebar();
 
@@ -281,12 +282,24 @@ export function AppSidebar({ user, organizationName, organizationLogo, enabledMo
       <SidebarHeader className="border-b border-sidebar-border bg-primary/5 p-4">
         <div className="flex items-center gap-3">
           {organizationLogo ? (
-            <div className="flex h-10 max-w-[140px] items-center">
-              <img
-                src={organizationLogo}
-                alt={organizationName || 'Logo'}
-                className="h-9 w-auto max-w-[140px] object-contain"
-              />
+            <div className="flex h-10 max-w-35 items-center">
+              {/* Wrapper: en dark mode sin logo dark, fondo blanco pill como fallback */}
+              <div className={!organizationLogoDark ? 'dark:rounded-md dark:bg-white dark:px-1.5 dark:py-0.5' : ''}>
+                {/* Logo modo claro */}
+                <img
+                  src={organizationLogo}
+                  alt={organizationName || 'Logo'}
+                  className={organizationLogoDark ? 'h-9 w-auto max-w-35 object-contain dark:hidden' : 'h-9 w-auto max-w-35 object-contain'}
+                />
+                {/* Logo modo oscuro: solo si existe */}
+                {organizationLogoDark && (
+                  <img
+                    src={organizationLogoDark}
+                    alt={organizationName || 'Logo'}
+                    className="hidden h-9 w-auto max-w-35 object-contain dark:block"
+                  />
+                )}
+              </div>
             </div>
           ) : (
             <div className="flex h-8 items-center">

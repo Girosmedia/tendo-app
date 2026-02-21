@@ -2877,6 +2877,7 @@ export const OrganizationSettingsScalarFieldEnum = {
   tradeName: 'tradeName',
   rut: 'rut',
   logoUrl: 'logoUrl',
+  logoDarkUrl: 'logoDarkUrl',
   address: 'address',
   city: 'city',
   region: 'region',

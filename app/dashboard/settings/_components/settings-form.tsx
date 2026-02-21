@@ -43,6 +43,7 @@ const settingsSchema = z.object({
     message: 'RUT inválido',
   }),
   logoUrl: z.string().url('URL inválida').optional().or(z.literal('')),
+  logoDarkUrl: z.string().url('URL inválida').optional().or(z.literal('')),
 
   // Ubicación
   address: z.string().optional(),
@@ -113,6 +114,7 @@ export function SettingsForm({ initialData }: SettingsFormProps) {
       tradeName: initialData?.tradeName ?? undefined,
       rut: initialData?.rut ?? '',
       logoUrl: initialData?.logoUrl ?? undefined,
+      logoDarkUrl: initialData?.logoDarkUrl ?? undefined,
       address: initialData?.address ?? undefined,
       city: initialData?.city ?? undefined,
       region: initialData?.region ?? undefined,
@@ -236,26 +238,70 @@ export function SettingsForm({ initialData }: SettingsFormProps) {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="logoUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>URL del Logo</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="url"
-                        placeholder="https://..."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      URL pública de tu logo
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="logoUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2">
+                        Logo modo claro
+                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">☀︎ Light</span>
+                      </FormLabel>
+                      <FormControl>
+                        <div className="flex items-center gap-3">
+                          <Input
+                            type="url"
+                            placeholder="https://mi-empresa.com/logo.png"
+                            {...field}
+                          />
+                          {field.value && (
+                            <div className="flex h-10 w-20 shrink-0 items-center justify-center rounded-md border bg-white p-1">
+                              <img src={field.value} alt="Preview" className="h-8 w-auto max-w-18 object-contain" />
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormDescription>
+                        Logo sobre fondos claros (se muestra en modo claro)
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="logoDarkUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2">
+                        Logo modo oscuro
+                        <span className="rounded-full bg-slate-700 px-2 py-0.5 text-[10px] font-medium text-slate-200">🌙 Dark</span>
+                        <span className="text-xs font-normal text-muted-foreground">(opcional)</span>
+                      </FormLabel>
+                      <FormControl>
+                        <div className="flex items-center gap-3">
+                          <Input
+                            type="url"
+                            placeholder="https://mi-empresa.com/logo-blanco.png"
+                            {...field}
+                          />
+                          {field.value && (
+                            <div className="flex h-10 w-20 shrink-0 items-center justify-center rounded-md border bg-slate-900 p-1">
+                              <img src={field.value} alt="Preview dark" className="h-8 w-auto max-w-18 object-contain" />
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormDescription>
+                        Versión del logo para fondos oscuros (blanco/negativo). Si no lo subes, se usará el logo claro sobre fondo blanco.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
           </CardContent>
         </Card>

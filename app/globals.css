@@ -213,6 +213,271 @@
   --scrollbar-thumb-hover: #27b78999;
 }
 
+/* ─────────────────────────────────────────────
+   Paletas de color — selector de tema Tendo
+   Se aplican como atributo data-color en <html>
+   ───────────────────────────────────────────── */
+
+/* Violet */
+:root[data-color="violet"] {
+  --primary: #7c3aed;
+  --primary-foreground: #faf5ff;
+  --color-primary: #7c3aed;
+  --color-primary-foreground: #faf5ff;
+  --secondary: #7c3aed0d;
+  --accent: #7c3aed14;
+  --accent-foreground: #7c3aed;
+  --color-accent: #7c3aed14;
+  --color-accent-foreground: #7c3aed;
+  --ring: #7c3aed;
+  --color-ring: #7c3aed;
+  --sidebar-primary: #7c3aed;
+  --sidebar-primary-foreground: #faf5ff;
+  --sidebar-accent: #7c3aed17;
+  --sidebar-accent-foreground: #7c3aed;
+  --sidebar-ring: #7c3aed;
+  --color-sidebar-primary: #7c3aed;
+  --color-sidebar-primary-foreground: #faf5ff;
+  --color-sidebar-accent: #7c3aed17;
+  --color-sidebar-accent-foreground: #7c3aed;
+  --color-sidebar-ring: #7c3aed;
+  --scrollbar-thumb: #7c3aed70;
+  --scrollbar-thumb-hover: #7c3aeda6;
+}
+.dark[data-color="violet"] {
+  --primary: #a78bfa;
+  --primary-foreground: #1e1b4b;
+  --color-primary: #a78bfa;
+  --color-primary-foreground: #1e1b4b;
+  --secondary: #a78bfa24;
+  --accent: #a78bfa33;
+  --accent-foreground: #a78bfa;
+  --color-accent: #a78bfa33;
+  --color-accent-foreground: #a78bfa;
+  --ring: #a78bfa;
+  --color-ring: #a78bfa;
+  --sidebar-primary: #a78bfa;
+  --sidebar-primary-foreground: #1e1b4b;
+  --sidebar-accent: #a78bfa33;
+  --sidebar-accent-foreground: #a78bfa;
+  --sidebar-ring: #a78bfa;
+  --color-sidebar-primary: #a78bfa;
+  --color-sidebar-primary-foreground: #1e1b4b;
+  --color-sidebar-accent: #a78bfa33;
+  --color-sidebar-accent-foreground: #a78bfa;
+  --color-sidebar-ring: #a78bfa;
+  --scrollbar-thumb: #a78bfa66;
+  --scrollbar-thumb-hover: #a78bfa99;
+}
+
+/* Ocean */
+:root[data-color="ocean"] {
+  --primary: #0284c7;
+  --primary-foreground: #f0f9ff;
+  --color-primary: #0284c7;
+  --color-primary-foreground: #f0f9ff;
+  --secondary: #0284c70d;
+  --accent: #0284c714;
+  --accent-foreground: #0284c7;
+  --color-accent: #0284c714;
+  --color-accent-foreground: #0284c7;
+  --ring: #0284c7;
+  --color-ring: #0284c7;
+  --sidebar-primary: #0284c7;
+  --sidebar-primary-foreground: #f0f9ff;
+  --sidebar-accent: #0284c717;
+  --sidebar-accent-foreground: #0284c7;
+  --sidebar-ring: #0284c7;
+  --color-sidebar-primary: #0284c7;
+  --color-sidebar-primary-foreground: #f0f9ff;
+  --color-sidebar-accent: #0284c717;
+  --color-sidebar-accent-foreground: #0284c7;
+  --color-sidebar-ring: #0284c7;
+  --scrollbar-thumb: #0284c770;
+  --scrollbar-thumb-hover: #0284c7a6;
+}
+.dark[data-color="ocean"] {
+  --primary: #38bdf8;
+  --primary-foreground: #0c4a6e;
+  --color-primary: #38bdf8;
+  --color-primary-foreground: #0c4a6e;
+  --secondary: #38bdf824;
+  --accent: #38bdf833;
+  --accent-foreground: #38bdf8;
+  --color-accent: #38bdf833;
+  --color-accent-foreground: #38bdf8;
+  --ring: #38bdf8;
+  --color-ring: #38bdf8;
+  --sidebar-primary: #38bdf8;
+  --sidebar-primary-foreground: #0c4a6e;
+  --sidebar-accent: #38bdf833;
+  --sidebar-accent-foreground: #38bdf8;
+  --sidebar-ring: #38bdf8;
+  --color-sidebar-primary: #38bdf8;
+  --color-sidebar-primary-foreground: #0c4a6e;
+  --color-sidebar-accent: #38bdf833;
+  --color-sidebar-accent-foreground: #38bdf8;
+  --color-sidebar-ring: #38bdf8;
+  --scrollbar-thumb: #38bdf866;
+  --scrollbar-thumb-hover: #38bdf899;
+}
+
+/* Rose */
+:root[data-color="rose"] {
+  --primary: #e11d48;
+  --primary-foreground: #fff1f2;
+  --color-primary: #e11d48;
+  --color-primary-foreground: #fff1f2;
+  --secondary: #e11d480d;
+  --accent: #e11d4814;
+  --accent-foreground: #e11d48;
+  --color-accent: #e11d4814;
+  --color-accent-foreground: #e11d48;
+  --ring: #e11d48;
+  --color-ring: #e11d48;
+  --sidebar-primary: #e11d48;
+  --sidebar-primary-foreground: #fff1f2;
+  --sidebar-accent: #e11d4817;
+  --sidebar-accent-foreground: #e11d48;
+  --sidebar-ring: #e11d48;
+  --color-sidebar-primary: #e11d48;
+  --color-sidebar-primary-foreground: #fff1f2;
+  --color-sidebar-accent: #e11d4817;
+  --color-sidebar-accent-foreground: #e11d48;
+  --color-sidebar-ring: #e11d48;
+  --scrollbar-thumb: #e11d4870;
+  --scrollbar-thumb-hover: #e11d48a6;
+}
+.dark[data-color="rose"] {
+  --primary: #fb7185;
+  --primary-foreground: #4c0519;
+  --color-primary: #fb7185;
+  --color-primary-foreground: #4c0519;
+  --secondary: #fb718524;
+  --accent: #fb718533;
+  --accent-foreground: #fb7185;
+  --color-accent: #fb718533;
+  --color-accent-foreground: #fb7185;
+  --ring: #fb7185;
+  --color-ring: #fb7185;
+  --sidebar-primary: #fb7185;
+  --sidebar-primary-foreground: #4c0519;
+  --sidebar-accent: #fb718533;
+  --sidebar-accent-foreground: #fb7185;
+  --sidebar-ring: #fb7185;
+  --color-sidebar-primary: #fb7185;
+  --color-sidebar-primary-foreground: #4c0519;
+  --color-sidebar-accent: #fb718533;
+  --color-sidebar-accent-foreground: #fb7185;
+  --color-sidebar-ring: #fb7185;
+  --scrollbar-thumb: #fb718566;
+  --scrollbar-thumb-hover: #fb718599;
+}
+
+/* Amber */
+:root[data-color="amber"] {
+  --primary: #d97706;
+  --primary-foreground: #fffbeb;
+  --color-primary: #d97706;
+  --color-primary-foreground: #fffbeb;
+  --secondary: #d977060d;
+  --accent: #d9770614;
+  --accent-foreground: #d97706;
+  --color-accent: #d9770614;
+  --color-accent-foreground: #d97706;
+  --ring: #d97706;
+  --color-ring: #d97706;
+  --sidebar-primary: #d97706;
+  --sidebar-primary-foreground: #fffbeb;
+  --sidebar-accent: #d9770617;
+  --sidebar-accent-foreground: #d97706;
+  --sidebar-ring: #d97706;
+  --color-sidebar-primary: #d97706;
+  --color-sidebar-primary-foreground: #fffbeb;
+  --color-sidebar-accent: #d9770617;
+  --color-sidebar-accent-foreground: #d97706;
+  --color-sidebar-ring: #d97706;
+  --scrollbar-thumb: #d9770670;
+  --scrollbar-thumb-hover: #d97706a6;
+}
+.dark[data-color="amber"] {
+  --primary: #fbbf24;
+  --primary-foreground: #451a03;
+  --color-primary: #fbbf24;
+  --color-primary-foreground: #451a03;
+  --secondary: #fbbf2424;
+  --accent: #fbbf2433;
+  --accent-foreground: #fbbf24;
+  --color-accent: #fbbf2433;
+  --color-accent-foreground: #fbbf24;
+  --ring: #fbbf24;
+  --color-ring: #fbbf24;
+  --sidebar-primary: #fbbf24;
+  --sidebar-primary-foreground: #451a03;
+  --sidebar-accent: #fbbf2433;
+  --sidebar-accent-foreground: #fbbf24;
+  --sidebar-ring: #fbbf24;
+  --color-sidebar-primary: #fbbf24;
+  --color-sidebar-primary-foreground: #451a03;
+  --color-sidebar-accent: #fbbf2433;
+  --color-sidebar-accent-foreground: #fbbf24;
+  --color-sidebar-ring: #fbbf24;
+  --scrollbar-thumb: #fbbf2466;
+  --scrollbar-thumb-hover: #fbbf2499;
+}
+
+/* Teal */
+:root[data-color="teal"] {
+  --primary: #0d9488;
+  --primary-foreground: #f0fdfa;
+  --color-primary: #0d9488;
+  --color-primary-foreground: #f0fdfa;
+  --secondary: #0d94880d;
+  --accent: #0d948814;
+  --accent-foreground: #0d9488;
+  --color-accent: #0d948814;
+  --color-accent-foreground: #0d9488;
+  --ring: #0d9488;
+  --color-ring: #0d9488;
+  --sidebar-primary: #0d9488;
+  --sidebar-primary-foreground: #f0fdfa;
+  --sidebar-accent: #0d948817;
+  --sidebar-accent-foreground: #0d9488;
+  --sidebar-ring: #0d9488;
+  --color-sidebar-primary: #0d9488;
+  --color-sidebar-primary-foreground: #f0fdfa;
+  --color-sidebar-accent: #0d948817;
+  --color-sidebar-accent-foreground: #0d9488;
+  --color-sidebar-ring: #0d9488;
+  --scrollbar-thumb: #0d948870;
+  --scrollbar-thumb-hover: #0d9488a6;
+}
+.dark[data-color="teal"] {
+  --primary: #2dd4bf;
+  --primary-foreground: #042f2e;
+  --color-primary: #2dd4bf;
+  --color-primary-foreground: #042f2e;
+  --secondary: #2dd4bf24;
+  --accent: #2dd4bf33;
+  --accent-foreground: #2dd4bf;
+  --color-accent: #2dd4bf33;
+  --color-accent-foreground: #2dd4bf;
+  --ring: #2dd4bf;
+  --color-ring: #2dd4bf;
+  --sidebar-primary: #2dd4bf;
+  --sidebar-primary-foreground: #042f2e;
+  --sidebar-accent: #2dd4bf33;
+  --sidebar-accent-foreground: #2dd4bf;
+  --sidebar-ring: #2dd4bf;
+  --color-sidebar-primary: #2dd4bf;
+  --color-sidebar-primary-foreground: #042f2e;
+  --color-sidebar-accent: #2dd4bf33;
+  --color-sidebar-accent-foreground: #2dd4bf;
+  --color-sidebar-ring: #2dd4bf;
+  --scrollbar-thumb: #2dd4bf66;
+  --scrollbar-thumb-hover: #2dd4bf99;
+}
+
 /* Scrollbars - Estilo refinado y consistente */
 * {
   scrollbar-width: thin;

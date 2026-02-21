@@ -43,6 +43,7 @@ export type OrganizationSettingsMinAggregateOutputType = {
   tradeName: string | null
   rut: string | null
   logoUrl: string | null
+  logoDarkUrl: string | null
   address: string | null
   city: string | null
   region: string | null
@@ -68,6 +69,7 @@ export type OrganizationSettingsMaxAggregateOutputType = {
   tradeName: string | null
   rut: string | null
   logoUrl: string | null
+  logoDarkUrl: string | null
   address: string | null
   city: string | null
   region: string | null
@@ -93,6 +95,7 @@ export type OrganizationSettingsCountAggregateOutputType = {
   tradeName: number
   rut: number
   logoUrl: number
+  logoDarkUrl: number
   address: number
   city: number
   region: number
@@ -130,6 +133,7 @@ export type OrganizationSettingsMinAggregateInputType = {
   tradeName?: true
   rut?: true
   logoUrl?: true
+  logoDarkUrl?: true
   address?: true
   city?: true
   region?: true
@@ -155,6 +159,7 @@ export type OrganizationSettingsMaxAggregateInputType = {
   tradeName?: true
   rut?: true
   logoUrl?: true
+  logoDarkUrl?: true
   address?: true
   city?: true
   region?: true
@@ -180,6 +185,7 @@ export type OrganizationSettingsCountAggregateInputType = {
   tradeName?: true
   rut?: true
   logoUrl?: true
+  logoDarkUrl?: true
   address?: true
   city?: true
   region?: true
@@ -292,6 +298,7 @@ export type OrganizationSettingsGroupByOutputType = {
   tradeName: string | null
   rut: string
   logoUrl: string | null
+  logoDarkUrl: string | null
   address: string | null
   city: string | null
   region: string | null
@@ -340,6 +347,7 @@ export type OrganizationSettingsWhereInput = {
   tradeName?: Prisma.StringNullableFilter<"OrganizationSettings"> | string | null
   rut?: Prisma.StringFilter<"OrganizationSettings"> | string
   logoUrl?: Prisma.StringNullableFilter<"OrganizationSettings"> | string | null
+  logoDarkUrl?: Prisma.StringNullableFilter<"OrganizationSettings"> | string | null
   address?: Prisma.StringNullableFilter<"OrganizationSettings"> | string | null
   city?: Prisma.StringNullableFilter<"OrganizationSettings"> | string | null
   region?: Prisma.StringNullableFilter<"OrganizationSettings"> | string | null
@@ -366,6 +374,7 @@ export type OrganizationSettingsOrderByWithRelationInput = {
   tradeName?: Prisma.SortOrderInput | Prisma.SortOrder
   rut?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  logoDarkUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
   region?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -395,6 +404,7 @@ export type OrganizationSettingsWhereUniqueInput = Prisma.AtLeast<{
   tradeName?: Prisma.StringNullableFilter<"OrganizationSettings"> | string | null
   rut?: Prisma.StringFilter<"OrganizationSettings"> | string
   logoUrl?: Prisma.StringNullableFilter<"OrganizationSettings"> | string | null
+  logoDarkUrl?: Prisma.StringNullableFilter<"OrganizationSettings"> | string | null
   address?: Prisma.StringNullableFilter<"OrganizationSettings"> | string | null
   city?: Prisma.StringNullableFilter<"OrganizationSettings"> | string | null
   region?: Prisma.StringNullableFilter<"OrganizationSettings"> | string | null
@@ -421,6 +431,7 @@ export type OrganizationSettingsOrderByWithAggregationInput = {
   tradeName?: Prisma.SortOrderInput | Prisma.SortOrder
   rut?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  logoDarkUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
   region?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -454,6 +465,7 @@ export type OrganizationSettingsScalarWhereWithAggregatesInput = {
   tradeName?: Prisma.StringNullableWithAggregatesFilter<"OrganizationSettings"> | string | null
   rut?: Prisma.StringWithAggregatesFilter<"OrganizationSettings"> | string
   logoUrl?: Prisma.StringNullableWithAggregatesFilter<"OrganizationSettings"> | string | null
+  logoDarkUrl?: Prisma.StringNullableWithAggregatesFilter<"OrganizationSettings"> | string | null
   address?: Prisma.StringNullableWithAggregatesFilter<"OrganizationSettings"> | string | null
   city?: Prisma.StringNullableWithAggregatesFilter<"OrganizationSettings"> | string | null
   region?: Prisma.StringNullableWithAggregatesFilter<"OrganizationSettings"> | string | null
@@ -478,6 +490,7 @@ export type OrganizationSettingsCreateInput = {
   tradeName?: string | null
   rut: string
   logoUrl?: string | null
+  logoDarkUrl?: string | null
   address?: string | null
   city?: string | null
   region?: string | null
@@ -504,6 +517,7 @@ export type OrganizationSettingsUncheckedCreateInput = {
   tradeName?: string | null
   rut: string
   logoUrl?: string | null
+  logoDarkUrl?: string | null
   address?: string | null
   city?: string | null
   region?: string | null
@@ -528,6 +542,7 @@ export type OrganizationSettingsUpdateInput = {
   tradeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rut?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoDarkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -554,6 +569,7 @@ export type OrganizationSettingsUncheckedUpdateInput = {
   tradeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rut?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoDarkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -579,6 +595,7 @@ export type OrganizationSettingsCreateManyInput = {
   tradeName?: string | null
   rut: string
   logoUrl?: string | null
+  logoDarkUrl?: string | null
   address?: string | null
   city?: string | null
   region?: string | null
@@ -603,6 +620,7 @@ export type OrganizationSettingsUpdateManyMutationInput = {
   tradeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rut?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoDarkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -628,6 +646,7 @@ export type OrganizationSettingsUncheckedUpdateManyInput = {
   tradeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rut?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoDarkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -658,6 +677,7 @@ export type OrganizationSettingsCountOrderByAggregateInput = {
   tradeName?: Prisma.SortOrder
   rut?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrder
+  logoDarkUrl?: Prisma.SortOrder
   address?: Prisma.SortOrder
   city?: Prisma.SortOrder
   region?: Prisma.SortOrder
@@ -688,6 +708,7 @@ export type OrganizationSettingsMaxOrderByAggregateInput = {
   tradeName?: Prisma.SortOrder
   rut?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrder
+  logoDarkUrl?: Prisma.SortOrder
   address?: Prisma.SortOrder
   city?: Prisma.SortOrder
   region?: Prisma.SortOrder
@@ -713,6 +734,7 @@ export type OrganizationSettingsMinOrderByAggregateInput = {
   tradeName?: Prisma.SortOrder
   rut?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrder
+  logoDarkUrl?: Prisma.SortOrder
   address?: Prisma.SortOrder
   city?: Prisma.SortOrder
   region?: Prisma.SortOrder
@@ -774,6 +796,7 @@ export type OrganizationSettingsCreateWithoutOrganizationInput = {
   tradeName?: string | null
   rut: string
   logoUrl?: string | null
+  logoDarkUrl?: string | null
   address?: string | null
   city?: string | null
   region?: string | null
@@ -798,6 +821,7 @@ export type OrganizationSettingsUncheckedCreateWithoutOrganizationInput = {
   tradeName?: string | null
   rut: string
   logoUrl?: string | null
+  logoDarkUrl?: string | null
   address?: string | null
   city?: string | null
   region?: string | null
@@ -838,6 +862,7 @@ export type OrganizationSettingsUpdateWithoutOrganizationInput = {
   tradeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rut?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoDarkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -862,6 +887,7 @@ export type OrganizationSettingsUncheckedUpdateWithoutOrganizationInput = {
   tradeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rut?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoDarkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -889,6 +915,7 @@ export type OrganizationSettingsSelect<ExtArgs extends runtime.Types.Extensions.
   tradeName?: boolean
   rut?: boolean
   logoUrl?: boolean
+  logoDarkUrl?: boolean
   address?: boolean
   city?: boolean
   region?: boolean
@@ -915,6 +942,7 @@ export type OrganizationSettingsSelectCreateManyAndReturn<ExtArgs extends runtim
   tradeName?: boolean
   rut?: boolean
   logoUrl?: boolean
+  logoDarkUrl?: boolean
   address?: boolean
   city?: boolean
   region?: boolean
@@ -941,6 +969,7 @@ export type OrganizationSettingsSelectUpdateManyAndReturn<ExtArgs extends runtim
   tradeName?: boolean
   rut?: boolean
   logoUrl?: boolean
+  logoDarkUrl?: boolean
   address?: boolean
   city?: boolean
   region?: boolean
@@ -967,6 +996,7 @@ export type OrganizationSettingsSelectScalar = {
   tradeName?: boolean
   rut?: boolean
   logoUrl?: boolean
+  logoDarkUrl?: boolean
   address?: boolean
   city?: boolean
   region?: boolean
@@ -985,7 +1015,7 @@ export type OrganizationSettingsSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OrganizationSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "businessName" | "tradeName" | "rut" | "logoUrl" | "address" | "city" | "region" | "country" | "phone" | "email" | "website" | "taxRegime" | "economicActivity" | "timezone" | "currency" | "locale" | "cardDebitCommissionRate" | "cardCreditCommissionRate" | "createdAt" | "updatedAt", ExtArgs["result"]["organizationSettings"]>
+export type OrganizationSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "businessName" | "tradeName" | "rut" | "logoUrl" | "logoDarkUrl" | "address" | "city" | "region" | "country" | "phone" | "email" | "website" | "taxRegime" | "economicActivity" | "timezone" | "currency" | "locale" | "cardDebitCommissionRate" | "cardCreditCommissionRate" | "createdAt" | "updatedAt", ExtArgs["result"]["organizationSettings"]>
 export type OrganizationSettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
@@ -1008,6 +1038,7 @@ export type $OrganizationSettingsPayload<ExtArgs extends runtime.Types.Extension
     tradeName: string | null
     rut: string
     logoUrl: string | null
+    logoDarkUrl: string | null
     address: string | null
     city: string | null
     region: string | null
@@ -1454,6 +1485,7 @@ export interface OrganizationSettingsFieldRefs {
   readonly tradeName: Prisma.FieldRef<"OrganizationSettings", 'String'>
   readonly rut: Prisma.FieldRef<"OrganizationSettings", 'String'>
   readonly logoUrl: Prisma.FieldRef<"OrganizationSettings", 'String'>
+  readonly logoDarkUrl: Prisma.FieldRef<"OrganizationSettings", 'String'>
   readonly address: Prisma.FieldRef<"OrganizationSettings", 'String'>
   readonly city: Prisma.FieldRef<"OrganizationSettings", 'String'>
   readonly region: Prisma.FieldRef<"OrganizationSettings", 'String'>

@@ -58,6 +58,7 @@ export default async function SettingsPage() {
     tradeName: settings.tradeName ?? undefined,
     rut: settings.rut,
     logoUrl: settings.logoUrl ?? undefined,
+    logoDarkUrl: settings.logoDarkUrl ?? undefined,
     address: settings.address ?? undefined,
     city: settings.city ?? undefined,
     region: settings.region ?? undefined,

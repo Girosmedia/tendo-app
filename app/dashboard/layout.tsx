@@ -4,6 +4,7 @@ import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from './_components/app-sidebar';
 import { ImpersonationBanner } from './_components/impersonation-banner';
 import { MobileTabBar } from './_components/mobile-tabbar';
+import { TopbarActions } from './_components/topbar-actions';
 import { Toaster } from '@/components/ui/sonner';
 import { db } from '@/lib/db';
 import { getActiveImpersonation } from '@/app/actions/impersonation';
@@ -50,6 +51,7 @@ export default async function DashboardLayout({
         settings: {
           select: {
             logoUrl: true,
+            logoDarkUrl: true,
           },
         },
       },
@@ -67,6 +69,7 @@ export default async function DashboardLayout({
   ]);
 
   const organizationLogo = organization?.settings?.logoUrl || organization?.logoUrl || null;
+  const organizationLogoDark = organization?.settings?.logoDarkUrl || null;
   const entitlements = organization
     ? resolveEntitlements({
         organizationPlan: organization.plan,
@@ -96,10 +99,11 @@ export default async function DashboardLayout({
           }}
           organizationName={organization?.name}
           organizationLogo={organizationLogo}
+          organizationLogoDark={organizationLogoDark}
           enabledModules={enabledModules}
         />
         <main className="flex-1">
-          <div className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="sticky top-0 z-10 border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
             <div className="flex h-14 items-center gap-4 px-4">
               <SidebarTrigger />
               <div className="flex items-center gap-2">
@@ -107,6 +111,7 @@ export default async function DashboardLayout({
                   {organization?.name || 'Dashboard'}
                 </h1>
               </div>
+              <TopbarActions />
             </div>
           </div>
           <div className="flex-1 space-y-4 md:space-y-8 p-3 md:p-8 pb-20 md:pb-8">{children}</div>

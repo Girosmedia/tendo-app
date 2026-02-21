@@ -350,6 +350,7 @@ model OrganizationSettings {
   tradeName    String? @map("trade_name")
   rut          String
   logoUrl      String? @map("logo_url")
+  logoDarkUrl  String? @map("logo_dark_url")
 
   // Ubicación
   address String?

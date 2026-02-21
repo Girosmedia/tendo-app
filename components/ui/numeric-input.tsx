@@ -165,7 +165,7 @@ export function QuantityInput({
   className,
   ...props
 }: QuantityInputProps) {
-  const numValue = typeof value === 'string' ? parseFloat(value) : value
+  const numValue = typeof value === 'string' ? parseFloat(value) : (value ?? 0)
 
   const increment = () => {
     const newValue = numValue + 1
