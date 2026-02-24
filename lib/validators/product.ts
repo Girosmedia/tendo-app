@@ -55,21 +55,22 @@ export const productFormSchema = z.object({
 
 /**
  * Schema para edición de productos (formulario cliente)
- * Similar al de creación pero con campos nullable en lugar de optional
+ * Usa strings para campos numéricos, igual que productFormSchema,
+ * para evitar el problema de inputs que se resetean al borrar.
  */
 export const productEditFormSchema = z.object({
   type: z.enum(['PRODUCT', 'SERVICE']),
   categoryId: z.string().nullable(),
   sku: z.string().min(1, 'El SKU es requerido').max(50),
   name: z.string().min(1, 'El nombre es requerido').max(200),
-  description: z.string().nullable(),
-  imageUrl: imageUrlSchema,
-  price: z.number().min(0, 'El precio debe ser mayor o igual a 0'),
-  cost: z.number().min(0).nullable(),
-  taxRate: z.number().min(0).max(100),
+  description: z.string().nullable().optional(),
+  imageUrl: imageUrlSchema.optional(),
+  price: z.string().min(1, 'El precio es obligatorio'),
+  cost: z.string().optional(),
+  taxRate: z.string().optional(),
   trackInventory: z.boolean(),
-  currentStock: z.number().int().min(0),
-  minStock: z.number().int().min(0),
+  currentStock: z.string().optional(),
+  minStock: z.string().optional(),
   unit: z.string(),
   isActive: z.boolean(),
 })
@@ -113,6 +114,28 @@ export function transformFormDataToApi(data: ProductFormData): Omit<ProductApiIn
     minStock: data.minStock ? parseInt(data.minStock) : 0,
     unit: data.unit || 'unidad',
     isActive: data.isActive ?? true,
+  }
+}
+
+/**
+ * Helper para transformar datos del formulario de edición a formato API
+ */
+export function transformEditFormDataToApi(data: ProductEditFormData): ProductUpdateApiInput {
+  return {
+    type: data.type,
+    categoryId: data.categoryId || null,
+    sku: data.sku,
+    name: data.name,
+    description: data.description || undefined,
+    imageUrl: data.imageUrl || undefined,
+    price: parseFloat(data.price),
+    cost: data.cost ? parseFloat(data.cost) : undefined,
+    taxRate: data.taxRate ? parseFloat(data.taxRate) : 19,
+    trackInventory: data.trackInventory,
+    currentStock: data.currentStock ? parseInt(data.currentStock) : 0,
+    minStock: data.minStock ? parseInt(data.minStock) : 0,
+    unit: data.unit || 'unidad',
+    isActive: data.isActive,
   }
 }
 

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { productEditFormSchema, type ProductEditFormData } from '@/lib/validators/product';
+import { productEditFormSchema, transformEditFormDataToApi, type ProductEditFormData } from '@/lib/validators/product';
 import {
   Dialog,
   DialogContent,
@@ -68,14 +68,14 @@ export function EditProductDialog({
       categoryId: null,
       sku: '',
       name: '',
-      description: null,
-      imageUrl: null,
-      price: 0,
-      cost: null,
-      taxRate: 19,
+      description: '',
+      imageUrl: '',
+      price: '0',
+      cost: '',
+      taxRate: '19',
       trackInventory: false,
-      currentStock: 0,
-      minStock: 0,
+      currentStock: '0',
+      minStock: '0',
       unit: 'unidad',
       isActive: true,
     },
@@ -108,14 +108,14 @@ export function EditProductDialog({
           categoryId: product.categoryId,
           sku: product.sku,
           name: product.name,
-          description: product.description,
-          imageUrl: product.imageUrl,
-          price: Number(product.price),
-          cost: product.cost ? Number(product.cost) : null,
-          taxRate: Number(product.taxRate),
+          description: product.description ?? '',
+          imageUrl: product.imageUrl ?? '',
+          price: String(product.price),
+          cost: product.cost ? String(product.cost) : '',
+          taxRate: String(product.taxRate),
           trackInventory: product.trackInventory,
-          currentStock: product.currentStock,
-          minStock: product.minStock,
+          currentStock: String(product.currentStock ?? 0),
+          minStock: String(product.minStock ?? 0),
           unit: product.unit,
           isActive: product.isActive,
         });
@@ -145,7 +145,7 @@ export function EditProductDialog({
       const res = await fetch(`/api/products/${productId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(transformEditFormDataToApi(data)),
       });
 
       if (!res.ok) {
@@ -346,8 +346,6 @@ export function EditProductDialog({
                           type="number"
                           placeholder="1500"
                           {...field}
-                          value={field.value ?? ''}
-                          onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
                         />
                       </FormControl>
                       <FormMessage />
@@ -367,10 +365,6 @@ export function EditProductDialog({
                           type="number"
                           placeholder="1000"
                           {...field}
-                          value={field.value || ''}
-                          onChange={(e) =>
-                            field.onChange(e.target.value ? Number(e.target.value) : null)
-                          }
                         />
                       </FormControl>
                       <FormMessage />
@@ -390,8 +384,6 @@ export function EditProductDialog({
                           type="number"
                           placeholder="19"
                           {...field}
-                          value={field.value ?? ''}
-                          onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
                         />
                       </FormControl>
                       <FormMessage />
@@ -440,8 +432,6 @@ export function EditProductDialog({
                                 type="number"
                                 placeholder="100"
                                 {...field}
-                                value={field.value ?? ''}
-                                onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
                               />
                             </FormControl>
                             <FormMessage />
@@ -460,8 +450,6 @@ export function EditProductDialog({
                                 type="number"
                                 placeholder="10"
                                 {...field}
-                                value={field.value ?? ''}
-                                onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
                               />
                             </FormControl>
                             <FormDescription>
@@ -540,7 +528,7 @@ export function EditProductDialog({
             <LabelPreview 
               product={{
                 name: form.getValues('name'),
-                price: form.getValues('price'),
+                price: Number(form.getValues('price')),
                 sku: form.getValues('sku'),
               }}
               organizationName={organizationName}

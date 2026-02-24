@@ -69,9 +69,14 @@ export function ProductSearch() {
   // Manejo de escáner de código de barras
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      // Ignorar si el usuario está escribiendo en un input
-      if (document.activeElement?.tagName === 'INPUT' && 
-          document.activeElement !== inputRef.current) {
+      // Si el usuario está escribiendo en el input de búsqueda, no interceptar nada
+      if (document.activeElement === inputRef.current) {
+        return;
+      }
+
+      // Ignorar si el usuario está escribiendo en cualquier otro input/textarea
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') {
         return;
       }
 
