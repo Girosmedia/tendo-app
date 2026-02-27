@@ -403,6 +403,7 @@ export const ModelName = {
   Product: 'Product',
   Customer: 'Customer',
   Document: 'Document',
+  DocumentPayment: 'DocumentPayment',
   DocumentItem: 'DocumentItem',
   Project: 'Project',
   ProjectPayment: 'ProjectPayment',
@@ -429,7 +430,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "user" | "verificationToken" | "organization" | "supportTicket" | "subscription" | "supplier" | "accountPayable" | "member" | "teamInvitation" | "organizationSettings" | "systemSettings" | "auditLog" | "impersonationSession" | "category" | "product" | "customer" | "document" | "documentItem" | "project" | "projectPayment" | "projectResource" | "projectMilestone" | "projectExpense" | "cashRegister" | "operationalExpense" | "treasuryMovement" | "credit" | "payment"
+    modelProps: "account" | "session" | "user" | "verificationToken" | "organization" | "supportTicket" | "subscription" | "supplier" | "accountPayable" | "member" | "teamInvitation" | "organizationSettings" | "systemSettings" | "auditLog" | "impersonationSession" | "category" | "product" | "customer" | "document" | "documentPayment" | "documentItem" | "project" | "projectPayment" | "projectResource" | "projectMilestone" | "projectExpense" | "cashRegister" | "operationalExpense" | "treasuryMovement" | "credit" | "payment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1839,6 +1840,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DocumentPayment: {
+      payload: Prisma.$DocumentPaymentPayload<ExtArgs>
+      fields: Prisma.DocumentPaymentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DocumentPaymentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPaymentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DocumentPaymentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPaymentPayload>
+        }
+        findFirst: {
+          args: Prisma.DocumentPaymentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPaymentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DocumentPaymentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPaymentPayload>
+        }
+        findMany: {
+          args: Prisma.DocumentPaymentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPaymentPayload>[]
+        }
+        create: {
+          args: Prisma.DocumentPaymentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPaymentPayload>
+        }
+        createMany: {
+          args: Prisma.DocumentPaymentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DocumentPaymentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPaymentPayload>[]
+        }
+        delete: {
+          args: Prisma.DocumentPaymentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPaymentPayload>
+        }
+        update: {
+          args: Prisma.DocumentPaymentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPaymentPayload>
+        }
+        deleteMany: {
+          args: Prisma.DocumentPaymentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DocumentPaymentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DocumentPaymentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPaymentPayload>[]
+        }
+        upsert: {
+          args: Prisma.DocumentPaymentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPaymentPayload>
+        }
+        aggregate: {
+          args: Prisma.DocumentPaymentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDocumentPayment>
+        }
+        groupBy: {
+          args: Prisma.DocumentPaymentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DocumentPaymentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DocumentPaymentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DocumentPaymentCountAggregateOutputType> | number
+        }
+      }
+    }
     DocumentItem: {
       payload: Prisma.$DocumentItemPayload<ExtArgs>
       fields: Prisma.DocumentItemFieldRefs
@@ -3035,6 +3110,19 @@ export const DocumentScalarFieldEnum = {
 export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
 
 
+export const DocumentPaymentScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  paymentMethod: 'paymentMethod',
+  cardType: 'cardType',
+  amount: 'amount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DocumentPaymentScalarFieldEnum = (typeof DocumentPaymentScalarFieldEnum)[keyof typeof DocumentPaymentScalarFieldEnum]
+
+
 export const DocumentItemScalarFieldEnum = {
   id: 'id',
   documentId: 'documentId',
@@ -3808,6 +3896,7 @@ export type GlobalOmitConfig = {
   product?: Prisma.ProductOmit
   customer?: Prisma.CustomerOmit
   document?: Prisma.DocumentOmit
+  documentPayment?: Prisma.DocumentPaymentOmit
   documentItem?: Prisma.DocumentItemOmit
   project?: Prisma.ProjectOmit
   projectPayment?: Prisma.ProjectPaymentOmit

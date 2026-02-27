@@ -70,6 +70,7 @@ export const ModelName = {
   Product: 'Product',
   Customer: 'Customer',
   Document: 'Document',
+  DocumentPayment: 'DocumentPayment',
   DocumentItem: 'DocumentItem',
   Project: 'Project',
   ProjectPayment: 'ProjectPayment',
@@ -440,6 +441,19 @@ export const DocumentScalarFieldEnum = {
 } as const
 
 export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
+
+
+export const DocumentPaymentScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  paymentMethod: 'paymentMethod',
+  cardType: 'cardType',
+  amount: 'amount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DocumentPaymentScalarFieldEnum = (typeof DocumentPaymentScalarFieldEnum)[keyof typeof DocumentPaymentScalarFieldEnum]
 
 
 export const DocumentItemScalarFieldEnum = {

@@ -135,6 +135,11 @@ export type Customer = Prisma.CustomerModel
  */
 export type Document = Prisma.DocumentModel
 /**
+ * Model DocumentPayment
+ * 
+ */
+export type DocumentPayment = Prisma.DocumentPaymentModel
+/**
  * Model DocumentItem
  * 
  */

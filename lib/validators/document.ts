@@ -89,6 +89,15 @@ export const createDocumentSchema = z.object({
   items: z
     .array(documentItemSchema)
     .min(1, 'El documento debe tener al menos un ítem'),
+  payments: z
+    .array(
+      z.object({
+        paymentMethod: PaymentMethodEnum,
+        cardType: CardTypeEnum.optional().nullable(),
+        amount: z.number().positive('El monto debe ser mayor a 0'),
+      })
+    )
+    .optional(),
 }).superRefine((data, ctx) => {
   if (data.paymentMethod === 'CARD') {
     if (!data.cardType) {
@@ -98,22 +107,16 @@ export const createDocumentSchema = z.object({
         message: 'El tipo de tarjeta es requerido para pagos con tarjeta',
       });
     }
-
-    if (!data.cardProvider) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['cardProvider'],
-        message: 'El proveedor de tarjeta es requerido para pagos con tarjeta',
-      });
-    }
   }
 
-  if (data.paymentMethod === 'MULTI' && (data.cardType || data.cardProvider)) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ['paymentMethod'],
-      message: 'En esta versión, MULTI no soporta desglose de tarjeta para comisión',
-    });
+  if (data.paymentMethod === 'MULTI') {
+    if (!data.payments || data.payments.length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['payments'],
+        message: 'El pago mixto requiere al menos un método de pago',
+      });
+    }
   }
 
   if (data.paymentMethod !== 'CARD' && (data.cardType || data.cardProvider)) {

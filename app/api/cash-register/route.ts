@@ -97,7 +97,7 @@ export async function GET(request: Request) {
             organizationId: organization.id,
             createdBy: register.openedBy,
             status: 'PAID',
-            paymentMethod: 'CARD',
+            paymentMethod: { in: ['CARD', 'MULTI'] },
             issuedAt: {
               gte: register.openedAt,
               lte: registerEndDate,
@@ -114,7 +114,7 @@ export async function GET(request: Request) {
           const now = new Date();
           
           // Calcular ventas totales y por método de pago
-          const [allSalesData, cashSales, cardSalesData, transferSalesData, multiSalesData] = await Promise.all([
+          const [allSalesData, cashSales, cardSalesData, transferSalesData, multiSalesData, multiCashSalesData] = await Promise.all([
             db.document.aggregate({
               where: {
                 organizationId: organization.id,
@@ -190,6 +190,24 @@ export async function GET(request: Request) {
                 total: true,
               },
             }),
+            db.documentPayment.aggregate({
+              where: {
+                paymentMethod: 'CASH',
+                document: {
+                  organizationId: organization.id,
+                  createdBy: register.openedBy,
+                  status: 'PAID',
+                  paymentMethod: 'MULTI',
+                  issuedAt: {
+                    gte: register.openedAt,
+                    lte: now,
+                  },
+                },
+              },
+              _sum: {
+                amount: true,
+              },
+            }),
           ]);
 
           salesCount = allSalesData._count || 0;
@@ -197,10 +215,11 @@ export async function GET(request: Request) {
           const totalCashSales = sumRoundedCashTotals(
             cashSales.map((sale) => Number(sale.total))
           );
-          expectedCash = Number(register.openingCash) + totalCashSales;
+          const multiCashSales = Number(multiCashSalesData._sum.amount || 0);
+          expectedCash = Number(register.openingCash) + totalCashSales + multiCashSales;
 
           // Agregar totales por método de pago
-          register.totalCashSales = totalCashSales;
+          register.totalCashSales = totalCashSales + multiCashSales;
           register.totalCardSales = Number(cardSalesData._sum.total || 0);
           register.totalTransferSales = Number(transferSalesData._sum.total || 0);
           register.totalMultiSales = Number(multiSalesData._sum.total || 0);

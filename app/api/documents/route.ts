@@ -176,7 +176,7 @@ export async function POST(req: NextRequest) {
     let cardCommissionRate: number | null = null;
     let cardCommissionAmount: number | null = null;
 
-    if (validatedData.paymentMethod === 'CARD' && validatedData.cardProvider && validatedData.cardType) {
+    if (validatedData.paymentMethod === 'CARD' && validatedData.cardType) {
       const settings = await db.organizationSettings.findUnique({
         where: { organizationId: organization.id },
         select: {
@@ -189,6 +189,30 @@ export async function POST(req: NextRequest) {
         ? Number(settings?.cardDebitCommissionRate ?? 0)
         : Number(settings?.cardCreditCommissionRate ?? 0);
       cardCommissionAmount = Math.round((total * cardCommissionRate) / 100);
+    } else if (validatedData.paymentMethod === 'MULTI' && validatedData.payments) {
+      const settings = await db.organizationSettings.findUnique({
+        where: { organizationId: organization.id },
+        select: {
+          cardDebitCommissionRate: true,
+          cardCreditCommissionRate: true,
+        },
+      });
+
+      const debitRate = Number(settings?.cardDebitCommissionRate ?? 0);
+      const creditRate = Number(settings?.cardCreditCommissionRate ?? 0);
+
+      let totalCommission = 0;
+      for (const payment of validatedData.payments) {
+        if (payment.paymentMethod === 'CARD' && payment.cardType) {
+          const rate = payment.cardType === 'DEBIT' ? debitRate : creditRate;
+          totalCommission += Math.round((payment.amount * rate) / 100);
+        }
+      }
+
+      if (totalCommission > 0) {
+        cardCommissionAmount = totalCommission;
+        // No guardamos un rate único porque puede ser mixto, pero guardamos el monto total
+      }
     }
 
     // Obtener el siguiente número de documento para este tipo
@@ -266,7 +290,6 @@ export async function POST(req: NextRequest) {
           paidAt,
           paymentMethod: validatedData.paymentMethod,
           cardType: validatedData.paymentMethod === 'CARD' ? validatedData.cardType : null,
-          cardProvider: validatedData.paymentMethod === 'CARD' ? validatedData.cardProvider : null,
           cardCommissionRate,
           cardCommissionAmount,
           subtotal: subtotal,
@@ -299,6 +322,17 @@ export async function POST(req: NextRequest) {
               total: item.total,
             })),
           },
+          ...(validatedData.paymentMethod === 'MULTI' && validatedData.payments && validatedData.payments.length > 0
+            ? {
+                payments: {
+                  create: validatedData.payments.map((payment) => ({
+                    paymentMethod: payment.paymentMethod,
+                    cardType: payment.cardType,
+                    amount: payment.amount,
+                  })),
+                },
+              }
+            : {}),
         },
         include: {
           customer: true,
@@ -307,6 +341,7 @@ export async function POST(req: NextRequest) {
               product: true,
             },
           },
+          payments: true,
         },
       });
 

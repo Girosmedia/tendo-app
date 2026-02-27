@@ -87,7 +87,7 @@ export async function GET() {
           organizationId: organization.id,
           createdBy: activeCashRegister.openedBy,
           status: 'PAID',
-          paymentMethod: 'CARD',
+          paymentMethod: { in: ['CARD', 'MULTI'] },
           issuedAt: {
             gte: activeCashRegister.openedAt,
             lte: now,

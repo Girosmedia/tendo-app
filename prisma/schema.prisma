@@ -661,6 +661,7 @@ model Document {
   organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   customer       Customer?      @relation(fields: [customerId], references: [id], onDelete: SetNull)
   items          DocumentItem[]
+  payments       DocumentPayment[]
   credits        Credit[]
   project        Project?       @relation("QuoteToProject")
 
@@ -674,6 +675,23 @@ model Document {
   @@index([cardType])
   @@index([cardProvider])
   @@map("documents")
+}
+
+model DocumentPayment {
+  id             String        @id @default(cuid())
+  documentId     String        @map("document_id")
+  paymentMethod  PaymentMethod @map("payment_method")
+  cardType       CardType?     @map("card_type")
+  amount         Decimal       @db.Decimal(10, 2)
+  
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  document       Document      @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@index([paymentMethod])
+  @@map("document_payments")
 }
 
 model DocumentItem {

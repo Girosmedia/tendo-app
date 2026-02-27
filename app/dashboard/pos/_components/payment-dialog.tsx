@@ -18,13 +18,14 @@ import {
   CreditCard,
   Banknote,
   Building2,
-  FileText,
   Handshake,
   Layers,
   CheckCircle2,
   Loader2,
   AlertTriangle,
   DollarSign,
+  Plus,
+  Trash2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -37,18 +38,24 @@ interface PaymentDialogProps {
   onSuccess: () => void;
 }
 
-type PaymentMethod = 'CASH' | 'CARD' | 'TRANSFER' | 'CHECK' | 'CREDIT' | 'MULTI';
+type PaymentMethod = 'CASH' | 'CARD' | 'TRANSFER' | 'CREDIT' | 'MULTI';
 type CardType = 'DEBIT' | 'CREDIT';
-type CardProvider = 'TRANSBANK' | 'MERCADO_PAGO' | 'GETNET' | 'OTHER';
 
 const paymentMethods = [
   { value: 'CASH' as const, label: 'Efectivo', icon: Banknote },
-  { value: 'CARD' as const, label: 'Tarjeta', icon: CreditCard },
+  { value: 'CARD' as const, label: 'Débito', icon: CreditCard, cardType: 'DEBIT' as CardType },
+  { value: 'CARD' as const, label: 'Crédito', icon: CreditCard, cardType: 'CREDIT' as CardType },
   { value: 'TRANSFER' as const, label: 'Transferencia', icon: Building2 },
-  { value: 'CHECK' as const, label: 'Cheque', icon: FileText },
-  { value: 'CREDIT' as const, label: 'Crédito', icon: Handshake },
+  { value: 'CREDIT' as const, label: 'Fiado', icon: Handshake },
   { value: 'MULTI' as const, label: 'Mixto', icon: Layers },
 ];
+
+interface MultiPaymentItem {
+  id: string;
+  method: PaymentMethod;
+  cardType?: CardType;
+  amount: number;
+}
 
 interface Customer {
   id: string;
@@ -70,7 +77,10 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
   const [globalDiscount, setGlobalDiscount] = useState(0);
   const [globalDiscountType, setGlobalDiscountType] = useState<'amount' | 'percent'>('percent');
   const [cardType, setCardType] = useState<CardType | ''>('');
-  const [cardProvider, setCardProvider] = useState<CardProvider | ''>('TRANSBANK');
+  const [multiPayments, setMultiPayments] = useState<MultiPaymentItem[]>([]);
+  const [currentMultiMethod, setCurrentMultiMethod] = useState<PaymentMethod | null>(null);
+  const [currentMultiCardType, setCurrentMultiCardType] = useState<CardType | ''>('');
+  const [currentMultiAmount, setCurrentMultiAmount] = useState('');
 
   const items = usePosStore((state) => state.items);
   const getTotals = usePosStore((state) => state.getTotals);
@@ -99,6 +109,9 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
   const paymentTotal = selectedMethod === 'CASH' ? roundedCashTotal : exactFinalTotal;
   const cashRoundingAdjustment = roundedCashTotal - exactFinalTotal;
 
+  const multiPaymentsTotal = multiPayments.reduce((sum, p) => sum + p.amount, 0);
+  const multiPaymentsRemaining = Math.max(0, paymentTotal - multiPaymentsTotal);
+
   // Fetch customers cuando se abre el diálogo
   useEffect(() => {
     if (!isOpen) return;
@@ -124,7 +137,6 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
   useEffect(() => {
     if (selectedMethod !== 'CARD') {
       setCardType('');
-      setCardProvider('TRANSBANK');
       return;
     }
   }, [selectedMethod]);
@@ -138,7 +150,8 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
     selectedMethod &&
     (selectedMethod !== 'CASH' || parseFloat(cashReceived || '0') >= paymentTotal) &&
     (selectedMethod !== 'CREDIT' || (selectedCustomerId && !isCreditExceeded())) &&
-    (selectedMethod !== 'CARD' || (cardType && cardProvider));
+    (selectedMethod !== 'CARD' || cardType) &&
+    (selectedMethod !== 'MULTI' || (multiPaymentsTotal >= paymentTotal && multiPayments.length > 0));
 
   // Verificar si se excede el límite de crédito
   function isCreditExceeded() {
@@ -166,7 +179,6 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
         status: 'PAID',
         paymentMethod: selectedMethod,
         cardType: selectedMethod === 'CARD' ? cardType : undefined,
-        cardProvider: selectedMethod === 'CARD' ? cardProvider : undefined,
         customerId: selectedCustomerId || undefined,
         cashReceived: selectedMethod === 'CASH' ? parseFloat(cashReceived) : undefined,
         discount: discountAmount, // Descuento global sobre el total
@@ -180,6 +192,11 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
           discountPercent: item.discountPercent,
           taxRate: item.taxRate,
         })),
+        payments: selectedMethod === 'MULTI' ? multiPayments.map(p => ({
+          paymentMethod: p.method,
+          cardType: p.cardType,
+          amount: p.amount,
+        })) : undefined,
       };
 
       const res = await fetch('/api/documents', {
@@ -231,7 +248,10 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
     setGlobalDiscount(0);
     setGlobalDiscountType('percent');
     setCardType('');
-    setCardProvider('TRANSBANK');
+    setMultiPayments([]);
+    setCurrentMultiMethod(null);
+    setCurrentMultiCardType('');
+    setCurrentMultiAmount('');
     setShowSuccess(false);
     setSaleNumber(null);
     onSuccess();
@@ -246,7 +266,10 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
       setGlobalDiscount(0);
       setGlobalDiscountType('percent');
       setCardType('');
-      setCardProvider('TRANSBANK');
+      setMultiPayments([]);
+      setCurrentMultiMethod(null);
+      setCurrentMultiCardType('');
+      setCurrentMultiAmount('');
       setShowSuccess(false);
       setSaleNumber(null);
       // Llamar a onSuccess para limpiar carrito y refrescar productos
@@ -414,17 +437,25 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
           <div className="space-y-2">
             <Label>Método de Pago</Label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {paymentMethods.map((method) => {
+              {paymentMethods.map((method, idx) => {
                 const Icon = method.icon;
+                const isSelected = selectedMethod === method.value && (method.value !== 'CARD' || cardType === method.cardType);
                 return (
                   <Button
-                    key={method.value}
-                    variant={selectedMethod === method.value ? 'default' : 'outline'}
+                    key={`${method.value}-${idx}`}
+                    variant={isSelected ? 'default' : 'outline'}
                     className={cn(
                       'h-20 flex-col gap-2',
-                      selectedMethod === method.value && 'ring-2 ring-primary'
+                      isSelected && 'ring-2 ring-primary'
                     )}
-                    onClick={() => setSelectedMethod(method.value)}
+                    onClick={() => {
+                      setSelectedMethod(method.value);
+                      if (method.value === 'CARD') {
+                        setCardType(method.cardType as CardType);
+                      } else {
+                        setCardType('');
+                      }
+                    }}
                   >
                     <Icon className="h-6 w-6" />
                     <span className="text-sm">{method.label}</span>
@@ -457,37 +488,112 @@ export function PaymentDialog({ isOpen, onClose, onSuccess }: PaymentDialogProps
             </div>
           )}
 
-          {selectedMethod === 'CARD' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="cardType">Tipo de Tarjeta</Label>
-                <select
-                  id="cardType"
-                  className="flex h-12 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  value={cardType}
-                  onChange={(e) => setCardType(e.target.value as CardType)}
-                >
-                  <option value="">Seleccionar tipo</option>
-                  <option value="DEBIT">Débito</option>
-                  <option value="CREDIT">Crédito</option>
-                </select>
+          {/* Pago Mixto */}
+          {selectedMethod === 'MULTI' && (
+            <div className="space-y-4 border rounded-lg p-4 bg-muted/30">
+              <div className="flex justify-between items-center mb-2">
+                <h4 className="font-medium">Desglose de Pagos</h4>
+                <div className="text-sm">
+                  <span className="text-muted-foreground">Faltante: </span>
+                  <span className={cn("font-bold", multiPaymentsRemaining > 0 ? "text-destructive" : "text-success")}>
+                    ${multiPaymentsRemaining.toLocaleString('es-CL')}
+                  </span>
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="cardProvider">Proveedor de Canal</Label>
-                <select
-                  id="cardProvider"
-                  className="flex h-12 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  value={cardProvider}
-                  onChange={(e) => setCardProvider(e.target.value as CardProvider)}
-                >
-                  <option value="">Seleccionar proveedor</option>
-                  <option value="TRANSBANK">Transbank</option>
-                  <option value="MERCADO_PAGO">Mercado Pago</option>
-                  <option value="GETNET">Getnet</option>
-                  <option value="OTHER">Otro</option>
-                </select>
-              </div>
+              {/* Lista de pagos agregados */}
+              {multiPayments.length > 0 && (
+                <div className="space-y-2 mb-4">
+                  {multiPayments.map((p) => (
+                    <div key={p.id} className="flex justify-between items-center p-2 bg-background border rounded-md text-sm">
+                      <div className="flex items-center gap-2">
+                        {p.method === 'CASH' && <Banknote className="h-4 w-4 text-muted-foreground" />}
+                        {p.method === 'CARD' && <CreditCard className="h-4 w-4 text-muted-foreground" />}
+                        {p.method === 'TRANSFER' && <Building2 className="h-4 w-4 text-muted-foreground" />}
+                        {p.method === 'CREDIT' && <Handshake className="h-4 w-4 text-muted-foreground" />}
+                        <span>
+                          {p.method === 'CASH' ? 'Efectivo' : 
+                           p.method === 'CARD' ? (p.cardType === 'DEBIT' ? 'Débito' : 'Crédito') : 
+                           p.method === 'TRANSFER' ? 'Transferencia' : 'Fiado'}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="font-medium">${p.amount.toLocaleString('es-CL')}</span>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-6 w-6 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={() => setMultiPayments(prev => prev.filter(item => item.id !== p.id))}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Formulario para agregar pago */}
+              {multiPaymentsRemaining > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end bg-background p-3 rounded-md border">
+                  <div className="md:col-span-5 space-y-1.5">
+                    <Label className="text-xs">Método</Label>
+                    <select
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      value={currentMultiMethod === 'CARD' ? `${currentMultiMethod}-${currentMultiCardType}` : (currentMultiMethod || '')}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val.startsWith('CARD-')) {
+                          setCurrentMultiMethod('CARD');
+                          setCurrentMultiCardType(val.split('-')[1] as CardType);
+                        } else {
+                          setCurrentMultiMethod(val as PaymentMethod);
+                          setCurrentMultiCardType('');
+                        }
+                      }}
+                    >
+                      <option value="">Seleccionar...</option>
+                      <option value="CASH">Efectivo</option>
+                      <option value="CARD-DEBIT">Débito</option>
+                      <option value="CARD-CREDIT">Crédito</option>
+                      <option value="TRANSFER">Transferencia</option>
+                      <option value="CREDIT">Fiado</option>
+                    </select>
+                  </div>
+                  <div className="md:col-span-5 space-y-1.5">
+                    <Label className="text-xs">Monto</Label>
+                    <CurrencyInput
+                      value={currentMultiAmount ? parseFloat(currentMultiAmount) : undefined}
+                      onChange={(value) => setCurrentMultiAmount(value === undefined ? '' : value.toString())}
+                      className="h-10"
+                      placeholder={`$ ${multiPaymentsRemaining.toLocaleString('es-CL')}`}
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <Button 
+                      type="button"
+                      className="w-full h-10" 
+                      disabled={!currentMultiMethod || !currentMultiAmount || parseFloat(currentMultiAmount) <= 0}
+                      onClick={() => {
+                        if (currentMultiMethod && currentMultiAmount) {
+                          const amount = parseFloat(currentMultiAmount);
+                          setMultiPayments(prev => [...prev, {
+                            id: Math.random().toString(36).substring(7),
+                            method: currentMultiMethod,
+                            cardType: currentMultiMethod === 'CARD' ? currentMultiCardType || undefined : undefined,
+                            amount
+                          }]);
+                          setCurrentMultiMethod(null);
+                          setCurrentMultiCardType('');
+                          setCurrentMultiAmount('');
+                        }
+                      }}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
