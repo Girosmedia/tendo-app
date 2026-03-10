@@ -1,37 +1,35 @@
 # 1. Usar una imagen oficial y súper ligera de Node.js 20
 FROM node:20-alpine
 
-# 2. Instalar OpenSSL (Requerido por Prisma en Alpine)
+# 2. Instalar pnpm y OpenSSL (Requerido por Prisma en Alpine)
 RUN apk add --no-cache openssl
+RUN npm install -g pnpm
 
 # 3. Crear el directorio de trabajo
 WORKDIR /app
 
-# 4. Copiar los archivos de dependencias
-COPY package*.json ./
+# 4. Copiar los archivos de dependencias (OJO: copiamos pnpm-lock.yaml)
+COPY package.json pnpm-lock.yaml ./
 COPY prisma ./prisma/
 
-# 5. Instalar todas las dependencias
-RUN npm ci
+# 5. Instalar todas las dependencias de forma estricta con pnpm
+RUN pnpm install --frozen-lockfile
 
 # 6. Copiar el resto del código de la aplicación
 COPY . .
 
 # 7. Generar el cliente de Prisma
-RUN npx prisma generate
+RUN pnpm dlx prisma generate
 
 # 8. Construir la aplicación Next.js
-RUN npm run build
+RUN pnpm run build
 
 # 9. Exponer el puerto
 EXPOSE 3000
 
-# 10. Comando para arrancar:
-#     1. Aplica migraciones pendientes
-#     2. Backfills idempotentes (no-op si ya se ejecutaron antes)
-#     3. Inicia Next.js
+# 10. Comando para arrancar
 CMD npx prisma migrate deploy && \
     npx tsx scripts/backfill-unit-costs.ts --apply && \
     npx tsx scripts/backfill-document-payments.ts --apply && \
     npx tsx scripts/backfill-treasury-movements.ts --apply && \
-    npm start
+    pnpm start
