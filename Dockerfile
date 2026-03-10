@@ -8,7 +8,7 @@ RUN npm install -g pnpm
 # 3. Crear el directorio de trabajo
 WORKDIR /app
 
-# 4. Copiar los archivos de dependencias (OJO: copiamos pnpm-lock.yaml)
+# 4. Copiar los archivos de dependencias
 COPY package.json pnpm-lock.yaml ./
 COPY prisma ./prisma/
 
@@ -18,16 +18,20 @@ RUN pnpm install --frozen-lockfile
 # 6. Copiar el resto del código de la aplicación
 COPY . .
 
-# 7. Generar el cliente de Prisma
+# 7. === EL ENGAÑO (Variables dummy para que el build no llore) ===
+ENV DATABASE_URL="postgresql://falso:falso@localhost:5432/falso"
+ENV SKIP_ENV_VALIDATION="1"
+
+# 8. Generar el cliente de Prisma
 RUN pnpm dlx prisma generate
 
-# 8. Construir la aplicación Next.js
+# 9. Construir la aplicación Next.js
 RUN pnpm run build
 
-# 9. Exponer el puerto
+# 10. Exponer el puerto
 EXPOSE 3000
 
-# 10. Comando para arrancar
+# 11. Comando para arrancar
 CMD npx prisma migrate deploy && \
     npx tsx scripts/backfill-unit-costs.ts --apply && \
     npx tsx scripts/backfill-document-payments.ts --apply && \
