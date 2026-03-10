@@ -26,5 +26,12 @@ RUN npm run build
 # 9. Exponer el puerto
 EXPOSE 3000
 
-# 10. Comando para arrancar (Migrar y luego iniciar Next.js)
-CMD npx prisma migrate deploy && npm start
+# 10. Comando para arrancar:
+#     1. Aplica migraciones pendientes
+#     2. Backfills idempotentes (no-op si ya se ejecutaron antes)
+#     3. Inicia Next.js
+CMD npx prisma migrate deploy && \
+    npx tsx scripts/backfill-unit-costs.ts --apply && \
+    npx tsx scripts/backfill-document-payments.ts --apply && \
+    npx tsx scripts/backfill-treasury-movements.ts --apply && \
+    npm start
