@@ -259,6 +259,7 @@ export type PaymentWhereInput = {
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   credit?: Prisma.XOR<Prisma.CreditScalarRelationFilter, Prisma.CreditWhereInput>
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
+  treasuryMovement?: Prisma.XOR<Prisma.TreasuryMovementNullableScalarRelationFilter, Prisma.TreasuryMovementWhereInput> | null
 }
 
 export type PaymentOrderByWithRelationInput = {
@@ -275,6 +276,7 @@ export type PaymentOrderByWithRelationInput = {
   organization?: Prisma.OrganizationOrderByWithRelationInput
   credit?: Prisma.CreditOrderByWithRelationInput
   customer?: Prisma.CustomerOrderByWithRelationInput
+  treasuryMovement?: Prisma.TreasuryMovementOrderByWithRelationInput
 }
 
 export type PaymentWhereUniqueInput = Prisma.AtLeast<{
@@ -294,6 +296,7 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   credit?: Prisma.XOR<Prisma.CreditScalarRelationFilter, Prisma.CreditWhereInput>
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
+  treasuryMovement?: Prisma.XOR<Prisma.TreasuryMovementNullableScalarRelationFilter, Prisma.TreasuryMovementWhereInput> | null
 }, "id">
 
 export type PaymentOrderByWithAggregationInput = {
@@ -341,6 +344,7 @@ export type PaymentCreateInput = {
   organization: Prisma.OrganizationCreateNestedOneWithoutPaymentsInput
   credit: Prisma.CreditCreateNestedOneWithoutPaymentsInput
   customer: Prisma.CustomerCreateNestedOneWithoutPaymentsInput
+  treasuryMovement?: Prisma.TreasuryMovementCreateNestedOneWithoutCreditPaymentInput
 }
 
 export type PaymentUncheckedCreateInput = {
@@ -354,6 +358,7 @@ export type PaymentUncheckedCreateInput = {
   notes?: string | null
   paidAt?: Date | string
   createdAt?: Date | string
+  treasuryMovement?: Prisma.TreasuryMovementUncheckedCreateNestedOneWithoutCreditPaymentInput
 }
 
 export type PaymentUpdateInput = {
@@ -367,6 +372,7 @@ export type PaymentUpdateInput = {
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutPaymentsNestedInput
   credit?: Prisma.CreditUpdateOneRequiredWithoutPaymentsNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutPaymentsNestedInput
+  treasuryMovement?: Prisma.TreasuryMovementUpdateOneWithoutCreditPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateInput = {
@@ -380,6 +386,7 @@ export type PaymentUncheckedUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treasuryMovement?: Prisma.TreasuryMovementUncheckedUpdateOneWithoutCreditPaymentNestedInput
 }
 
 export type PaymentCreateManyInput = {
@@ -426,6 +433,11 @@ export type PaymentListRelationFilter = {
 
 export type PaymentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type PaymentNullableScalarRelationFilter = {
+  is?: Prisma.PaymentWhereInput | null
+  isNot?: Prisma.PaymentWhereInput | null
 }
 
 export type PaymentCountOrderByAggregateInput = {
@@ -559,6 +571,22 @@ export type PaymentUncheckedUpdateManyWithoutCustomerNestedInput = {
   deleteMany?: Prisma.PaymentScalarWhereInput | Prisma.PaymentScalarWhereInput[]
 }
 
+export type PaymentCreateNestedOneWithoutTreasuryMovementInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutTreasuryMovementInput, Prisma.PaymentUncheckedCreateWithoutTreasuryMovementInput>
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutTreasuryMovementInput
+  connect?: Prisma.PaymentWhereUniqueInput
+}
+
+export type PaymentUpdateOneWithoutTreasuryMovementNestedInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutTreasuryMovementInput, Prisma.PaymentUncheckedCreateWithoutTreasuryMovementInput>
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutTreasuryMovementInput
+  upsert?: Prisma.PaymentUpsertWithoutTreasuryMovementInput
+  disconnect?: Prisma.PaymentWhereInput | boolean
+  delete?: Prisma.PaymentWhereInput | boolean
+  connect?: Prisma.PaymentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PaymentUpdateToOneWithWhereWithoutTreasuryMovementInput, Prisma.PaymentUpdateWithoutTreasuryMovementInput>, Prisma.PaymentUncheckedUpdateWithoutTreasuryMovementInput>
+}
+
 export type PaymentCreateNestedManyWithoutCreditInput = {
   create?: Prisma.XOR<Prisma.PaymentCreateWithoutCreditInput, Prisma.PaymentUncheckedCreateWithoutCreditInput> | Prisma.PaymentCreateWithoutCreditInput[] | Prisma.PaymentUncheckedCreateWithoutCreditInput[]
   connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutCreditInput | Prisma.PaymentCreateOrConnectWithoutCreditInput[]
@@ -611,6 +639,7 @@ export type PaymentCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   credit: Prisma.CreditCreateNestedOneWithoutPaymentsInput
   customer: Prisma.CustomerCreateNestedOneWithoutPaymentsInput
+  treasuryMovement?: Prisma.TreasuryMovementCreateNestedOneWithoutCreditPaymentInput
 }
 
 export type PaymentUncheckedCreateWithoutOrganizationInput = {
@@ -623,6 +652,7 @@ export type PaymentUncheckedCreateWithoutOrganizationInput = {
   notes?: string | null
   paidAt?: Date | string
   createdAt?: Date | string
+  treasuryMovement?: Prisma.TreasuryMovementUncheckedCreateNestedOneWithoutCreditPaymentInput
 }
 
 export type PaymentCreateOrConnectWithoutOrganizationInput = {
@@ -677,6 +707,7 @@ export type PaymentCreateWithoutCustomerInput = {
   createdAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutPaymentsInput
   credit: Prisma.CreditCreateNestedOneWithoutPaymentsInput
+  treasuryMovement?: Prisma.TreasuryMovementCreateNestedOneWithoutCreditPaymentInput
 }
 
 export type PaymentUncheckedCreateWithoutCustomerInput = {
@@ -689,6 +720,7 @@ export type PaymentUncheckedCreateWithoutCustomerInput = {
   notes?: string | null
   paidAt?: Date | string
   createdAt?: Date | string
+  treasuryMovement?: Prisma.TreasuryMovementUncheckedCreateNestedOneWithoutCreditPaymentInput
 }
 
 export type PaymentCreateOrConnectWithoutCustomerInput = {
@@ -717,6 +749,74 @@ export type PaymentUpdateManyWithWhereWithoutCustomerInput = {
   data: Prisma.XOR<Prisma.PaymentUpdateManyMutationInput, Prisma.PaymentUncheckedUpdateManyWithoutCustomerInput>
 }
 
+export type PaymentCreateWithoutTreasuryMovementInput = {
+  id?: string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod: string
+  reference?: string | null
+  notes?: string | null
+  paidAt?: Date | string
+  createdAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutPaymentsInput
+  credit: Prisma.CreditCreateNestedOneWithoutPaymentsInput
+  customer: Prisma.CustomerCreateNestedOneWithoutPaymentsInput
+}
+
+export type PaymentUncheckedCreateWithoutTreasuryMovementInput = {
+  id?: string
+  organizationId: string
+  creditId: string
+  customerId: string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod: string
+  reference?: string | null
+  notes?: string | null
+  paidAt?: Date | string
+  createdAt?: Date | string
+}
+
+export type PaymentCreateOrConnectWithoutTreasuryMovementInput = {
+  where: Prisma.PaymentWhereUniqueInput
+  create: Prisma.XOR<Prisma.PaymentCreateWithoutTreasuryMovementInput, Prisma.PaymentUncheckedCreateWithoutTreasuryMovementInput>
+}
+
+export type PaymentUpsertWithoutTreasuryMovementInput = {
+  update: Prisma.XOR<Prisma.PaymentUpdateWithoutTreasuryMovementInput, Prisma.PaymentUncheckedUpdateWithoutTreasuryMovementInput>
+  create: Prisma.XOR<Prisma.PaymentCreateWithoutTreasuryMovementInput, Prisma.PaymentUncheckedCreateWithoutTreasuryMovementInput>
+  where?: Prisma.PaymentWhereInput
+}
+
+export type PaymentUpdateToOneWithWhereWithoutTreasuryMovementInput = {
+  where?: Prisma.PaymentWhereInput
+  data: Prisma.XOR<Prisma.PaymentUpdateWithoutTreasuryMovementInput, Prisma.PaymentUncheckedUpdateWithoutTreasuryMovementInput>
+}
+
+export type PaymentUpdateWithoutTreasuryMovementInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paidAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutPaymentsNestedInput
+  credit?: Prisma.CreditUpdateOneRequiredWithoutPaymentsNestedInput
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutPaymentsNestedInput
+}
+
+export type PaymentUncheckedUpdateWithoutTreasuryMovementInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  creditId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paidAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type PaymentCreateWithoutCreditInput = {
   id?: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -727,6 +827,7 @@ export type PaymentCreateWithoutCreditInput = {
   createdAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutPaymentsInput
   customer: Prisma.CustomerCreateNestedOneWithoutPaymentsInput
+  treasuryMovement?: Prisma.TreasuryMovementCreateNestedOneWithoutCreditPaymentInput
 }
 
 export type PaymentUncheckedCreateWithoutCreditInput = {
@@ -739,6 +840,7 @@ export type PaymentUncheckedCreateWithoutCreditInput = {
   notes?: string | null
   paidAt?: Date | string
   createdAt?: Date | string
+  treasuryMovement?: Prisma.TreasuryMovementUncheckedCreateNestedOneWithoutCreditPaymentInput
 }
 
 export type PaymentCreateOrConnectWithoutCreditInput = {
@@ -789,6 +891,7 @@ export type PaymentUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   credit?: Prisma.CreditUpdateOneRequiredWithoutPaymentsNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutPaymentsNestedInput
+  treasuryMovement?: Prisma.TreasuryMovementUpdateOneWithoutCreditPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateWithoutOrganizationInput = {
@@ -801,6 +904,7 @@ export type PaymentUncheckedUpdateWithoutOrganizationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treasuryMovement?: Prisma.TreasuryMovementUncheckedUpdateOneWithoutCreditPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateManyWithoutOrganizationInput = {
@@ -837,6 +941,7 @@ export type PaymentUpdateWithoutCustomerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutPaymentsNestedInput
   credit?: Prisma.CreditUpdateOneRequiredWithoutPaymentsNestedInput
+  treasuryMovement?: Prisma.TreasuryMovementUpdateOneWithoutCreditPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateWithoutCustomerInput = {
@@ -849,6 +954,7 @@ export type PaymentUncheckedUpdateWithoutCustomerInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treasuryMovement?: Prisma.TreasuryMovementUncheckedUpdateOneWithoutCreditPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateManyWithoutCustomerInput = {
@@ -885,6 +991,7 @@ export type PaymentUpdateWithoutCreditInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutPaymentsNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutPaymentsNestedInput
+  treasuryMovement?: Prisma.TreasuryMovementUpdateOneWithoutCreditPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateWithoutCreditInput = {
@@ -897,6 +1004,7 @@ export type PaymentUncheckedUpdateWithoutCreditInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treasuryMovement?: Prisma.TreasuryMovementUncheckedUpdateOneWithoutCreditPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateManyWithoutCreditInput = {
@@ -927,6 +1035,7 @@ export type PaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   credit?: boolean | Prisma.CreditDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  treasuryMovement?: boolean | Prisma.Payment$treasuryMovementArgs<ExtArgs>
 }, ExtArgs["result"]["payment"]>
 
 export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -979,6 +1088,7 @@ export type PaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   credit?: boolean | Prisma.CreditDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  treasuryMovement?: boolean | Prisma.Payment$treasuryMovementArgs<ExtArgs>
 }
 export type PaymentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -997,6 +1107,7 @@ export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     organization: Prisma.$OrganizationPayload<ExtArgs>
     credit: Prisma.$CreditPayload<ExtArgs>
     customer: Prisma.$CustomerPayload<ExtArgs>
+    treasuryMovement: Prisma.$TreasuryMovementPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1406,6 +1517,7 @@ export interface Prisma__PaymentClient<T, Null = never, ExtArgs extends runtime.
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   credit<T extends Prisma.CreditDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CreditDefaultArgs<ExtArgs>>): Prisma.Prisma__CreditClient<runtime.Types.Result.GetResult<Prisma.$CreditPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   customer<T extends Prisma.CustomerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerDefaultArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  treasuryMovement<T extends Prisma.Payment$treasuryMovementArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payment$treasuryMovementArgs<ExtArgs>>): Prisma.Prisma__TreasuryMovementClient<runtime.Types.Result.GetResult<Prisma.$TreasuryMovementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1838,6 +1950,25 @@ export type PaymentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Payments to delete.
    */
   limit?: number
+}
+
+/**
+ * Payment.treasuryMovement
+ */
+export type Payment$treasuryMovementArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TreasuryMovement
+   */
+  select?: Prisma.TreasuryMovementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TreasuryMovement
+   */
+  omit?: Prisma.TreasuryMovementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TreasuryMovementInclude<ExtArgs> | null
+  where?: Prisma.TreasuryMovementWhereInput
 }
 
 /**

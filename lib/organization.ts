@@ -8,12 +8,41 @@ import { db } from '@/lib/db';
 export async function getCurrentOrganization() {
   const session = await auth();
 
-  if (!session?.user?.organizationId) {
+  if (!session?.user) {
+    return null;
+  }
+
+  let effectiveOrganizationId = session.user.organizationId;
+
+  // Priorizar impersonación activa para super admins
+  if (session.user.isSuperAdmin) {
+    const activeImpersonation = await db.impersonationSession.findFirst({
+      where: {
+        superAdminId: session.user.id,
+        isActive: true,
+        expiresAt: {
+          gt: new Date(),
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      select: {
+        targetOrganizationId: true,
+      },
+    });
+
+    if (activeImpersonation?.targetOrganizationId) {
+      effectiveOrganizationId = activeImpersonation.targetOrganizationId;
+    }
+  }
+
+  if (!effectiveOrganizationId) {
     return null;
   }
 
   const organization = await db.organization.findUnique({
-    where: { id: session.user.organizationId },
+    where: { id: effectiveOrganizationId },
     include: {
       subscription: {
         select: {

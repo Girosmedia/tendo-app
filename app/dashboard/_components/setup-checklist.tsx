@@ -67,7 +67,7 @@ export function SetupChecklist() {
         exit={{ opacity: 0, y: -20 }}
         className="mb-6"
       >
-        <Card className="border-primary/50 bg-gradient-to-br from-primary/5 to-transparent">
+        <Card className="border-primary/50 bg-linear-to-br from-primary/5 to-transparent">
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2">
@@ -105,9 +105,9 @@ export function SetupChecklist() {
               <Link key={task.id} href={task.path}>
                 <div className="group flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-accent">
                   {task.completed ? (
-                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-primary" />
+                    <CheckCircle2 className="h-5 w-5 shrink-0 text-primary" />
                   ) : (
-                    <Circle className="h-5 w-5 flex-shrink-0 text-muted-foreground" />
+                    <Circle className="h-5 w-5 shrink-0 text-muted-foreground" />
                   )}
                   <div className="flex-1">
                     <p className={`text-sm font-medium ${task.completed ? 'text-muted-foreground line-through' : ''}`}>

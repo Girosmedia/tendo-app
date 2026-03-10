@@ -664,6 +664,7 @@ model Document {
   payments       DocumentPayment[]
   credits        Credit[]
   project        Project?       @relation("QuoteToProject")
+  treasuryMovements TreasuryMovement[]
 
   @@unique([organizationId, type, docNumber])
   @@index([organizationId])
@@ -708,6 +709,7 @@ model DocumentItem {
   quantity       Decimal  @db.Decimal(10, 3)  // 3 decimales para granel
   unit           String   @default("unidad")  // unidad, kg, litro, etc
   unitPrice      Decimal  @db.Decimal(10, 2) @map("unit_price")
+  unitCost       Decimal? @db.Decimal(10, 2) @map("unit_cost")
   
   // Descuento e impuestos
   // IMPORTANTE: discount y discountPercent se sincronizan automáticamente en la UI
@@ -950,6 +952,10 @@ enum TreasuryMovementCategory {
   LOAN_IN
   LOAN_OUT
   ACCOUNT_PAYABLE_PAYMENT
+  SALE_INCOME           // Venta POS cobrada (CASH, CARD, TRANSFER, CHECK, MULTI)
+  CREDIT_PAYMENT        // Abono de fiado recibido
+  OPERATIONAL_EXPENSE   // Gasto operacional (reservado para uso futuro)
+  CASH_REGISTER_DIFF    // Diferencia de arqueo al cerrar caja
   OTHER
 }
 
@@ -992,6 +998,9 @@ model TreasuryMovement {
   id               String                   @id @default(cuid())
   organizationId   String                   @map("organization_id")
   accountPayableId String?                  @map("account_payable_id")
+  // FK opcionales de origen — solo uno debe tener valor por registro
+  documentId           String?              @map("document_id")       // venta POS
+  creditPaymentId      String?              @unique @map("credit_payment_id") // abono de fiado
 
   type             TreasuryMovementType
   category         TreasuryMovementCategory @default(OTHER)
@@ -1009,9 +1018,13 @@ model TreasuryMovement {
 
   organization     Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   accountPayable   AccountPayable?          @relation(fields: [accountPayableId], references: [id], onDelete: SetNull)
+  document         Document?                @relation(fields: [documentId], references: [id], onDelete: SetNull)
+  creditPayment    Payment?                 @relation(fields: [creditPaymentId], references: [id], onDelete: SetNull)
 
   @@index([organizationId])
   @@index([accountPayableId])
+  @@index([documentId])
+  // creditPaymentId ya tiene índice implícito por @unique
   @@index([occurredAt])
   @@index([type])
   @@index([category])
@@ -1079,9 +1092,10 @@ model Payment {
   paidAt         DateTime @default(now()) @map("paid_at")  // Fecha del pago
   createdAt      DateTime @default(now()) @map("created_at")
   
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  credit         Credit       @relation(fields: [creditId], references: [id], onDelete: Cascade)
-  customer       Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  organization      Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  credit            Credit           @relation(fields: [creditId], references: [id], onDelete: Cascade)
+  customer          Customer         @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  treasuryMovement  TreasuryMovement?
   
   @@index([organizationId])
   @@index([creditId])

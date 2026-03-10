@@ -1,26 +1,56 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { Prisma } from '@/lib/generated/prisma/client/client';
 import { getCurrentOrganization } from '@/lib/organization';
+import { calculateManagementMetrics, calculateCashFlowMetrics, calculateExposureMetrics } from '@/lib/utils/accounting-engine';
 import {
+  getChileNow,
   getStartOfToday,
   getStartOfYesterday,
+  getStartOfThisWeek,
+  getEndOfThisWeek,
+  getStartOfLastWeek,
+  getEndOfLastWeek,
   getStartOfThisMonth,
   getEndOfThisMonth,
   getStartOfLastMonth,
   getEndOfLastMonth,
+  getStartOfThisQuarter,
+  getEndOfThisQuarter,
+  getStartOfLastQuarter,
+  getEndOfLastQuarter,
   getDaysAgo,
   decimalToNumber,
   calculateGrowth,
 } from '@/lib/utils/dashboard-helpers';
 import { hasModuleAccess } from '@/lib/entitlements';
+import { endOfMonth, startOfMonth, subMonths } from 'date-fns';
+
+type DashboardPeriod = 'today' | 'week' | 'month' | 'last_month' | 'quarter';
+
+function parsePeriod(rawPeriod: string | null): DashboardPeriod {
+  if (
+    rawPeriod === 'today' ||
+    rawPeriod === 'week' ||
+    rawPeriod === 'month' ||
+    rawPeriod === 'last_month' ||
+    rawPeriod === 'quarter'
+  ) {
+    return rawPeriod;
+  }
+
+  return 'month';
+}
 
 /**
  * GET /api/dashboard/kpis
- * Retorna métricas calculadas del dashboard para la organización actual
+ * Retorna métricas calculadas del dashboard para la organización actual.
+ * Query param: period = 'today' | 'week' | 'month' | 'last_month' | 'quarter'
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const period = parsePeriod(new URL(request.url).searchParams.get('period'));
+
   try {
     const session = await auth();
     if (!session?.user) {
@@ -39,6 +69,22 @@ export async function GET() {
       organizationModules: organization.modules,
     }, 'PROJECTS');
 
+    const periodLabelMap: Record<DashboardPeriod, string> = {
+      today: 'Hoy',
+      week: 'Esta semana',
+      month: 'Este mes',
+      last_month: 'Mes anterior',
+      quarter: 'Este trimestre',
+    };
+
+    const compareLabelMap: Record<DashboardPeriod, string> = {
+      today: 'ayer',
+      week: 'semana anterior',
+      month: 'mes anterior',
+      last_month: 'mes previo',
+      quarter: 'trimestre anterior',
+    };
+
     // Fechas de referencia
     const startToday = getStartOfToday();
     const startYesterday = getStartOfYesterday();
@@ -46,8 +92,46 @@ export async function GET() {
     const endThisMonth = getEndOfThisMonth();
     const startLastMonth = getStartOfLastMonth();
     const endLastMonth = getEndOfLastMonth();
+    const startThisWeek = getStartOfThisWeek();
+    const endThisWeek = getEndOfThisWeek();
+    const startLastWeek = getStartOfLastWeek();
+    const endLastWeek = getEndOfLastWeek();
+    const startThisQuarter = getStartOfThisQuarter();
+    const endThisQuarter = getEndOfThisQuarter();
+    const startLastQuarter = getStartOfLastQuarter();
+    const endLastQuarter = getEndOfLastQuarter();
     const last30Days = getDaysAgo(30);
     const last7Days = getDaysAgo(7);
+
+    const now = getChileNow();
+
+    let currentPeriodStart = startThisMonth;
+    let currentPeriodEnd = endThisMonth;
+    let previousPeriodStart = startLastMonth;
+    let previousPeriodEnd = endLastMonth;
+
+    if (period === 'today') {
+      currentPeriodStart = startToday;
+      currentPeriodEnd = now;
+      previousPeriodStart = startYesterday;
+      previousPeriodEnd = startToday;
+    } else if (period === 'week') {
+      currentPeriodStart = startThisWeek;
+      currentPeriodEnd = endThisWeek;
+      previousPeriodStart = startLastWeek;
+      previousPeriodEnd = endLastWeek;
+    } else if (period === 'last_month') {
+      currentPeriodStart = startLastMonth;
+      currentPeriodEnd = endLastMonth;
+      const twoMonthsAgo = subMonths(startLastMonth, 1);
+      previousPeriodStart = startOfMonth(twoMonthsAgo);
+      previousPeriodEnd = endOfMonth(twoMonthsAgo);
+    } else if (period === 'quarter') {
+      currentPeriodStart = startThisQuarter;
+      currentPeriodEnd = endThisQuarter;
+      previousPeriodStart = startLastQuarter;
+      previousPeriodEnd = endLastQuarter;
+    }
 
     // === VENTAS DEL DÍA ===
     const salesTodayData = await db.document.aggregate({
@@ -136,6 +220,167 @@ export async function GET() {
     const salesLastMonthTotal = decimalToNumber(salesLastMonthData._sum.total);
     const salesGrowthVsLastMonth = calculateGrowth(salesThisMonthTotal, salesLastMonthTotal);
 
+    // === VENTAS HISTÓRICAS ===
+    const salesAllTimeData = await db.document.aggregate({
+      where: {
+        organizationId,
+        type: 'SALE',
+        status: 'PAID',
+      },
+      _sum: { total: true },
+      _count: true,
+    });
+
+    const salesAllTimeTotal = decimalToNumber(salesAllTimeData._sum.total);
+    const salesAllTimeCount = salesAllTimeData._count;
+
+    async function getSalesAggregateByRange(startDate: Date, endDate: Date) {
+      const salesData = await db.document.aggregate({
+        where: {
+          organizationId,
+          type: 'SALE',
+          status: 'PAID',
+          issuedAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+        _sum: {
+          subtotal: true,
+          taxAmount: true,
+          discount: true,
+          total: true,
+        },
+        _count: true,
+      });
+
+      const total = decimalToNumber(salesData._sum.total);
+      const tax = decimalToNumber(salesData._sum.taxAmount);
+      const globalDiscount = decimalToNumber(salesData._sum.discount);
+      const net = total - tax;
+      const taxableBaseBeforeGlobalDiscount = net + globalDiscount;
+      const count = salesData._count;
+      const avgTicket = count > 0 ? total / count : 0;
+
+      return {
+        total,
+        tax,
+        net,
+        globalDiscount,
+        taxableBaseBeforeGlobalDiscount,
+        count,
+        avgTicket,
+      };
+    }
+
+    async function getFinancialAggregateByRange(startDate: Date, endDate: Date) {
+      const [salesItems, cardCommissionsData, operationalExpensesData] = await Promise.all([
+        db.documentItem.findMany({
+          where: {
+            document: {
+              organizationId,
+              type: 'SALE',
+              status: 'PAID',
+              issuedAt: {
+                gte: startDate,
+                lte: endDate,
+              },
+            },
+          },
+          select: {
+            quantity: true,
+            // Sprint 2: unitCost = snapshot histórico. Fallback a product.cost para datos pre-backfill.
+            unitCost: true,
+            product: {
+              select: {
+                cost: true,
+              },
+            },
+          },
+        }),
+        db.$queryRaw<Array<{ total: Prisma.Decimal | number | null }>>(Prisma.sql`
+          SELECT COALESCE(SUM(card_commission_amount), 0) AS total
+          FROM documents
+          WHERE organization_id = ${organizationId}
+            AND type = 'SALE'
+            AND status = 'PAID'
+            AND payment_method = 'CARD'
+            AND issued_at >= ${startDate}
+            AND issued_at <= ${endDate}
+        `),
+        db.operationalExpense.aggregate({
+          where: {
+            organizationId,
+            expenseDate: {
+              gte: startDate,
+              lte: endDate,
+            },
+          },
+          _sum: {
+            amount: true,
+          },
+          _count: true,
+        }),
+      ]);
+
+      const salesTotals = await getSalesAggregateByRange(startDate, endDate);
+
+      const salesItemsWithCost = salesItems.filter(
+        (item) => item.unitCost !== null || item.product?.cost !== null
+      );
+      const itemsWithoutCost = salesItems.length - salesItemsWithCost.length;
+
+      const costOfSales = Math.round(
+        salesItems.reduce((sum, item) => {
+          const snapshotCost = decimalToNumber(item.unitCost);
+          const liveCost = decimalToNumber(item.product?.cost);
+          const effectiveCost = snapshotCost > 0 ? snapshotCost : liveCost > 0 ? liveCost : 0;
+          return sum + effectiveCost * decimalToNumber(item.quantity);
+        }, 0)
+      );
+
+      const grossProfit = Math.round(salesTotals.net - costOfSales);
+      const grossMarginPercent = salesTotals.net > 0 ? (grossProfit / salesTotals.net) * 100 : 0;
+
+      const cardCommissions = Math.round(decimalToNumber(cardCommissionsData[0]?.total));
+      const operationalExpenses = Math.round(decimalToNumber(operationalExpensesData._sum.amount));
+      const operationalExpensesCount = operationalExpensesData._count;
+
+      const realProfit = grossProfit - operationalExpenses - cardCommissions;
+      const realMarginPercent = salesTotals.net > 0 ? (realProfit / salesTotals.net) * 100 : 0;
+
+      return {
+        grossSales: Math.round(salesTotals.total),
+        netSales: Math.round(salesTotals.net),
+        taxableBaseBeforeGlobalDiscount: Math.round(salesTotals.taxableBaseBeforeGlobalDiscount),
+        globalDiscount: Math.round(salesTotals.globalDiscount),
+        taxAmount: Math.round(salesTotals.tax),
+        count: salesTotals.count,
+        avgTicket: Math.round(salesTotals.avgTicket),
+        costOfSales,
+        grossProfit,
+        operationalExpenses,
+        cardCommissions,
+        operationalExpensesCount,
+        realProfit,
+        grossMarginPercent: Math.round(grossMarginPercent * 10) / 10,
+        realMarginPercent: Math.round(realMarginPercent * 10) / 10,
+        itemsWithoutCost,
+        costCoveragePercent: salesItems.length > 0
+          ? Math.round((salesItemsWithCost.length / salesItems.length) * 1000) / 10
+          : 100,
+      };
+    }
+
+    const [periodSalesCurrent, periodSalesPrevious, periodFinancialCurrent, periodFinancialPrevious] = await Promise.all([
+      getSalesAggregateByRange(currentPeriodStart, currentPeriodEnd),
+      getSalesAggregateByRange(previousPeriodStart, previousPeriodEnd),
+      getFinancialAggregateByRange(currentPeriodStart, currentPeriodEnd),
+      getFinancialAggregateByRange(previousPeriodStart, previousPeriodEnd),
+    ]);
+
+    const periodGrowthVsPrevious = calculateGrowth(periodSalesCurrent.total, periodSalesPrevious.total);
+
     // === COSTO DE VENTA Y MARGEN (hoy/mes) ===
     const [salesTodayItems, salesThisMonthItems, cardCommissionsTodayData, cardCommissionsThisMonthData] = await Promise.all([
       db.documentItem.findMany({
@@ -149,6 +394,7 @@ export async function GET() {
         },
         select: {
           quantity: true,
+          unitCost: true,
           product: {
             select: {
               cost: true,
@@ -170,6 +416,7 @@ export async function GET() {
         },
         select: {
           quantity: true,
+          unitCost: true,
           product: {
             select: {
               cost: true,
@@ -201,28 +448,34 @@ export async function GET() {
     const cardCommissionsToday = Math.round(decimalToNumber(cardCommissionsTodayData[0]?.total));
     const cardCommissionsThisMonth = Math.round(decimalToNumber(cardCommissionsThisMonthData[0]?.total));
 
-    const salesTodayItemsWithCost = salesTodayItems.filter((item) => item.product?.cost !== null);
+    const salesTodayItemsWithCost = salesTodayItems.filter(
+      (item) => item.unitCost !== null || item.product?.cost !== null
+    );
     const salesTodayItemsWithoutCost = salesTodayItems.length - salesTodayItemsWithCost.length;
 
     const costOfSalesToday = Math.round(
-      salesTodayItemsWithCost.reduce((sum, item) => {
-        const unitCost = decimalToNumber(item.product?.cost);
-        const quantity = decimalToNumber(item.quantity);
-        return sum + unitCost * quantity;
+      salesTodayItems.reduce((sum, item) => {
+        const snapshotCost = decimalToNumber(item.unitCost);
+        const liveCost = decimalToNumber(item.product?.cost);
+        const effectiveCost = snapshotCost > 0 ? snapshotCost : liveCost > 0 ? liveCost : 0;
+        return sum + effectiveCost * decimalToNumber(item.quantity);
       }, 0)
     );
 
     const grossProfitToday = Math.round(salesTodayNet - costOfSalesToday);
     const grossMarginTodayPercent = salesTodayNet > 0 ? (grossProfitToday / salesTodayNet) * 100 : 0;
 
-    const salesThisMonthItemsWithCost = salesThisMonthItems.filter((item) => item.product?.cost !== null);
+    const salesThisMonthItemsWithCost = salesThisMonthItems.filter(
+      (item) => item.unitCost !== null || item.product?.cost !== null
+    );
     const salesThisMonthItemsWithoutCost = salesThisMonthItems.length - salesThisMonthItemsWithCost.length;
 
     const costOfSalesThisMonth = Math.round(
-      salesThisMonthItemsWithCost.reduce((sum, item) => {
-        const unitCost = decimalToNumber(item.product?.cost);
-        const quantity = decimalToNumber(item.quantity);
-        return sum + unitCost * quantity;
+      salesThisMonthItems.reduce((sum, item) => {
+        const snapshotCost = decimalToNumber(item.unitCost);
+        const liveCost = decimalToNumber(item.product?.cost);
+        const effectiveCost = snapshotCost > 0 ? snapshotCost : liveCost > 0 ? liveCost : 0;
+        return sum + effectiveCost * decimalToNumber(item.quantity);
       }, 0)
     );
 
@@ -308,7 +561,7 @@ export async function GET() {
     const accountsReceivableTotal = Math.round(decimalToNumber(accountsReceivableAggregate._sum.currentDebt));
 
     // === COBRANZA Y MOROSIDAD ===
-    const now = new Date();
+    const overdueNow = new Date();
     const [overdueCreditsCount, overdueCreditsAggregate, paymentsThisMonthAggregate] = await Promise.all([
       db.credit.count({
         where: {
@@ -318,7 +571,7 @@ export async function GET() {
             { status: 'OVERDUE' },
             {
               status: 'ACTIVE',
-              dueDate: { lt: now },
+              dueDate: { lt: overdueNow },
             },
           ],
         },
@@ -331,7 +584,7 @@ export async function GET() {
             { status: 'OVERDUE' },
             {
               status: 'ACTIVE',
-              dueDate: { lt: now },
+              dueDate: { lt: overdueNow },
             },
           ],
         },
@@ -453,7 +706,10 @@ export async function GET() {
           organizationId,
           type: 'SALE',
           status: 'PAID',
-          issuedAt: { gte: last30Days },
+          issuedAt: {
+            gte: currentPeriodStart,
+            lte: currentPeriodEnd,
+          },
         },
         productId: { not: null },
       },
@@ -673,7 +929,10 @@ export async function GET() {
         organizationId,
         type: 'SALE',
         status: 'PAID',
-        issuedAt: { gte: last30Days },
+        issuedAt: {
+          gte: currentPeriodStart,
+          lte: currentPeriodEnd,
+        },
       },
       _sum: {
         total: true,
@@ -729,14 +988,17 @@ export async function GET() {
       zimpleActionItems.push('Alta dependencia de efectivo: incentiva medios electrónicos para reducir riesgo.');
     }
 
-    // === VENTAS ÚLTIMOS 7 DÍAS (para gráfico) ===
-    const salesLast7DaysData = await db.document.groupBy({
+    // === VENTAS DEL PERÍODO ACTIVO (para gráfico) ===
+    const salesPeriodData = await db.document.groupBy({
       by: ['issuedAt'],
       where: {
         organizationId,
         type: 'SALE',
         status: 'PAID',
-        issuedAt: { gte: last7Days },
+        issuedAt: {
+          gte: currentPeriodStart,
+          lte: currentPeriodEnd,
+        },
       },
       _sum: {
         total: true,
@@ -744,20 +1006,22 @@ export async function GET() {
     });
 
     // Agrupar por día (ignorando hora)
-    const salesByDay = salesLast7DaysData.reduce((acc, item) => {
+    const salesByDay = salesPeriodData.reduce((acc, item) => {
       const dateKey = item.issuedAt.toISOString().split('T')[0]; // YYYY-MM-DD
       const existing = acc[dateKey] || 0;
       acc[dateKey] = existing + decimalToNumber(item._sum.total);
       return acc;
     }, {} as Record<string, number>);
 
-    // Preparar datos para gráfico (asegurar que todos los días estén presentes)
-    const last7DaysArray: Date[] = [];
-    for (let i = 6; i >= 0; i--) {
-      last7DaysArray.push(getDaysAgo(i));
+    // Preparar datos para gráfico (asegurar que todos los días del período estén presentes)
+    const periodDaysArray: Date[] = [];
+    const cursor = new Date(currentPeriodStart);
+    while (cursor <= currentPeriodEnd) {
+      periodDaysArray.push(new Date(cursor));
+      cursor.setDate(cursor.getDate() + 1);
     }
 
-    const salesChartData = last7DaysArray.map((date) => {
+    const salesChartData = periodDaysArray.map((date) => {
       const dateKey = date.toISOString().split('T')[0];
       return {
         date: dateKey,
@@ -765,14 +1029,17 @@ export async function GET() {
       };
     });
 
-    // === RESULTADO REAL (7 DÍAS) ===
-    const [salesDocsLast7Days, salesItemsLast7Days, operationalExpensesLast7Days, cardCommissionsLast7DaysData] = await Promise.all([
+    // === RESULTADO REAL DEL PERÍODO ACTIVO ===
+    const [salesDocsPeriod, salesItemsPeriod, operationalExpensesPeriod, cardCommissionsPeriodData] = await Promise.all([
       db.document.findMany({
         where: {
           organizationId,
           type: 'SALE',
           status: 'PAID',
-          issuedAt: { gte: last7Days },
+          issuedAt: {
+            gte: currentPeriodStart,
+            lte: currentPeriodEnd,
+          },
         },
         select: {
           issuedAt: true,
@@ -785,7 +1052,10 @@ export async function GET() {
             organizationId,
             type: 'SALE',
             status: 'PAID',
-            issuedAt: { gte: last7Days },
+              issuedAt: {
+                gte: currentPeriodStart,
+                lte: currentPeriodEnd,
+              },
           },
         },
         select: {
@@ -805,7 +1075,10 @@ export async function GET() {
       db.operationalExpense.findMany({
         where: {
           organizationId,
-          expenseDate: { gte: last7Days },
+          expenseDate: {
+            gte: currentPeriodStart,
+            lte: currentPeriodEnd,
+          },
         },
         select: {
           expenseDate: true,
@@ -819,19 +1092,20 @@ export async function GET() {
           AND type = 'SALE'
           AND status = 'PAID'
           AND payment_method = 'CARD'
-          AND issued_at >= ${last7Days}
+          AND issued_at >= ${currentPeriodStart}
+          AND issued_at <= ${currentPeriodEnd}
         GROUP BY DATE(issued_at)
       `),
     ]);
 
     const netSalesByDay: Record<string, number> = {};
-    for (const document of salesDocsLast7Days) {
+    for (const document of salesDocsPeriod) {
       const dateKey = document.issuedAt.toISOString().split('T')[0];
       netSalesByDay[dateKey] = (netSalesByDay[dateKey] || 0) + decimalToNumber(document.subtotal);
     }
 
     const costByDay: Record<string, number> = {};
-    for (const item of salesItemsLast7Days) {
+    for (const item of salesItemsPeriod) {
       const dateKey = item.document.issuedAt.toISOString().split('T')[0];
       const quantity = decimalToNumber(item.quantity);
       const unitCost = decimalToNumber(item.product?.cost);
@@ -839,19 +1113,19 @@ export async function GET() {
     }
 
     const operationalExpensesByDay: Record<string, number> = {};
-    for (const expense of operationalExpensesLast7Days) {
+    for (const expense of operationalExpensesPeriod) {
       const dateKey = expense.expenseDate.toISOString().split('T')[0];
       operationalExpensesByDay[dateKey] =
         (operationalExpensesByDay[dateKey] || 0) + decimalToNumber(expense.amount);
     }
 
     const cardCommissionsByDay: Record<string, number> = {};
-    for (const row of cardCommissionsLast7DaysData) {
+    for (const row of cardCommissionsPeriodData) {
       const dateKey = row.date.toISOString().split('T')[0];
       cardCommissionsByDay[dateKey] = decimalToNumber(row.total);
     }
 
-    const realResultChartData = last7DaysArray.map((date) => {
+    const realResultChartData = periodDaysArray.map((date) => {
       const dateKey = date.toISOString().split('T')[0];
       const netSales = Math.round(netSalesByDay[dateKey] || 0);
       const costOfSales = Math.round(costByDay[dateKey] || 0);
@@ -872,6 +1146,14 @@ export async function GET() {
         realMarginPercent: Math.round(realMarginPercent * 10) / 10,
       };
     });
+
+    // === MOTORES CONTABLES DUALES (Sprint 2) ===
+    // Se ejecutan en paralelo con el período activo seleccionado por el usuario.
+    const [periodManagementMetrics, periodCashFlowMetrics, periodExposureMetrics] = await Promise.all([
+      calculateManagementMetrics(organizationId, currentPeriodStart, currentPeriodEnd),
+      calculateCashFlowMetrics(organizationId, currentPeriodStart, currentPeriodEnd),
+      calculateExposureMetrics(organizationId, currentPeriodStart, currentPeriodEnd),
+    ]);
 
     // === RESPUESTA FINAL ===
     return NextResponse.json({
@@ -900,7 +1182,51 @@ export async function GET() {
       salesLastMonth: {
         total: Math.round(salesLastMonthTotal),
       },
+      salesAllTime: {
+        total: Math.round(salesAllTimeTotal),
+        count: salesAllTimeCount,
+      },
       salesGrowthVsLastMonth: Math.round(salesGrowthVsLastMonth * 10) / 10,
+
+      periodContext: {
+        key: period,
+        label: periodLabelMap[period],
+        compareLabel: compareLabelMap[period],
+        currentRange: {
+          start: currentPeriodStart.toISOString(),
+          end: currentPeriodEnd.toISOString(),
+        },
+        previousRange: {
+          start: previousPeriodStart.toISOString(),
+          end: previousPeriodEnd.toISOString(),
+        },
+      },
+
+      periodSummary: {
+        current: {
+          sales: {
+            total: Math.round(periodSalesCurrent.total),
+            net: Math.round(periodSalesCurrent.net),
+            tax: Math.round(periodSalesCurrent.tax),
+            discount: Math.round(periodSalesCurrent.globalDiscount),
+            count: periodSalesCurrent.count,
+            avgTicket: Math.round(periodSalesCurrent.avgTicket),
+          },
+          financials: periodFinancialCurrent,
+        },
+        previous: {
+          sales: {
+            total: Math.round(periodSalesPrevious.total),
+            net: Math.round(periodSalesPrevious.net),
+            tax: Math.round(periodSalesPrevious.tax),
+            discount: Math.round(periodSalesPrevious.globalDiscount),
+            count: periodSalesPrevious.count,
+            avgTicket: Math.round(periodSalesPrevious.avgTicket),
+          },
+          financials: periodFinancialPrevious,
+        },
+        growthVsPrevious: Math.round(periodGrowthVsPrevious * 10) / 10,
+      },
 
       // Clientes
       totalCustomers,
@@ -1001,6 +1327,21 @@ export async function GET() {
       // Datos para gráficos
       salesChartData,
       realResultChartData,
+
+      // ─── Motores Contables Duales (Sprint 2) ──────────────────────────────
+      // managementMetrics: Rentabilidad real (Devengado). Márgenes y COGS exactos.
+      // cashFlowMetrics: Flujo de Caja (Percibido). Liquidez real 14 D3/D8.
+      // Ambos aplican al período activo seleccionado (hoy / semana / mes / trimestre).
+      managementMetrics: periodManagementMetrics,
+      cashFlowMetrics: periodCashFlowMetrics,
+
+      // ─── Motor 3: Exposición de Cartera (Sprint 6) ───────────────────────────
+      // receivables: CxC activa (total, vencida, por vencer, eficiencia, top deudores)
+      // payables:   CxP pendiente (total, vencida, por vencer, top proveedores)
+      // treasury:   Saldo estimado histórico (INFLOW – OUTFLOW en Tesorería)
+      receivables: periodExposureMetrics.receivables,
+      payables: periodExposureMetrics.payables,
+      treasury: periodExposureMetrics.treasury,
 
       // Módulos y métricas de proyectos
       hasProjectsModule,

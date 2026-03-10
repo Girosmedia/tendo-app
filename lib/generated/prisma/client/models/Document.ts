@@ -426,6 +426,7 @@ export type DocumentWhereInput = {
   payments?: Prisma.DocumentPaymentListRelationFilter
   credits?: Prisma.CreditListRelationFilter
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  treasuryMovements?: Prisma.TreasuryMovementListRelationFilter
 }
 
 export type DocumentOrderByWithRelationInput = {
@@ -461,6 +462,7 @@ export type DocumentOrderByWithRelationInput = {
   payments?: Prisma.DocumentPaymentOrderByRelationAggregateInput
   credits?: Prisma.CreditOrderByRelationAggregateInput
   project?: Prisma.ProjectOrderByWithRelationInput
+  treasuryMovements?: Prisma.TreasuryMovementOrderByRelationAggregateInput
 }
 
 export type DocumentWhereUniqueInput = Prisma.AtLeast<{
@@ -500,6 +502,7 @@ export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   payments?: Prisma.DocumentPaymentListRelationFilter
   credits?: Prisma.CreditListRelationFilter
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  treasuryMovements?: Prisma.TreasuryMovementListRelationFilter
 }, "id" | "organizationId_type_docNumber">
 
 export type DocumentOrderByWithAggregationInput = {
@@ -599,6 +602,7 @@ export type DocumentCreateInput = {
   payments?: Prisma.DocumentPaymentCreateNestedManyWithoutDocumentInput
   credits?: Prisma.CreditCreateNestedManyWithoutDocumentInput
   project?: Prisma.ProjectCreateNestedOneWithoutQuoteInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateInput = {
@@ -632,6 +636,7 @@ export type DocumentUncheckedCreateInput = {
   payments?: Prisma.DocumentPaymentUncheckedCreateNestedManyWithoutDocumentInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutDocumentInput
   project?: Prisma.ProjectUncheckedCreateNestedOneWithoutQuoteInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUpdateInput = {
@@ -665,6 +670,7 @@ export type DocumentUpdateInput = {
   payments?: Prisma.DocumentPaymentUpdateManyWithoutDocumentNestedInput
   credits?: Prisma.CreditUpdateManyWithoutDocumentNestedInput
   project?: Prisma.ProjectUpdateOneWithoutQuoteNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateInput = {
@@ -698,6 +704,7 @@ export type DocumentUncheckedUpdateInput = {
   payments?: Prisma.DocumentPaymentUncheckedUpdateManyWithoutDocumentNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutDocumentNestedInput
   project?: Prisma.ProjectUncheckedUpdateOneWithoutQuoteNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentCreateManyInput = {
@@ -1072,6 +1079,22 @@ export type DocumentUpdateOneWithoutProjectNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentUpdateToOneWithWhereWithoutProjectInput, Prisma.DocumentUpdateWithoutProjectInput>, Prisma.DocumentUncheckedUpdateWithoutProjectInput>
 }
 
+export type DocumentCreateNestedOneWithoutTreasuryMovementsInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutTreasuryMovementsInput, Prisma.DocumentUncheckedCreateWithoutTreasuryMovementsInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutTreasuryMovementsInput
+  connect?: Prisma.DocumentWhereUniqueInput
+}
+
+export type DocumentUpdateOneWithoutTreasuryMovementsNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutTreasuryMovementsInput, Prisma.DocumentUncheckedCreateWithoutTreasuryMovementsInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutTreasuryMovementsInput
+  upsert?: Prisma.DocumentUpsertWithoutTreasuryMovementsInput
+  disconnect?: Prisma.DocumentWhereInput | boolean
+  delete?: Prisma.DocumentWhereInput | boolean
+  connect?: Prisma.DocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentUpdateToOneWithWhereWithoutTreasuryMovementsInput, Prisma.DocumentUpdateWithoutTreasuryMovementsInput>, Prisma.DocumentUncheckedUpdateWithoutTreasuryMovementsInput>
+}
+
 export type DocumentCreateNestedOneWithoutCreditsInput = {
   create?: Prisma.XOR<Prisma.DocumentCreateWithoutCreditsInput, Prisma.DocumentUncheckedCreateWithoutCreditsInput>
   connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutCreditsInput
@@ -1118,6 +1141,7 @@ export type DocumentCreateWithoutOrganizationInput = {
   payments?: Prisma.DocumentPaymentCreateNestedManyWithoutDocumentInput
   credits?: Prisma.CreditCreateNestedManyWithoutDocumentInput
   project?: Prisma.ProjectCreateNestedOneWithoutQuoteInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutOrganizationInput = {
@@ -1150,6 +1174,7 @@ export type DocumentUncheckedCreateWithoutOrganizationInput = {
   payments?: Prisma.DocumentPaymentUncheckedCreateNestedManyWithoutDocumentInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutDocumentInput
   project?: Prisma.ProjectUncheckedCreateNestedOneWithoutQuoteInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutOrganizationInput = {
@@ -1240,6 +1265,7 @@ export type DocumentCreateWithoutCustomerInput = {
   payments?: Prisma.DocumentPaymentCreateNestedManyWithoutDocumentInput
   credits?: Prisma.CreditCreateNestedManyWithoutDocumentInput
   project?: Prisma.ProjectCreateNestedOneWithoutQuoteInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutCustomerInput = {
@@ -1272,6 +1298,7 @@ export type DocumentUncheckedCreateWithoutCustomerInput = {
   payments?: Prisma.DocumentPaymentUncheckedCreateNestedManyWithoutDocumentInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutDocumentInput
   project?: Prisma.ProjectUncheckedCreateNestedOneWithoutQuoteInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutCustomerInput = {
@@ -1330,6 +1357,7 @@ export type DocumentCreateWithoutPaymentsInput = {
   items?: Prisma.DocumentItemCreateNestedManyWithoutDocumentInput
   credits?: Prisma.CreditCreateNestedManyWithoutDocumentInput
   project?: Prisma.ProjectCreateNestedOneWithoutQuoteInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutPaymentsInput = {
@@ -1362,6 +1390,7 @@ export type DocumentUncheckedCreateWithoutPaymentsInput = {
   items?: Prisma.DocumentItemUncheckedCreateNestedManyWithoutDocumentInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutDocumentInput
   project?: Prisma.ProjectUncheckedCreateNestedOneWithoutQuoteInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutPaymentsInput = {
@@ -1410,6 +1439,7 @@ export type DocumentUpdateWithoutPaymentsInput = {
   items?: Prisma.DocumentItemUpdateManyWithoutDocumentNestedInput
   credits?: Prisma.CreditUpdateManyWithoutDocumentNestedInput
   project?: Prisma.ProjectUpdateOneWithoutQuoteNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutPaymentsInput = {
@@ -1442,6 +1472,7 @@ export type DocumentUncheckedUpdateWithoutPaymentsInput = {
   items?: Prisma.DocumentItemUncheckedUpdateManyWithoutDocumentNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutDocumentNestedInput
   project?: Prisma.ProjectUncheckedUpdateOneWithoutQuoteNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentCreateWithoutItemsInput = {
@@ -1474,6 +1505,7 @@ export type DocumentCreateWithoutItemsInput = {
   payments?: Prisma.DocumentPaymentCreateNestedManyWithoutDocumentInput
   credits?: Prisma.CreditCreateNestedManyWithoutDocumentInput
   project?: Prisma.ProjectCreateNestedOneWithoutQuoteInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutItemsInput = {
@@ -1506,6 +1538,7 @@ export type DocumentUncheckedCreateWithoutItemsInput = {
   payments?: Prisma.DocumentPaymentUncheckedCreateNestedManyWithoutDocumentInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutDocumentInput
   project?: Prisma.ProjectUncheckedCreateNestedOneWithoutQuoteInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutItemsInput = {
@@ -1554,6 +1587,7 @@ export type DocumentUpdateWithoutItemsInput = {
   payments?: Prisma.DocumentPaymentUpdateManyWithoutDocumentNestedInput
   credits?: Prisma.CreditUpdateManyWithoutDocumentNestedInput
   project?: Prisma.ProjectUpdateOneWithoutQuoteNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutItemsInput = {
@@ -1586,6 +1620,7 @@ export type DocumentUncheckedUpdateWithoutItemsInput = {
   payments?: Prisma.DocumentPaymentUncheckedUpdateManyWithoutDocumentNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutDocumentNestedInput
   project?: Prisma.ProjectUncheckedUpdateOneWithoutQuoteNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentCreateWithoutProjectInput = {
@@ -1618,6 +1653,7 @@ export type DocumentCreateWithoutProjectInput = {
   items?: Prisma.DocumentItemCreateNestedManyWithoutDocumentInput
   payments?: Prisma.DocumentPaymentCreateNestedManyWithoutDocumentInput
   credits?: Prisma.CreditCreateNestedManyWithoutDocumentInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutProjectInput = {
@@ -1650,6 +1686,7 @@ export type DocumentUncheckedCreateWithoutProjectInput = {
   items?: Prisma.DocumentItemUncheckedCreateNestedManyWithoutDocumentInput
   payments?: Prisma.DocumentPaymentUncheckedCreateNestedManyWithoutDocumentInput
   credits?: Prisma.CreditUncheckedCreateNestedManyWithoutDocumentInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutProjectInput = {
@@ -1698,6 +1735,7 @@ export type DocumentUpdateWithoutProjectInput = {
   items?: Prisma.DocumentItemUpdateManyWithoutDocumentNestedInput
   payments?: Prisma.DocumentPaymentUpdateManyWithoutDocumentNestedInput
   credits?: Prisma.CreditUpdateManyWithoutDocumentNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutProjectInput = {
@@ -1730,6 +1768,155 @@ export type DocumentUncheckedUpdateWithoutProjectInput = {
   items?: Prisma.DocumentItemUncheckedUpdateManyWithoutDocumentNestedInput
   payments?: Prisma.DocumentPaymentUncheckedUpdateManyWithoutDocumentNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutDocumentNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutDocumentNestedInput
+}
+
+export type DocumentCreateWithoutTreasuryMovementsInput = {
+  id?: string
+  type?: $Enums.DocumentType
+  status?: $Enums.DocumentStatus
+  docNumber: number
+  docPrefix?: string | null
+  issuedAt?: Date | string
+  dueAt?: Date | string | null
+  paidAt?: Date | string | null
+  paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cashReceived?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cashChange?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  notes?: string | null
+  createdBy: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutDocumentsInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutDocumentsInput
+  items?: Prisma.DocumentItemCreateNestedManyWithoutDocumentInput
+  payments?: Prisma.DocumentPaymentCreateNestedManyWithoutDocumentInput
+  credits?: Prisma.CreditCreateNestedManyWithoutDocumentInput
+  project?: Prisma.ProjectCreateNestedOneWithoutQuoteInput
+}
+
+export type DocumentUncheckedCreateWithoutTreasuryMovementsInput = {
+  id?: string
+  organizationId: string
+  customerId?: string | null
+  type?: $Enums.DocumentType
+  status?: $Enums.DocumentStatus
+  docNumber: number
+  docPrefix?: string | null
+  issuedAt?: Date | string
+  dueAt?: Date | string | null
+  paidAt?: Date | string | null
+  paymentMethod?: $Enums.PaymentMethod
+  cardType?: $Enums.CardType | null
+  cardProvider?: $Enums.CardProvider | null
+  cardCommissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cashReceived?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cashChange?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  notes?: string | null
+  createdBy: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.DocumentItemUncheckedCreateNestedManyWithoutDocumentInput
+  payments?: Prisma.DocumentPaymentUncheckedCreateNestedManyWithoutDocumentInput
+  credits?: Prisma.CreditUncheckedCreateNestedManyWithoutDocumentInput
+  project?: Prisma.ProjectUncheckedCreateNestedOneWithoutQuoteInput
+}
+
+export type DocumentCreateOrConnectWithoutTreasuryMovementsInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutTreasuryMovementsInput, Prisma.DocumentUncheckedCreateWithoutTreasuryMovementsInput>
+}
+
+export type DocumentUpsertWithoutTreasuryMovementsInput = {
+  update: Prisma.XOR<Prisma.DocumentUpdateWithoutTreasuryMovementsInput, Prisma.DocumentUncheckedUpdateWithoutTreasuryMovementsInput>
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutTreasuryMovementsInput, Prisma.DocumentUncheckedCreateWithoutTreasuryMovementsInput>
+  where?: Prisma.DocumentWhereInput
+}
+
+export type DocumentUpdateToOneWithWhereWithoutTreasuryMovementsInput = {
+  where?: Prisma.DocumentWhereInput
+  data: Prisma.XOR<Prisma.DocumentUpdateWithoutTreasuryMovementsInput, Prisma.DocumentUncheckedUpdateWithoutTreasuryMovementsInput>
+}
+
+export type DocumentUpdateWithoutTreasuryMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+  docNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  docPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cashReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cashChange?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutDocumentsNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutDocumentsNestedInput
+  items?: Prisma.DocumentItemUpdateManyWithoutDocumentNestedInput
+  payments?: Prisma.DocumentPaymentUpdateManyWithoutDocumentNestedInput
+  credits?: Prisma.CreditUpdateManyWithoutDocumentNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutQuoteNestedInput
+}
+
+export type DocumentUncheckedUpdateWithoutTreasuryMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+  docNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  docPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  cardType?: Prisma.NullableEnumCardTypeFieldUpdateOperationsInput | $Enums.CardType | null
+  cardProvider?: Prisma.NullableEnumCardProviderFieldUpdateOperationsInput | $Enums.CardProvider | null
+  cardCommissionRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cardCommissionAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cashReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cashChange?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.DocumentItemUncheckedUpdateManyWithoutDocumentNestedInput
+  payments?: Prisma.DocumentPaymentUncheckedUpdateManyWithoutDocumentNestedInput
+  credits?: Prisma.CreditUncheckedUpdateManyWithoutDocumentNestedInput
+  project?: Prisma.ProjectUncheckedUpdateOneWithoutQuoteNestedInput
 }
 
 export type DocumentCreateWithoutCreditsInput = {
@@ -1762,6 +1949,7 @@ export type DocumentCreateWithoutCreditsInput = {
   items?: Prisma.DocumentItemCreateNestedManyWithoutDocumentInput
   payments?: Prisma.DocumentPaymentCreateNestedManyWithoutDocumentInput
   project?: Prisma.ProjectCreateNestedOneWithoutQuoteInput
+  treasuryMovements?: Prisma.TreasuryMovementCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutCreditsInput = {
@@ -1794,6 +1982,7 @@ export type DocumentUncheckedCreateWithoutCreditsInput = {
   items?: Prisma.DocumentItemUncheckedCreateNestedManyWithoutDocumentInput
   payments?: Prisma.DocumentPaymentUncheckedCreateNestedManyWithoutDocumentInput
   project?: Prisma.ProjectUncheckedCreateNestedOneWithoutQuoteInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutCreditsInput = {
@@ -1842,6 +2031,7 @@ export type DocumentUpdateWithoutCreditsInput = {
   items?: Prisma.DocumentItemUpdateManyWithoutDocumentNestedInput
   payments?: Prisma.DocumentPaymentUpdateManyWithoutDocumentNestedInput
   project?: Prisma.ProjectUpdateOneWithoutQuoteNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutCreditsInput = {
@@ -1874,6 +2064,7 @@ export type DocumentUncheckedUpdateWithoutCreditsInput = {
   items?: Prisma.DocumentItemUncheckedUpdateManyWithoutDocumentNestedInput
   payments?: Prisma.DocumentPaymentUncheckedUpdateManyWithoutDocumentNestedInput
   project?: Prisma.ProjectUncheckedUpdateOneWithoutQuoteNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentCreateManyOrganizationInput = {
@@ -1934,6 +2125,7 @@ export type DocumentUpdateWithoutOrganizationInput = {
   payments?: Prisma.DocumentPaymentUpdateManyWithoutDocumentNestedInput
   credits?: Prisma.CreditUpdateManyWithoutDocumentNestedInput
   project?: Prisma.ProjectUpdateOneWithoutQuoteNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutOrganizationInput = {
@@ -1966,6 +2158,7 @@ export type DocumentUncheckedUpdateWithoutOrganizationInput = {
   payments?: Prisma.DocumentPaymentUncheckedUpdateManyWithoutDocumentNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutDocumentNestedInput
   project?: Prisma.ProjectUncheckedUpdateOneWithoutQuoteNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateManyWithoutOrganizationInput = {
@@ -2054,6 +2247,7 @@ export type DocumentUpdateWithoutCustomerInput = {
   payments?: Prisma.DocumentPaymentUpdateManyWithoutDocumentNestedInput
   credits?: Prisma.CreditUpdateManyWithoutDocumentNestedInput
   project?: Prisma.ProjectUpdateOneWithoutQuoteNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutCustomerInput = {
@@ -2086,6 +2280,7 @@ export type DocumentUncheckedUpdateWithoutCustomerInput = {
   payments?: Prisma.DocumentPaymentUncheckedUpdateManyWithoutDocumentNestedInput
   credits?: Prisma.CreditUncheckedUpdateManyWithoutDocumentNestedInput
   project?: Prisma.ProjectUncheckedUpdateOneWithoutQuoteNestedInput
+  treasuryMovements?: Prisma.TreasuryMovementUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateManyWithoutCustomerInput = {
@@ -2125,12 +2320,14 @@ export type DocumentCountOutputType = {
   items: number
   payments: number
   credits: number
+  treasuryMovements: number
 }
 
 export type DocumentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   items?: boolean | DocumentCountOutputTypeCountItemsArgs
   payments?: boolean | DocumentCountOutputTypeCountPaymentsArgs
   credits?: boolean | DocumentCountOutputTypeCountCreditsArgs
+  treasuryMovements?: boolean | DocumentCountOutputTypeCountTreasuryMovementsArgs
 }
 
 /**
@@ -2162,6 +2359,13 @@ export type DocumentCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Typ
  */
 export type DocumentCountOutputTypeCountCreditsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CreditWhereInput
+}
+
+/**
+ * DocumentCountOutputType without action
+ */
+export type DocumentCountOutputTypeCountTreasuryMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TreasuryMovementWhereInput
 }
 
 
@@ -2198,6 +2402,7 @@ export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   payments?: boolean | Prisma.Document$paymentsArgs<ExtArgs>
   credits?: boolean | Prisma.Document$creditsArgs<ExtArgs>
   project?: boolean | Prisma.Document$projectArgs<ExtArgs>
+  treasuryMovements?: boolean | Prisma.Document$treasuryMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.DocumentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["document"]>
 
@@ -2300,6 +2505,7 @@ export type DocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   payments?: boolean | Prisma.Document$paymentsArgs<ExtArgs>
   credits?: boolean | Prisma.Document$creditsArgs<ExtArgs>
   project?: boolean | Prisma.Document$projectArgs<ExtArgs>
+  treasuryMovements?: boolean | Prisma.Document$treasuryMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.DocumentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DocumentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2320,6 +2526,7 @@ export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     payments: Prisma.$DocumentPaymentPayload<ExtArgs>[]
     credits: Prisma.$CreditPayload<ExtArgs>[]
     project: Prisma.$ProjectPayload<ExtArgs> | null
+    treasuryMovements: Prisma.$TreasuryMovementPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2748,6 +2955,7 @@ export interface Prisma__DocumentClient<T, Null = never, ExtArgs extends runtime
   payments<T extends Prisma.Document$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   credits<T extends Prisma.Document$creditsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$creditsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CreditPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   project<T extends Prisma.Document$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  treasuryMovements<T extends Prisma.Document$treasuryMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$treasuryMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TreasuryMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3306,6 +3514,30 @@ export type Document$projectArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   include?: Prisma.ProjectInclude<ExtArgs> | null
   where?: Prisma.ProjectWhereInput
+}
+
+/**
+ * Document.treasuryMovements
+ */
+export type Document$treasuryMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TreasuryMovement
+   */
+  select?: Prisma.TreasuryMovementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TreasuryMovement
+   */
+  omit?: Prisma.TreasuryMovementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TreasuryMovementInclude<ExtArgs> | null
+  where?: Prisma.TreasuryMovementWhereInput
+  orderBy?: Prisma.TreasuryMovementOrderByWithRelationInput | Prisma.TreasuryMovementOrderByWithRelationInput[]
+  cursor?: Prisma.TreasuryMovementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TreasuryMovementScalarFieldEnum | Prisma.TreasuryMovementScalarFieldEnum[]
 }
 
 /**

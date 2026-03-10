@@ -16,6 +16,9 @@
     "smoke:api": "tsx scripts/smoke-api.ts",
     "smoke:security": "tsx scripts/smoke-security.ts",
     "seed": "tsx prisma/seed.ts",
+    "backfill:unit-costs": "tsx scripts/backfill-unit-costs.ts",
+    "backfill:document-payments": "tsx scripts/backfill-document-payments.ts",
+    "reconcile:accounting": "tsx scripts/reconcile-accounting.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {

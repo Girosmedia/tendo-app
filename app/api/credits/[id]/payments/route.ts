@@ -130,6 +130,26 @@ export async function POST(req: NextRequest, context: RouteContext) {
         },
       });
 
+      // Registrar ingreso automático en tesorería por abono de crédito
+      const treasurySource =
+        paymentMethod === 'CASH' ? 'CASH' :
+        paymentMethod === 'TRANSFER' ? 'TRANSFER' :
+        paymentMethod === 'CARD' || paymentMethod === 'CHECK' ? 'BANK' :
+        'OTHER';
+      await tx.treasuryMovement.create({
+        data: {
+          organizationId,
+          type: 'INFLOW',
+          category: 'CREDIT_PAYMENT',
+          source: treasurySource,
+          title: `Abono crédito · ${credit.customer.name}`,
+          amount,
+          occurredAt: paidAt ? new Date(paidAt) : new Date(),
+          createdBy: session.user.id,
+          creditPaymentId: newPayment.id,
+        },
+      });
+
       return newPayment;
     });
 

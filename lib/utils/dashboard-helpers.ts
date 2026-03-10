@@ -1,4 +1,19 @@
-import { startOfDay, startOfMonth, endOfMonth, subMonths, subDays, format } from 'date-fns';
+import {
+  startOfDay,
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  startOfQuarter,
+  endOfQuarter,
+  subMonths,
+  subQuarters,
+  subWeeks,
+  subDays,
+  format,
+  isSameMonth,
+} from 'date-fns';
+import { es } from 'date-fns/locale';
 import { toZonedTime } from 'date-fns-tz';
 
 /**
@@ -13,6 +28,11 @@ export function getStartOfToday(): Date {
   const now = new Date();
   const zonedNow = toZonedTime(now, CHILE_TIMEZONE);
   return startOfDay(zonedNow);
+}
+
+export function getChileNow(): Date {
+  const now = new Date();
+  return toZonedTime(now, CHILE_TIMEZONE);
 }
 
 /**
@@ -70,6 +90,46 @@ export function getDaysAgo(days: number): Date {
   const now = new Date();
   const zonedNow = toZonedTime(now, CHILE_TIMEZONE);
   return subDays(zonedNow, days);
+}
+
+export function getStartOfThisWeek(): Date {
+  const zonedNow = getChileNow();
+  return startOfWeek(zonedNow, { weekStartsOn: 1 });
+}
+
+export function getEndOfThisWeek(): Date {
+  const zonedNow = getChileNow();
+  return endOfWeek(zonedNow, { weekStartsOn: 1 });
+}
+
+export function getStartOfLastWeek(): Date {
+  const zonedNow = subWeeks(getChileNow(), 1);
+  return startOfWeek(zonedNow, { weekStartsOn: 1 });
+}
+
+export function getEndOfLastWeek(): Date {
+  const zonedNow = subWeeks(getChileNow(), 1);
+  return endOfWeek(zonedNow, { weekStartsOn: 1 });
+}
+
+export function getStartOfThisQuarter(): Date {
+  const zonedNow = getChileNow();
+  return startOfQuarter(zonedNow);
+}
+
+export function getEndOfThisQuarter(): Date {
+  const zonedNow = getChileNow();
+  return endOfQuarter(zonedNow);
+}
+
+export function getStartOfLastQuarter(): Date {
+  const zonedNow = subQuarters(getChileNow(), 1);
+  return startOfQuarter(zonedNow);
+}
+
+export function getEndOfLastQuarter(): Date {
+  const zonedNow = subQuarters(getChileNow(), 1);
+  return endOfQuarter(zonedNow);
 }
 
 /**
@@ -138,4 +198,23 @@ export function getLast7Days(): Date[] {
 export function decimalToNumber(value: any): number {
   if (value === null || value === undefined) return 0;
   return Number(value);
+}
+
+/**
+ * Formatea un rango de fechas del período para mostrar en la UI.
+ * Usa la zona horaria de Chile para representar correctamente los límites de día/semana.
+ * Ej: "9 - 15 mar"  o  "28 feb - 6 mar" si cruza meses.
+ *
+ * @param startIso ISO string del inicio del período (UTC)
+ * @param endIso   ISO string del fin del período (UTC)
+ */
+export function formatDateRange(startIso: string, endIso: string): string {
+  const s = toZonedTime(new Date(startIso), CHILE_TIMEZONE);
+  const e = toZonedTime(new Date(endIso), CHILE_TIMEZONE);
+  if (isSameMonth(s, e)) {
+    // mismo mes → "9 - 15 mar"
+    return `${format(s, 'd', { locale: es })} - ${format(e, 'd MMM', { locale: es })}`;
+  }
+  // cruza meses → "28 feb - 6 mar"
+  return `${format(s, 'd MMM', { locale: es })} - ${format(e, 'd MMM', { locale: es })}`;
 }

@@ -83,11 +83,22 @@ export async function POST(req: Request) {
       },
     })
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       sessionId: impersonationSession.id,
       redirectTo: '/dashboard',
     })
+
+    response.cookies.set('impersonation_session', impersonationSession.id, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 30 * 60, // 30 minutos
+      expires: expiresAt,
+    })
+
+    return response
   } catch (error) {
     console.error('Error al iniciar impersonation:', error)
     return NextResponse.json(

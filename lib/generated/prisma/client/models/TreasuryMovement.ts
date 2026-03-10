@@ -38,6 +38,8 @@ export type TreasuryMovementMinAggregateOutputType = {
   id: string | null
   organizationId: string | null
   accountPayableId: string | null
+  documentId: string | null
+  creditPaymentId: string | null
   type: $Enums.TreasuryMovementType | null
   category: $Enums.TreasuryMovementCategory | null
   source: $Enums.TreasuryMovementSource | null
@@ -55,6 +57,8 @@ export type TreasuryMovementMaxAggregateOutputType = {
   id: string | null
   organizationId: string | null
   accountPayableId: string | null
+  documentId: string | null
+  creditPaymentId: string | null
   type: $Enums.TreasuryMovementType | null
   category: $Enums.TreasuryMovementCategory | null
   source: $Enums.TreasuryMovementSource | null
@@ -72,6 +76,8 @@ export type TreasuryMovementCountAggregateOutputType = {
   id: number
   organizationId: number
   accountPayableId: number
+  documentId: number
+  creditPaymentId: number
   type: number
   category: number
   source: number
@@ -99,6 +105,8 @@ export type TreasuryMovementMinAggregateInputType = {
   id?: true
   organizationId?: true
   accountPayableId?: true
+  documentId?: true
+  creditPaymentId?: true
   type?: true
   category?: true
   source?: true
@@ -116,6 +124,8 @@ export type TreasuryMovementMaxAggregateInputType = {
   id?: true
   organizationId?: true
   accountPayableId?: true
+  documentId?: true
+  creditPaymentId?: true
   type?: true
   category?: true
   source?: true
@@ -133,6 +143,8 @@ export type TreasuryMovementCountAggregateInputType = {
   id?: true
   organizationId?: true
   accountPayableId?: true
+  documentId?: true
+  creditPaymentId?: true
   type?: true
   category?: true
   source?: true
@@ -237,6 +249,8 @@ export type TreasuryMovementGroupByOutputType = {
   id: string
   organizationId: string
   accountPayableId: string | null
+  documentId: string | null
+  creditPaymentId: string | null
   type: $Enums.TreasuryMovementType
   category: $Enums.TreasuryMovementCategory
   source: $Enums.TreasuryMovementSource
@@ -277,6 +291,8 @@ export type TreasuryMovementWhereInput = {
   id?: Prisma.StringFilter<"TreasuryMovement"> | string
   organizationId?: Prisma.StringFilter<"TreasuryMovement"> | string
   accountPayableId?: Prisma.StringNullableFilter<"TreasuryMovement"> | string | null
+  documentId?: Prisma.StringNullableFilter<"TreasuryMovement"> | string | null
+  creditPaymentId?: Prisma.StringNullableFilter<"TreasuryMovement"> | string | null
   type?: Prisma.EnumTreasuryMovementTypeFilter<"TreasuryMovement"> | $Enums.TreasuryMovementType
   category?: Prisma.EnumTreasuryMovementCategoryFilter<"TreasuryMovement"> | $Enums.TreasuryMovementCategory
   source?: Prisma.EnumTreasuryMovementSourceFilter<"TreasuryMovement"> | $Enums.TreasuryMovementSource
@@ -290,12 +306,16 @@ export type TreasuryMovementWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"TreasuryMovement"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   accountPayable?: Prisma.XOR<Prisma.AccountPayableNullableScalarRelationFilter, Prisma.AccountPayableWhereInput> | null
+  document?: Prisma.XOR<Prisma.DocumentNullableScalarRelationFilter, Prisma.DocumentWhereInput> | null
+  creditPayment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
 }
 
 export type TreasuryMovementOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   accountPayableId?: Prisma.SortOrderInput | Prisma.SortOrder
+  documentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  creditPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   category?: Prisma.SortOrder
   source?: Prisma.SortOrder
@@ -309,15 +329,19 @@ export type TreasuryMovementOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
   accountPayable?: Prisma.AccountPayableOrderByWithRelationInput
+  document?: Prisma.DocumentOrderByWithRelationInput
+  creditPayment?: Prisma.PaymentOrderByWithRelationInput
 }
 
 export type TreasuryMovementWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  creditPaymentId?: string
   AND?: Prisma.TreasuryMovementWhereInput | Prisma.TreasuryMovementWhereInput[]
   OR?: Prisma.TreasuryMovementWhereInput[]
   NOT?: Prisma.TreasuryMovementWhereInput | Prisma.TreasuryMovementWhereInput[]
   organizationId?: Prisma.StringFilter<"TreasuryMovement"> | string
   accountPayableId?: Prisma.StringNullableFilter<"TreasuryMovement"> | string | null
+  documentId?: Prisma.StringNullableFilter<"TreasuryMovement"> | string | null
   type?: Prisma.EnumTreasuryMovementTypeFilter<"TreasuryMovement"> | $Enums.TreasuryMovementType
   category?: Prisma.EnumTreasuryMovementCategoryFilter<"TreasuryMovement"> | $Enums.TreasuryMovementCategory
   source?: Prisma.EnumTreasuryMovementSourceFilter<"TreasuryMovement"> | $Enums.TreasuryMovementSource
@@ -331,12 +355,16 @@ export type TreasuryMovementWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"TreasuryMovement"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   accountPayable?: Prisma.XOR<Prisma.AccountPayableNullableScalarRelationFilter, Prisma.AccountPayableWhereInput> | null
-}, "id">
+  document?: Prisma.XOR<Prisma.DocumentNullableScalarRelationFilter, Prisma.DocumentWhereInput> | null
+  creditPayment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
+}, "id" | "creditPaymentId">
 
 export type TreasuryMovementOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   accountPayableId?: Prisma.SortOrderInput | Prisma.SortOrder
+  documentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  creditPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   category?: Prisma.SortOrder
   source?: Prisma.SortOrder
@@ -362,6 +390,8 @@ export type TreasuryMovementScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"TreasuryMovement"> | string
   organizationId?: Prisma.StringWithAggregatesFilter<"TreasuryMovement"> | string
   accountPayableId?: Prisma.StringNullableWithAggregatesFilter<"TreasuryMovement"> | string | null
+  documentId?: Prisma.StringNullableWithAggregatesFilter<"TreasuryMovement"> | string | null
+  creditPaymentId?: Prisma.StringNullableWithAggregatesFilter<"TreasuryMovement"> | string | null
   type?: Prisma.EnumTreasuryMovementTypeWithAggregatesFilter<"TreasuryMovement"> | $Enums.TreasuryMovementType
   category?: Prisma.EnumTreasuryMovementCategoryWithAggregatesFilter<"TreasuryMovement"> | $Enums.TreasuryMovementCategory
   source?: Prisma.EnumTreasuryMovementSourceWithAggregatesFilter<"TreasuryMovement"> | $Enums.TreasuryMovementSource
@@ -390,12 +420,16 @@ export type TreasuryMovementCreateInput = {
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutTreasuryMovementsInput
   accountPayable?: Prisma.AccountPayableCreateNestedOneWithoutTreasuryMovementsInput
+  document?: Prisma.DocumentCreateNestedOneWithoutTreasuryMovementsInput
+  creditPayment?: Prisma.PaymentCreateNestedOneWithoutTreasuryMovementInput
 }
 
 export type TreasuryMovementUncheckedCreateInput = {
   id?: string
   organizationId: string
   accountPayableId?: string | null
+  documentId?: string | null
+  creditPaymentId?: string | null
   type: $Enums.TreasuryMovementType
   category?: $Enums.TreasuryMovementCategory
   source?: $Enums.TreasuryMovementSource
@@ -424,12 +458,16 @@ export type TreasuryMovementUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutTreasuryMovementsNestedInput
   accountPayable?: Prisma.AccountPayableUpdateOneWithoutTreasuryMovementsNestedInput
+  document?: Prisma.DocumentUpdateOneWithoutTreasuryMovementsNestedInput
+  creditPayment?: Prisma.PaymentUpdateOneWithoutTreasuryMovementNestedInput
 }
 
 export type TreasuryMovementUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   accountPayableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  creditPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumTreasuryMovementTypeFieldUpdateOperationsInput | $Enums.TreasuryMovementType
   category?: Prisma.EnumTreasuryMovementCategoryFieldUpdateOperationsInput | $Enums.TreasuryMovementCategory
   source?: Prisma.EnumTreasuryMovementSourceFieldUpdateOperationsInput | $Enums.TreasuryMovementSource
@@ -447,6 +485,8 @@ export type TreasuryMovementCreateManyInput = {
   id?: string
   organizationId: string
   accountPayableId?: string | null
+  documentId?: string | null
+  creditPaymentId?: string | null
   type: $Enums.TreasuryMovementType
   category?: $Enums.TreasuryMovementCategory
   source?: $Enums.TreasuryMovementSource
@@ -479,6 +519,8 @@ export type TreasuryMovementUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   accountPayableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  creditPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumTreasuryMovementTypeFieldUpdateOperationsInput | $Enums.TreasuryMovementType
   category?: Prisma.EnumTreasuryMovementCategoryFieldUpdateOperationsInput | $Enums.TreasuryMovementCategory
   source?: Prisma.EnumTreasuryMovementSourceFieldUpdateOperationsInput | $Enums.TreasuryMovementSource
@@ -506,6 +548,8 @@ export type TreasuryMovementCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   accountPayableId?: Prisma.SortOrder
+  documentId?: Prisma.SortOrder
+  creditPaymentId?: Prisma.SortOrder
   type?: Prisma.SortOrder
   category?: Prisma.SortOrder
   source?: Prisma.SortOrder
@@ -527,6 +571,8 @@ export type TreasuryMovementMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   accountPayableId?: Prisma.SortOrder
+  documentId?: Prisma.SortOrder
+  creditPaymentId?: Prisma.SortOrder
   type?: Prisma.SortOrder
   category?: Prisma.SortOrder
   source?: Prisma.SortOrder
@@ -544,6 +590,8 @@ export type TreasuryMovementMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   accountPayableId?: Prisma.SortOrder
+  documentId?: Prisma.SortOrder
+  creditPaymentId?: Prisma.SortOrder
   type?: Prisma.SortOrder
   category?: Prisma.SortOrder
   source?: Prisma.SortOrder
@@ -559,6 +607,11 @@ export type TreasuryMovementMinOrderByAggregateInput = {
 
 export type TreasuryMovementSumOrderByAggregateInput = {
   amount?: Prisma.SortOrder
+}
+
+export type TreasuryMovementNullableScalarRelationFilter = {
+  is?: Prisma.TreasuryMovementWhereInput | null
+  isNot?: Prisma.TreasuryMovementWhereInput | null
 }
 
 export type TreasuryMovementCreateNestedManyWithoutOrganizationInput = {
@@ -645,6 +698,48 @@ export type TreasuryMovementUncheckedUpdateManyWithoutAccountPayableNestedInput 
   deleteMany?: Prisma.TreasuryMovementScalarWhereInput | Prisma.TreasuryMovementScalarWhereInput[]
 }
 
+export type TreasuryMovementCreateNestedManyWithoutDocumentInput = {
+  create?: Prisma.XOR<Prisma.TreasuryMovementCreateWithoutDocumentInput, Prisma.TreasuryMovementUncheckedCreateWithoutDocumentInput> | Prisma.TreasuryMovementCreateWithoutDocumentInput[] | Prisma.TreasuryMovementUncheckedCreateWithoutDocumentInput[]
+  connectOrCreate?: Prisma.TreasuryMovementCreateOrConnectWithoutDocumentInput | Prisma.TreasuryMovementCreateOrConnectWithoutDocumentInput[]
+  createMany?: Prisma.TreasuryMovementCreateManyDocumentInputEnvelope
+  connect?: Prisma.TreasuryMovementWhereUniqueInput | Prisma.TreasuryMovementWhereUniqueInput[]
+}
+
+export type TreasuryMovementUncheckedCreateNestedManyWithoutDocumentInput = {
+  create?: Prisma.XOR<Prisma.TreasuryMovementCreateWithoutDocumentInput, Prisma.TreasuryMovementUncheckedCreateWithoutDocumentInput> | Prisma.TreasuryMovementCreateWithoutDocumentInput[] | Prisma.TreasuryMovementUncheckedCreateWithoutDocumentInput[]
+  connectOrCreate?: Prisma.TreasuryMovementCreateOrConnectWithoutDocumentInput | Prisma.TreasuryMovementCreateOrConnectWithoutDocumentInput[]
+  createMany?: Prisma.TreasuryMovementCreateManyDocumentInputEnvelope
+  connect?: Prisma.TreasuryMovementWhereUniqueInput | Prisma.TreasuryMovementWhereUniqueInput[]
+}
+
+export type TreasuryMovementUpdateManyWithoutDocumentNestedInput = {
+  create?: Prisma.XOR<Prisma.TreasuryMovementCreateWithoutDocumentInput, Prisma.TreasuryMovementUncheckedCreateWithoutDocumentInput> | Prisma.TreasuryMovementCreateWithoutDocumentInput[] | Prisma.TreasuryMovementUncheckedCreateWithoutDocumentInput[]
+  connectOrCreate?: Prisma.TreasuryMovementCreateOrConnectWithoutDocumentInput | Prisma.TreasuryMovementCreateOrConnectWithoutDocumentInput[]
+  upsert?: Prisma.TreasuryMovementUpsertWithWhereUniqueWithoutDocumentInput | Prisma.TreasuryMovementUpsertWithWhereUniqueWithoutDocumentInput[]
+  createMany?: Prisma.TreasuryMovementCreateManyDocumentInputEnvelope
+  set?: Prisma.TreasuryMovementWhereUniqueInput | Prisma.TreasuryMovementWhereUniqueInput[]
+  disconnect?: Prisma.TreasuryMovementWhereUniqueInput | Prisma.TreasuryMovementWhereUniqueInput[]
+  delete?: Prisma.TreasuryMovementWhereUniqueInput | Prisma.TreasuryMovementWhereUniqueInput[]
+  connect?: Prisma.TreasuryMovementWhereUniqueInput | Prisma.TreasuryMovementWhereUniqueInput[]
+  update?: Prisma.TreasuryMovementUpdateWithWhereUniqueWithoutDocumentInput | Prisma.TreasuryMovementUpdateWithWhereUniqueWithoutDocumentInput[]
+  updateMany?: Prisma.TreasuryMovementUpdateManyWithWhereWithoutDocumentInput | Prisma.TreasuryMovementUpdateManyWithWhereWithoutDocumentInput[]
+  deleteMany?: Prisma.TreasuryMovementScalarWhereInput | Prisma.TreasuryMovementScalarWhereInput[]
+}
+
+export type TreasuryMovementUncheckedUpdateManyWithoutDocumentNestedInput = {
+  create?: Prisma.XOR<Prisma.TreasuryMovementCreateWithoutDocumentInput, Prisma.TreasuryMovementUncheckedCreateWithoutDocumentInput> | Prisma.TreasuryMovementCreateWithoutDocumentInput[] | Prisma.TreasuryMovementUncheckedCreateWithoutDocumentInput[]
+  connectOrCreate?: Prisma.TreasuryMovementCreateOrConnectWithoutDocumentInput | Prisma.TreasuryMovementCreateOrConnectWithoutDocumentInput[]
+  upsert?: Prisma.TreasuryMovementUpsertWithWhereUniqueWithoutDocumentInput | Prisma.TreasuryMovementUpsertWithWhereUniqueWithoutDocumentInput[]
+  createMany?: Prisma.TreasuryMovementCreateManyDocumentInputEnvelope
+  set?: Prisma.TreasuryMovementWhereUniqueInput | Prisma.TreasuryMovementWhereUniqueInput[]
+  disconnect?: Prisma.TreasuryMovementWhereUniqueInput | Prisma.TreasuryMovementWhereUniqueInput[]
+  delete?: Prisma.TreasuryMovementWhereUniqueInput | Prisma.TreasuryMovementWhereUniqueInput[]
+  connect?: Prisma.TreasuryMovementWhereUniqueInput | Prisma.TreasuryMovementWhereUniqueInput[]
+  update?: Prisma.TreasuryMovementUpdateWithWhereUniqueWithoutDocumentInput | Prisma.TreasuryMovementUpdateWithWhereUniqueWithoutDocumentInput[]
+  updateMany?: Prisma.TreasuryMovementUpdateManyWithWhereWithoutDocumentInput | Prisma.TreasuryMovementUpdateManyWithWhereWithoutDocumentInput[]
+  deleteMany?: Prisma.TreasuryMovementScalarWhereInput | Prisma.TreasuryMovementScalarWhereInput[]
+}
+
 export type EnumTreasuryMovementTypeFieldUpdateOperationsInput = {
   set?: $Enums.TreasuryMovementType
 }
@@ -655,6 +750,38 @@ export type EnumTreasuryMovementCategoryFieldUpdateOperationsInput = {
 
 export type EnumTreasuryMovementSourceFieldUpdateOperationsInput = {
   set?: $Enums.TreasuryMovementSource
+}
+
+export type TreasuryMovementCreateNestedOneWithoutCreditPaymentInput = {
+  create?: Prisma.XOR<Prisma.TreasuryMovementCreateWithoutCreditPaymentInput, Prisma.TreasuryMovementUncheckedCreateWithoutCreditPaymentInput>
+  connectOrCreate?: Prisma.TreasuryMovementCreateOrConnectWithoutCreditPaymentInput
+  connect?: Prisma.TreasuryMovementWhereUniqueInput
+}
+
+export type TreasuryMovementUncheckedCreateNestedOneWithoutCreditPaymentInput = {
+  create?: Prisma.XOR<Prisma.TreasuryMovementCreateWithoutCreditPaymentInput, Prisma.TreasuryMovementUncheckedCreateWithoutCreditPaymentInput>
+  connectOrCreate?: Prisma.TreasuryMovementCreateOrConnectWithoutCreditPaymentInput
+  connect?: Prisma.TreasuryMovementWhereUniqueInput
+}
+
+export type TreasuryMovementUpdateOneWithoutCreditPaymentNestedInput = {
+  create?: Prisma.XOR<Prisma.TreasuryMovementCreateWithoutCreditPaymentInput, Prisma.TreasuryMovementUncheckedCreateWithoutCreditPaymentInput>
+  connectOrCreate?: Prisma.TreasuryMovementCreateOrConnectWithoutCreditPaymentInput
+  upsert?: Prisma.TreasuryMovementUpsertWithoutCreditPaymentInput
+  disconnect?: Prisma.TreasuryMovementWhereInput | boolean
+  delete?: Prisma.TreasuryMovementWhereInput | boolean
+  connect?: Prisma.TreasuryMovementWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TreasuryMovementUpdateToOneWithWhereWithoutCreditPaymentInput, Prisma.TreasuryMovementUpdateWithoutCreditPaymentInput>, Prisma.TreasuryMovementUncheckedUpdateWithoutCreditPaymentInput>
+}
+
+export type TreasuryMovementUncheckedUpdateOneWithoutCreditPaymentNestedInput = {
+  create?: Prisma.XOR<Prisma.TreasuryMovementCreateWithoutCreditPaymentInput, Prisma.TreasuryMovementUncheckedCreateWithoutCreditPaymentInput>
+  connectOrCreate?: Prisma.TreasuryMovementCreateOrConnectWithoutCreditPaymentInput
+  upsert?: Prisma.TreasuryMovementUpsertWithoutCreditPaymentInput
+  disconnect?: Prisma.TreasuryMovementWhereInput | boolean
+  delete?: Prisma.TreasuryMovementWhereInput | boolean
+  connect?: Prisma.TreasuryMovementWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TreasuryMovementUpdateToOneWithWhereWithoutCreditPaymentInput, Prisma.TreasuryMovementUpdateWithoutCreditPaymentInput>, Prisma.TreasuryMovementUncheckedUpdateWithoutCreditPaymentInput>
 }
 
 export type TreasuryMovementCreateWithoutOrganizationInput = {
@@ -671,11 +798,15 @@ export type TreasuryMovementCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   accountPayable?: Prisma.AccountPayableCreateNestedOneWithoutTreasuryMovementsInput
+  document?: Prisma.DocumentCreateNestedOneWithoutTreasuryMovementsInput
+  creditPayment?: Prisma.PaymentCreateNestedOneWithoutTreasuryMovementInput
 }
 
 export type TreasuryMovementUncheckedCreateWithoutOrganizationInput = {
   id?: string
   accountPayableId?: string | null
+  documentId?: string | null
+  creditPaymentId?: string | null
   type: $Enums.TreasuryMovementType
   category?: $Enums.TreasuryMovementCategory
   source?: $Enums.TreasuryMovementSource
@@ -722,6 +853,8 @@ export type TreasuryMovementScalarWhereInput = {
   id?: Prisma.StringFilter<"TreasuryMovement"> | string
   organizationId?: Prisma.StringFilter<"TreasuryMovement"> | string
   accountPayableId?: Prisma.StringNullableFilter<"TreasuryMovement"> | string | null
+  documentId?: Prisma.StringNullableFilter<"TreasuryMovement"> | string | null
+  creditPaymentId?: Prisma.StringNullableFilter<"TreasuryMovement"> | string | null
   type?: Prisma.EnumTreasuryMovementTypeFilter<"TreasuryMovement"> | $Enums.TreasuryMovementType
   category?: Prisma.EnumTreasuryMovementCategoryFilter<"TreasuryMovement"> | $Enums.TreasuryMovementCategory
   source?: Prisma.EnumTreasuryMovementSourceFilter<"TreasuryMovement"> | $Enums.TreasuryMovementSource
@@ -749,11 +882,15 @@ export type TreasuryMovementCreateWithoutAccountPayableInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutTreasuryMovementsInput
+  document?: Prisma.DocumentCreateNestedOneWithoutTreasuryMovementsInput
+  creditPayment?: Prisma.PaymentCreateNestedOneWithoutTreasuryMovementInput
 }
 
 export type TreasuryMovementUncheckedCreateWithoutAccountPayableInput = {
   id?: string
   organizationId: string
+  documentId?: string | null
+  creditPaymentId?: string | null
   type: $Enums.TreasuryMovementType
   category?: $Enums.TreasuryMovementCategory
   source?: $Enums.TreasuryMovementSource
@@ -793,9 +930,161 @@ export type TreasuryMovementUpdateManyWithWhereWithoutAccountPayableInput = {
   data: Prisma.XOR<Prisma.TreasuryMovementUpdateManyMutationInput, Prisma.TreasuryMovementUncheckedUpdateManyWithoutAccountPayableInput>
 }
 
+export type TreasuryMovementCreateWithoutDocumentInput = {
+  id?: string
+  type: $Enums.TreasuryMovementType
+  category?: $Enums.TreasuryMovementCategory
+  source?: $Enums.TreasuryMovementSource
+  title: string
+  description?: string | null
+  reference?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  occurredAt?: Date | string
+  createdBy: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutTreasuryMovementsInput
+  accountPayable?: Prisma.AccountPayableCreateNestedOneWithoutTreasuryMovementsInput
+  creditPayment?: Prisma.PaymentCreateNestedOneWithoutTreasuryMovementInput
+}
+
+export type TreasuryMovementUncheckedCreateWithoutDocumentInput = {
+  id?: string
+  organizationId: string
+  accountPayableId?: string | null
+  creditPaymentId?: string | null
+  type: $Enums.TreasuryMovementType
+  category?: $Enums.TreasuryMovementCategory
+  source?: $Enums.TreasuryMovementSource
+  title: string
+  description?: string | null
+  reference?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  occurredAt?: Date | string
+  createdBy: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TreasuryMovementCreateOrConnectWithoutDocumentInput = {
+  where: Prisma.TreasuryMovementWhereUniqueInput
+  create: Prisma.XOR<Prisma.TreasuryMovementCreateWithoutDocumentInput, Prisma.TreasuryMovementUncheckedCreateWithoutDocumentInput>
+}
+
+export type TreasuryMovementCreateManyDocumentInputEnvelope = {
+  data: Prisma.TreasuryMovementCreateManyDocumentInput | Prisma.TreasuryMovementCreateManyDocumentInput[]
+  skipDuplicates?: boolean
+}
+
+export type TreasuryMovementUpsertWithWhereUniqueWithoutDocumentInput = {
+  where: Prisma.TreasuryMovementWhereUniqueInput
+  update: Prisma.XOR<Prisma.TreasuryMovementUpdateWithoutDocumentInput, Prisma.TreasuryMovementUncheckedUpdateWithoutDocumentInput>
+  create: Prisma.XOR<Prisma.TreasuryMovementCreateWithoutDocumentInput, Prisma.TreasuryMovementUncheckedCreateWithoutDocumentInput>
+}
+
+export type TreasuryMovementUpdateWithWhereUniqueWithoutDocumentInput = {
+  where: Prisma.TreasuryMovementWhereUniqueInput
+  data: Prisma.XOR<Prisma.TreasuryMovementUpdateWithoutDocumentInput, Prisma.TreasuryMovementUncheckedUpdateWithoutDocumentInput>
+}
+
+export type TreasuryMovementUpdateManyWithWhereWithoutDocumentInput = {
+  where: Prisma.TreasuryMovementScalarWhereInput
+  data: Prisma.XOR<Prisma.TreasuryMovementUpdateManyMutationInput, Prisma.TreasuryMovementUncheckedUpdateManyWithoutDocumentInput>
+}
+
+export type TreasuryMovementCreateWithoutCreditPaymentInput = {
+  id?: string
+  type: $Enums.TreasuryMovementType
+  category?: $Enums.TreasuryMovementCategory
+  source?: $Enums.TreasuryMovementSource
+  title: string
+  description?: string | null
+  reference?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  occurredAt?: Date | string
+  createdBy: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutTreasuryMovementsInput
+  accountPayable?: Prisma.AccountPayableCreateNestedOneWithoutTreasuryMovementsInput
+  document?: Prisma.DocumentCreateNestedOneWithoutTreasuryMovementsInput
+}
+
+export type TreasuryMovementUncheckedCreateWithoutCreditPaymentInput = {
+  id?: string
+  organizationId: string
+  accountPayableId?: string | null
+  documentId?: string | null
+  type: $Enums.TreasuryMovementType
+  category?: $Enums.TreasuryMovementCategory
+  source?: $Enums.TreasuryMovementSource
+  title: string
+  description?: string | null
+  reference?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  occurredAt?: Date | string
+  createdBy: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TreasuryMovementCreateOrConnectWithoutCreditPaymentInput = {
+  where: Prisma.TreasuryMovementWhereUniqueInput
+  create: Prisma.XOR<Prisma.TreasuryMovementCreateWithoutCreditPaymentInput, Prisma.TreasuryMovementUncheckedCreateWithoutCreditPaymentInput>
+}
+
+export type TreasuryMovementUpsertWithoutCreditPaymentInput = {
+  update: Prisma.XOR<Prisma.TreasuryMovementUpdateWithoutCreditPaymentInput, Prisma.TreasuryMovementUncheckedUpdateWithoutCreditPaymentInput>
+  create: Prisma.XOR<Prisma.TreasuryMovementCreateWithoutCreditPaymentInput, Prisma.TreasuryMovementUncheckedCreateWithoutCreditPaymentInput>
+  where?: Prisma.TreasuryMovementWhereInput
+}
+
+export type TreasuryMovementUpdateToOneWithWhereWithoutCreditPaymentInput = {
+  where?: Prisma.TreasuryMovementWhereInput
+  data: Prisma.XOR<Prisma.TreasuryMovementUpdateWithoutCreditPaymentInput, Prisma.TreasuryMovementUncheckedUpdateWithoutCreditPaymentInput>
+}
+
+export type TreasuryMovementUpdateWithoutCreditPaymentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTreasuryMovementTypeFieldUpdateOperationsInput | $Enums.TreasuryMovementType
+  category?: Prisma.EnumTreasuryMovementCategoryFieldUpdateOperationsInput | $Enums.TreasuryMovementCategory
+  source?: Prisma.EnumTreasuryMovementSourceFieldUpdateOperationsInput | $Enums.TreasuryMovementSource
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutTreasuryMovementsNestedInput
+  accountPayable?: Prisma.AccountPayableUpdateOneWithoutTreasuryMovementsNestedInput
+  document?: Prisma.DocumentUpdateOneWithoutTreasuryMovementsNestedInput
+}
+
+export type TreasuryMovementUncheckedUpdateWithoutCreditPaymentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  accountPayableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTreasuryMovementTypeFieldUpdateOperationsInput | $Enums.TreasuryMovementType
+  category?: Prisma.EnumTreasuryMovementCategoryFieldUpdateOperationsInput | $Enums.TreasuryMovementCategory
+  source?: Prisma.EnumTreasuryMovementSourceFieldUpdateOperationsInput | $Enums.TreasuryMovementSource
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type TreasuryMovementCreateManyOrganizationInput = {
   id?: string
   accountPayableId?: string | null
+  documentId?: string | null
+  creditPaymentId?: string | null
   type: $Enums.TreasuryMovementType
   category?: $Enums.TreasuryMovementCategory
   source?: $Enums.TreasuryMovementSource
@@ -823,11 +1112,15 @@ export type TreasuryMovementUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accountPayable?: Prisma.AccountPayableUpdateOneWithoutTreasuryMovementsNestedInput
+  document?: Prisma.DocumentUpdateOneWithoutTreasuryMovementsNestedInput
+  creditPayment?: Prisma.PaymentUpdateOneWithoutTreasuryMovementNestedInput
 }
 
 export type TreasuryMovementUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   accountPayableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  creditPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumTreasuryMovementTypeFieldUpdateOperationsInput | $Enums.TreasuryMovementType
   category?: Prisma.EnumTreasuryMovementCategoryFieldUpdateOperationsInput | $Enums.TreasuryMovementCategory
   source?: Prisma.EnumTreasuryMovementSourceFieldUpdateOperationsInput | $Enums.TreasuryMovementSource
@@ -844,6 +1137,8 @@ export type TreasuryMovementUncheckedUpdateWithoutOrganizationInput = {
 export type TreasuryMovementUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   accountPayableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  creditPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumTreasuryMovementTypeFieldUpdateOperationsInput | $Enums.TreasuryMovementType
   category?: Prisma.EnumTreasuryMovementCategoryFieldUpdateOperationsInput | $Enums.TreasuryMovementCategory
   source?: Prisma.EnumTreasuryMovementSourceFieldUpdateOperationsInput | $Enums.TreasuryMovementSource
@@ -860,6 +1155,8 @@ export type TreasuryMovementUncheckedUpdateManyWithoutOrganizationInput = {
 export type TreasuryMovementCreateManyAccountPayableInput = {
   id?: string
   organizationId: string
+  documentId?: string | null
+  creditPaymentId?: string | null
   type: $Enums.TreasuryMovementType
   category?: $Enums.TreasuryMovementCategory
   source?: $Enums.TreasuryMovementSource
@@ -887,11 +1184,15 @@ export type TreasuryMovementUpdateWithoutAccountPayableInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutTreasuryMovementsNestedInput
+  document?: Prisma.DocumentUpdateOneWithoutTreasuryMovementsNestedInput
+  creditPayment?: Prisma.PaymentUpdateOneWithoutTreasuryMovementNestedInput
 }
 
 export type TreasuryMovementUncheckedUpdateWithoutAccountPayableInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  documentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  creditPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumTreasuryMovementTypeFieldUpdateOperationsInput | $Enums.TreasuryMovementType
   category?: Prisma.EnumTreasuryMovementCategoryFieldUpdateOperationsInput | $Enums.TreasuryMovementCategory
   source?: Prisma.EnumTreasuryMovementSourceFieldUpdateOperationsInput | $Enums.TreasuryMovementSource
@@ -908,6 +1209,80 @@ export type TreasuryMovementUncheckedUpdateWithoutAccountPayableInput = {
 export type TreasuryMovementUncheckedUpdateManyWithoutAccountPayableInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  documentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  creditPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTreasuryMovementTypeFieldUpdateOperationsInput | $Enums.TreasuryMovementType
+  category?: Prisma.EnumTreasuryMovementCategoryFieldUpdateOperationsInput | $Enums.TreasuryMovementCategory
+  source?: Prisma.EnumTreasuryMovementSourceFieldUpdateOperationsInput | $Enums.TreasuryMovementSource
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TreasuryMovementCreateManyDocumentInput = {
+  id?: string
+  organizationId: string
+  accountPayableId?: string | null
+  creditPaymentId?: string | null
+  type: $Enums.TreasuryMovementType
+  category?: $Enums.TreasuryMovementCategory
+  source?: $Enums.TreasuryMovementSource
+  title: string
+  description?: string | null
+  reference?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  occurredAt?: Date | string
+  createdBy: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TreasuryMovementUpdateWithoutDocumentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTreasuryMovementTypeFieldUpdateOperationsInput | $Enums.TreasuryMovementType
+  category?: Prisma.EnumTreasuryMovementCategoryFieldUpdateOperationsInput | $Enums.TreasuryMovementCategory
+  source?: Prisma.EnumTreasuryMovementSourceFieldUpdateOperationsInput | $Enums.TreasuryMovementSource
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutTreasuryMovementsNestedInput
+  accountPayable?: Prisma.AccountPayableUpdateOneWithoutTreasuryMovementsNestedInput
+  creditPayment?: Prisma.PaymentUpdateOneWithoutTreasuryMovementNestedInput
+}
+
+export type TreasuryMovementUncheckedUpdateWithoutDocumentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  accountPayableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  creditPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTreasuryMovementTypeFieldUpdateOperationsInput | $Enums.TreasuryMovementType
+  category?: Prisma.EnumTreasuryMovementCategoryFieldUpdateOperationsInput | $Enums.TreasuryMovementCategory
+  source?: Prisma.EnumTreasuryMovementSourceFieldUpdateOperationsInput | $Enums.TreasuryMovementSource
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TreasuryMovementUncheckedUpdateManyWithoutDocumentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  accountPayableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  creditPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumTreasuryMovementTypeFieldUpdateOperationsInput | $Enums.TreasuryMovementType
   category?: Prisma.EnumTreasuryMovementCategoryFieldUpdateOperationsInput | $Enums.TreasuryMovementCategory
   source?: Prisma.EnumTreasuryMovementSourceFieldUpdateOperationsInput | $Enums.TreasuryMovementSource
@@ -927,6 +1302,8 @@ export type TreasuryMovementSelect<ExtArgs extends runtime.Types.Extensions.Inte
   id?: boolean
   organizationId?: boolean
   accountPayableId?: boolean
+  documentId?: boolean
+  creditPaymentId?: boolean
   type?: boolean
   category?: boolean
   source?: boolean
@@ -940,12 +1317,16 @@ export type TreasuryMovementSelect<ExtArgs extends runtime.Types.Extensions.Inte
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   accountPayable?: boolean | Prisma.TreasuryMovement$accountPayableArgs<ExtArgs>
+  document?: boolean | Prisma.TreasuryMovement$documentArgs<ExtArgs>
+  creditPayment?: boolean | Prisma.TreasuryMovement$creditPaymentArgs<ExtArgs>
 }, ExtArgs["result"]["treasuryMovement"]>
 
 export type TreasuryMovementSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   organizationId?: boolean
   accountPayableId?: boolean
+  documentId?: boolean
+  creditPaymentId?: boolean
   type?: boolean
   category?: boolean
   source?: boolean
@@ -959,12 +1340,16 @@ export type TreasuryMovementSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   accountPayable?: boolean | Prisma.TreasuryMovement$accountPayableArgs<ExtArgs>
+  document?: boolean | Prisma.TreasuryMovement$documentArgs<ExtArgs>
+  creditPayment?: boolean | Prisma.TreasuryMovement$creditPaymentArgs<ExtArgs>
 }, ExtArgs["result"]["treasuryMovement"]>
 
 export type TreasuryMovementSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   organizationId?: boolean
   accountPayableId?: boolean
+  documentId?: boolean
+  creditPaymentId?: boolean
   type?: boolean
   category?: boolean
   source?: boolean
@@ -978,12 +1363,16 @@ export type TreasuryMovementSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   accountPayable?: boolean | Prisma.TreasuryMovement$accountPayableArgs<ExtArgs>
+  document?: boolean | Prisma.TreasuryMovement$documentArgs<ExtArgs>
+  creditPayment?: boolean | Prisma.TreasuryMovement$creditPaymentArgs<ExtArgs>
 }, ExtArgs["result"]["treasuryMovement"]>
 
 export type TreasuryMovementSelectScalar = {
   id?: boolean
   organizationId?: boolean
   accountPayableId?: boolean
+  documentId?: boolean
+  creditPaymentId?: boolean
   type?: boolean
   category?: boolean
   source?: boolean
@@ -997,18 +1386,24 @@ export type TreasuryMovementSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TreasuryMovementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "accountPayableId" | "type" | "category" | "source" | "title" | "description" | "reference" | "amount" | "occurredAt" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["treasuryMovement"]>
+export type TreasuryMovementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "accountPayableId" | "documentId" | "creditPaymentId" | "type" | "category" | "source" | "title" | "description" | "reference" | "amount" | "occurredAt" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["treasuryMovement"]>
 export type TreasuryMovementInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   accountPayable?: boolean | Prisma.TreasuryMovement$accountPayableArgs<ExtArgs>
+  document?: boolean | Prisma.TreasuryMovement$documentArgs<ExtArgs>
+  creditPayment?: boolean | Prisma.TreasuryMovement$creditPaymentArgs<ExtArgs>
 }
 export type TreasuryMovementIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   accountPayable?: boolean | Prisma.TreasuryMovement$accountPayableArgs<ExtArgs>
+  document?: boolean | Prisma.TreasuryMovement$documentArgs<ExtArgs>
+  creditPayment?: boolean | Prisma.TreasuryMovement$creditPaymentArgs<ExtArgs>
 }
 export type TreasuryMovementIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   accountPayable?: boolean | Prisma.TreasuryMovement$accountPayableArgs<ExtArgs>
+  document?: boolean | Prisma.TreasuryMovement$documentArgs<ExtArgs>
+  creditPayment?: boolean | Prisma.TreasuryMovement$creditPaymentArgs<ExtArgs>
 }
 
 export type $TreasuryMovementPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1016,11 +1411,15 @@ export type $TreasuryMovementPayload<ExtArgs extends runtime.Types.Extensions.In
   objects: {
     organization: Prisma.$OrganizationPayload<ExtArgs>
     accountPayable: Prisma.$AccountPayablePayload<ExtArgs> | null
+    document: Prisma.$DocumentPayload<ExtArgs> | null
+    creditPayment: Prisma.$PaymentPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     organizationId: string
     accountPayableId: string | null
+    documentId: string | null
+    creditPaymentId: string | null
     type: $Enums.TreasuryMovementType
     category: $Enums.TreasuryMovementCategory
     source: $Enums.TreasuryMovementSource
@@ -1428,6 +1827,8 @@ export interface Prisma__TreasuryMovementClient<T, Null = never, ExtArgs extends
   readonly [Symbol.toStringTag]: "PrismaPromise"
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   accountPayable<T extends Prisma.TreasuryMovement$accountPayableArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TreasuryMovement$accountPayableArgs<ExtArgs>>): Prisma.Prisma__AccountPayableClient<runtime.Types.Result.GetResult<Prisma.$AccountPayablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  document<T extends Prisma.TreasuryMovement$documentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TreasuryMovement$documentArgs<ExtArgs>>): Prisma.Prisma__DocumentClient<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  creditPayment<T extends Prisma.TreasuryMovement$creditPaymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TreasuryMovement$creditPaymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1460,6 +1861,8 @@ export interface TreasuryMovementFieldRefs {
   readonly id: Prisma.FieldRef<"TreasuryMovement", 'String'>
   readonly organizationId: Prisma.FieldRef<"TreasuryMovement", 'String'>
   readonly accountPayableId: Prisma.FieldRef<"TreasuryMovement", 'String'>
+  readonly documentId: Prisma.FieldRef<"TreasuryMovement", 'String'>
+  readonly creditPaymentId: Prisma.FieldRef<"TreasuryMovement", 'String'>
   readonly type: Prisma.FieldRef<"TreasuryMovement", 'TreasuryMovementType'>
   readonly category: Prisma.FieldRef<"TreasuryMovement", 'TreasuryMovementCategory'>
   readonly source: Prisma.FieldRef<"TreasuryMovement", 'TreasuryMovementSource'>
@@ -1883,6 +2286,44 @@ export type TreasuryMovement$accountPayableArgs<ExtArgs extends runtime.Types.Ex
    */
   include?: Prisma.AccountPayableInclude<ExtArgs> | null
   where?: Prisma.AccountPayableWhereInput
+}
+
+/**
+ * TreasuryMovement.document
+ */
+export type TreasuryMovement$documentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Document
+   */
+  select?: Prisma.DocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Document
+   */
+  omit?: Prisma.DocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentInclude<ExtArgs> | null
+  where?: Prisma.DocumentWhereInput
+}
+
+/**
+ * TreasuryMovement.creditPayment
+ */
+export type TreasuryMovement$creditPaymentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payment
+   */
+  select?: Prisma.PaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payment
+   */
+  omit?: Prisma.PaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentInclude<ExtArgs> | null
+  where?: Prisma.PaymentWhereInput
 }
 
 /**

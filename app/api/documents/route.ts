@@ -143,6 +143,39 @@ export async function POST(req: NextRequest) {
       total: totalsCalculation.items[index].total,
     }));
 
+    const productIds = Array.from(
+      new Set(
+        validatedData.items
+          .map((item) => item.productId)
+          .filter((productId): productId is string => Boolean(productId))
+      )
+    );
+
+    const productCostMap = new Map<string, number | null>();
+    if (productIds.length > 0) {
+      const products = await db.product.findMany({
+        where: {
+          organizationId: organization.id,
+          id: {
+            in: productIds,
+          },
+        },
+        select: {
+          id: true,
+          cost: true,
+        },
+      });
+
+      for (const product of products) {
+        productCostMap.set(product.id, product.cost ? Number(product.cost) : null);
+      }
+    }
+
+    const itemsWithCosts = itemsWithTotals.map((item) => ({
+      ...item,
+      unitCost: item.productId ? (productCostMap.get(item.productId) ?? null) : null,
+    }));
+
     const subtotal = totalsCalculation.subtotal;
     const taxAmount = totalsCalculation.taxAmount;
     const total = totalsCalculation.total;
@@ -234,6 +267,12 @@ export async function POST(req: NextRequest) {
     // Usar el status directamente del request
     const status = validatedData.status;
     const paidAt = status === 'PAID' ? new Date() : null;
+    const shouldCreateSinglePayment =
+      status === 'PAID' &&
+      validatedData.paymentMethod !== 'MULTI' &&
+      validatedData.paymentMethod !== 'CREDIT';
+    const singlePaymentAmount =
+      validatedData.paymentMethod === 'CASH' ? roundedCashTotal : total;
     
     // Determinar si se debe decrementar stock
     const shouldDecrementStock = 
@@ -304,7 +343,7 @@ export async function POST(req: NextRequest) {
           notes: validatedData.notes,
           createdBy: session.user.id,
           items: {
-            create: itemsWithTotals.map((item) => ({
+            create: itemsWithCosts.map((item) => ({
               productId: item.productId,
               sku: item.sku,
               name: item.name,
@@ -312,6 +351,7 @@ export async function POST(req: NextRequest) {
               quantity: item.quantity,
               unit: item.unit,
               unitPrice: item.unitPrice,
+              unitCost: item.unitCost,
               discount: item.discount,
               discountPercent: item.discountPercent
                 ? item.discountPercent
@@ -332,7 +372,22 @@ export async function POST(req: NextRequest) {
                   })),
                 },
               }
-            : {}),
+            : shouldCreateSinglePayment
+              ? {
+                  payments: {
+                    create: [
+                      {
+                        paymentMethod: validatedData.paymentMethod,
+                        cardType:
+                          validatedData.paymentMethod === 'CARD'
+                            ? (validatedData.cardType ?? null)
+                            : null,
+                        amount: singlePaymentAmount,
+                      },
+                    ],
+                  },
+                }
+              : {}),
         },
         include: {
           customer: true,
@@ -372,6 +427,31 @@ export async function POST(req: NextRequest) {
             currentDebt: {
               increment: total,
             },
+          },
+        });
+      }
+
+      // Registrar ingreso automático en tesorería para ventas pagadas al contado
+      if (status === 'PAID' && validatedData.paymentMethod !== 'CREDIT') {
+        const pm = validatedData.paymentMethod;
+        const treasurySource =
+          pm === 'CASH' ? 'CASH' :
+          pm === 'TRANSFER' ? 'TRANSFER' :
+          pm === 'CARD' || pm === 'CHECK' ? 'BANK' :
+          'OTHER'; // MULTI u otros
+        const treasuryAmount =
+          pm === 'CASH' ? roundedCashTotal : total;
+        await tx.treasuryMovement.create({
+          data: {
+            organizationId: organization.id,
+            type: 'INFLOW',
+            category: 'SALE_INCOME',
+            source: treasurySource,
+            title: `Venta #${docNumber}`,
+            amount: treasuryAmount,
+            occurredAt: paidAt ?? new Date(),
+            createdBy: session.user.id,
+            documentId: doc.id,
           },
         });
       }

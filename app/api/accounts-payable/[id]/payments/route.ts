@@ -59,48 +59,52 @@ export async function POST(
           ? 'OVERDUE'
           : 'PARTIAL';
 
-    const updatedPayable = await db.accountPayable.update({
-      where: { id },
-      data: {
-        balance: nextBalance,
-        status,
-        paidAt:
-          nextBalance <= 0
-            ? validatedData.paidAt
-              ? new Date(validatedData.paidAt)
-              : new Date()
-            : payable.paidAt,
-        notes:
-          validatedData.notes && validatedData.notes.trim().length > 0
-            ? [payable.notes, validatedData.notes].filter(Boolean).join('\n')
-            : payable.notes,
-      },
-      include: {
-        supplier: {
-          select: {
-            id: true,
-            name: true,
-            rut: true,
-            status: true,
+    const updatedPayable = await db.$transaction(async (tx) => {
+      const updated = await tx.accountPayable.update({
+        where: { id },
+        data: {
+          balance: nextBalance,
+          status,
+          paidAt:
+            nextBalance <= 0
+              ? validatedData.paidAt
+                ? new Date(validatedData.paidAt)
+                : new Date()
+              : payable.paidAt,
+          notes:
+            validatedData.notes && validatedData.notes.trim().length > 0
+              ? [payable.notes, validatedData.notes].filter(Boolean).join('\n')
+              : payable.notes,
+        },
+        include: {
+          supplier: {
+            select: {
+              id: true,
+              name: true,
+              rut: true,
+              status: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    await db.treasuryMovement.create({
-      data: {
-        organizationId: organization.id,
-        accountPayableId: payable.id,
-        type: 'OUTFLOW',
-        category: 'ACCOUNT_PAYABLE_PAYMENT',
-        source: validatedData.source,
-        title: `Pago CxP ${updatedPayable.documentNumber || updatedPayable.id.slice(0, 8)}`,
-        description: validatedData.notes || `Pago a proveedor ${updatedPayable.supplier.name}`,
-        reference: validatedData.reference || null,
-        amount: validatedData.paymentAmount,
-        occurredAt: validatedData.paidAt ? new Date(validatedData.paidAt) : new Date(),
-        createdBy: session.user.id,
-      },
+      await tx.treasuryMovement.create({
+        data: {
+          organizationId: organization.id,
+          accountPayableId: payable.id,
+          type: 'OUTFLOW',
+          category: 'ACCOUNT_PAYABLE_PAYMENT',
+          source: validatedData.source,
+          title: `Pago CxP ${updated.documentNumber || updated.id.slice(0, 8)}`,
+          description: validatedData.notes || `Pago a proveedor ${updated.supplier.name}`,
+          reference: validatedData.reference || null,
+          amount: validatedData.paymentAmount,
+          occurredAt: validatedData.paidAt ? new Date(validatedData.paidAt) : new Date(),
+          createdBy: session.user.id,
+        },
+      });
+
+      return updated;
     });
 
     await logAuditAction({

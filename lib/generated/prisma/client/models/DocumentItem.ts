@@ -29,6 +29,7 @@ export type AggregateDocumentItem = {
 export type DocumentItemAvgAggregateOutputType = {
   quantity: runtime.Decimal | null
   unitPrice: runtime.Decimal | null
+  unitCost: runtime.Decimal | null
   discount: runtime.Decimal | null
   discountPercent: runtime.Decimal | null
   taxRate: runtime.Decimal | null
@@ -40,6 +41,7 @@ export type DocumentItemAvgAggregateOutputType = {
 export type DocumentItemSumAggregateOutputType = {
   quantity: runtime.Decimal | null
   unitPrice: runtime.Decimal | null
+  unitCost: runtime.Decimal | null
   discount: runtime.Decimal | null
   discountPercent: runtime.Decimal | null
   taxRate: runtime.Decimal | null
@@ -58,6 +60,7 @@ export type DocumentItemMinAggregateOutputType = {
   quantity: runtime.Decimal | null
   unit: string | null
   unitPrice: runtime.Decimal | null
+  unitCost: runtime.Decimal | null
   discount: runtime.Decimal | null
   discountPercent: runtime.Decimal | null
   taxRate: runtime.Decimal | null
@@ -78,6 +81,7 @@ export type DocumentItemMaxAggregateOutputType = {
   quantity: runtime.Decimal | null
   unit: string | null
   unitPrice: runtime.Decimal | null
+  unitCost: runtime.Decimal | null
   discount: runtime.Decimal | null
   discountPercent: runtime.Decimal | null
   taxRate: runtime.Decimal | null
@@ -98,6 +102,7 @@ export type DocumentItemCountAggregateOutputType = {
   quantity: number
   unit: number
   unitPrice: number
+  unitCost: number
   discount: number
   discountPercent: number
   taxRate: number
@@ -113,6 +118,7 @@ export type DocumentItemCountAggregateOutputType = {
 export type DocumentItemAvgAggregateInputType = {
   quantity?: true
   unitPrice?: true
+  unitCost?: true
   discount?: true
   discountPercent?: true
   taxRate?: true
@@ -124,6 +130,7 @@ export type DocumentItemAvgAggregateInputType = {
 export type DocumentItemSumAggregateInputType = {
   quantity?: true
   unitPrice?: true
+  unitCost?: true
   discount?: true
   discountPercent?: true
   taxRate?: true
@@ -142,6 +149,7 @@ export type DocumentItemMinAggregateInputType = {
   quantity?: true
   unit?: true
   unitPrice?: true
+  unitCost?: true
   discount?: true
   discountPercent?: true
   taxRate?: true
@@ -162,6 +170,7 @@ export type DocumentItemMaxAggregateInputType = {
   quantity?: true
   unit?: true
   unitPrice?: true
+  unitCost?: true
   discount?: true
   discountPercent?: true
   taxRate?: true
@@ -182,6 +191,7 @@ export type DocumentItemCountAggregateInputType = {
   quantity?: true
   unit?: true
   unitPrice?: true
+  unitCost?: true
   discount?: true
   discountPercent?: true
   taxRate?: true
@@ -289,6 +299,7 @@ export type DocumentItemGroupByOutputType = {
   quantity: runtime.Decimal
   unit: string
   unitPrice: runtime.Decimal
+  unitCost: runtime.Decimal | null
   discount: runtime.Decimal
   discountPercent: runtime.Decimal | null
   taxRate: runtime.Decimal
@@ -332,6 +343,7 @@ export type DocumentItemWhereInput = {
   quantity?: Prisma.DecimalFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFilter<"DocumentItem"> | string
   unitPrice?: Prisma.DecimalFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: Prisma.DecimalNullableFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: Prisma.DecimalFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: Prisma.DecimalNullableFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: Prisma.DecimalFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -354,6 +366,7 @@ export type DocumentItemOrderByWithRelationInput = {
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
+  unitCost?: Prisma.SortOrderInput | Prisma.SortOrder
   discount?: Prisma.SortOrder
   discountPercent?: Prisma.SortOrderInput | Prisma.SortOrder
   taxRate?: Prisma.SortOrder
@@ -379,6 +392,7 @@ export type DocumentItemWhereUniqueInput = Prisma.AtLeast<{
   quantity?: Prisma.DecimalFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFilter<"DocumentItem"> | string
   unitPrice?: Prisma.DecimalFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: Prisma.DecimalNullableFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: Prisma.DecimalFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: Prisma.DecimalNullableFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: Prisma.DecimalFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -401,6 +415,7 @@ export type DocumentItemOrderByWithAggregationInput = {
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
+  unitCost?: Prisma.SortOrderInput | Prisma.SortOrder
   discount?: Prisma.SortOrder
   discountPercent?: Prisma.SortOrderInput | Prisma.SortOrder
   taxRate?: Prisma.SortOrder
@@ -429,6 +444,7 @@ export type DocumentItemScalarWhereWithAggregatesInput = {
   quantity?: Prisma.DecimalWithAggregatesFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringWithAggregatesFilter<"DocumentItem"> | string
   unitPrice?: Prisma.DecimalWithAggregatesFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: Prisma.DecimalNullableWithAggregatesFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: Prisma.DecimalWithAggregatesFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: Prisma.DecimalNullableWithAggregatesFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: Prisma.DecimalWithAggregatesFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -447,6 +463,7 @@ export type DocumentItemCreateInput = {
   quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: string
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -469,6 +486,7 @@ export type DocumentItemUncheckedCreateInput = {
   quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: string
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -487,6 +505,7 @@ export type DocumentItemUpdateInput = {
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -509,6 +528,7 @@ export type DocumentItemUncheckedUpdateInput = {
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -529,6 +549,7 @@ export type DocumentItemCreateManyInput = {
   quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: string
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -547,6 +568,7 @@ export type DocumentItemUpdateManyMutationInput = {
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -567,6 +589,7 @@ export type DocumentItemUncheckedUpdateManyInput = {
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -597,6 +620,7 @@ export type DocumentItemCountOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
+  unitCost?: Prisma.SortOrder
   discount?: Prisma.SortOrder
   discountPercent?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
@@ -610,6 +634,7 @@ export type DocumentItemCountOrderByAggregateInput = {
 export type DocumentItemAvgOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
+  unitCost?: Prisma.SortOrder
   discount?: Prisma.SortOrder
   discountPercent?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
@@ -628,6 +653,7 @@ export type DocumentItemMaxOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
+  unitCost?: Prisma.SortOrder
   discount?: Prisma.SortOrder
   discountPercent?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
@@ -648,6 +674,7 @@ export type DocumentItemMinOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
+  unitCost?: Prisma.SortOrder
   discount?: Prisma.SortOrder
   discountPercent?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
@@ -661,6 +688,7 @@ export type DocumentItemMinOrderByAggregateInput = {
 export type DocumentItemSumOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
+  unitCost?: Prisma.SortOrder
   discount?: Prisma.SortOrder
   discountPercent?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
@@ -761,6 +789,7 @@ export type DocumentItemCreateWithoutProductInput = {
   quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: string
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -781,6 +810,7 @@ export type DocumentItemUncheckedCreateWithoutProductInput = {
   quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: string
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -830,6 +860,7 @@ export type DocumentItemScalarWhereInput = {
   quantity?: Prisma.DecimalFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFilter<"DocumentItem"> | string
   unitPrice?: Prisma.DecimalFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: Prisma.DecimalNullableFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: Prisma.DecimalFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: Prisma.DecimalNullableFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: Prisma.DecimalFilter<"DocumentItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -848,6 +879,7 @@ export type DocumentItemCreateWithoutDocumentInput = {
   quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: string
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -868,6 +900,7 @@ export type DocumentItemUncheckedCreateWithoutDocumentInput = {
   quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: string
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -913,6 +946,7 @@ export type DocumentItemCreateManyProductInput = {
   quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: string
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -931,6 +965,7 @@ export type DocumentItemUpdateWithoutProductInput = {
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -951,6 +986,7 @@ export type DocumentItemUncheckedUpdateWithoutProductInput = {
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -970,6 +1006,7 @@ export type DocumentItemUncheckedUpdateManyWithoutProductInput = {
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -989,6 +1026,7 @@ export type DocumentItemCreateManyDocumentInput = {
   quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: string
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1007,6 +1045,7 @@ export type DocumentItemUpdateWithoutDocumentInput = {
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1027,6 +1066,7 @@ export type DocumentItemUncheckedUpdateWithoutDocumentInput = {
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1046,6 +1086,7 @@ export type DocumentItemUncheckedUpdateManyWithoutDocumentInput = {
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountPercent?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1068,6 +1109,7 @@ export type DocumentItemSelect<ExtArgs extends runtime.Types.Extensions.Internal
   quantity?: boolean
   unit?: boolean
   unitPrice?: boolean
+  unitCost?: boolean
   discount?: boolean
   discountPercent?: boolean
   taxRate?: boolean
@@ -1090,6 +1132,7 @@ export type DocumentItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   quantity?: boolean
   unit?: boolean
   unitPrice?: boolean
+  unitCost?: boolean
   discount?: boolean
   discountPercent?: boolean
   taxRate?: boolean
@@ -1112,6 +1155,7 @@ export type DocumentItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   quantity?: boolean
   unit?: boolean
   unitPrice?: boolean
+  unitCost?: boolean
   discount?: boolean
   discountPercent?: boolean
   taxRate?: boolean
@@ -1134,6 +1178,7 @@ export type DocumentItemSelectScalar = {
   quantity?: boolean
   unit?: boolean
   unitPrice?: boolean
+  unitCost?: boolean
   discount?: boolean
   discountPercent?: boolean
   taxRate?: boolean
@@ -1144,7 +1189,7 @@ export type DocumentItemSelectScalar = {
   updatedAt?: boolean
 }
 
-export type DocumentItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "documentId" | "productId" | "sku" | "name" | "description" | "quantity" | "unit" | "unitPrice" | "discount" | "discountPercent" | "taxRate" | "subtotal" | "taxAmount" | "total" | "createdAt" | "updatedAt", ExtArgs["result"]["documentItem"]>
+export type DocumentItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "documentId" | "productId" | "sku" | "name" | "description" | "quantity" | "unit" | "unitPrice" | "unitCost" | "discount" | "discountPercent" | "taxRate" | "subtotal" | "taxAmount" | "total" | "createdAt" | "updatedAt", ExtArgs["result"]["documentItem"]>
 export type DocumentItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
   product?: boolean | Prisma.DocumentItem$productArgs<ExtArgs>
@@ -1174,6 +1219,7 @@ export type $DocumentItemPayload<ExtArgs extends runtime.Types.Extensions.Intern
     quantity: runtime.Decimal
     unit: string
     unitPrice: runtime.Decimal
+    unitCost: runtime.Decimal | null
     discount: runtime.Decimal
     discountPercent: runtime.Decimal | null
     taxRate: runtime.Decimal
@@ -1616,6 +1662,7 @@ export interface DocumentItemFieldRefs {
   readonly quantity: Prisma.FieldRef<"DocumentItem", 'Decimal'>
   readonly unit: Prisma.FieldRef<"DocumentItem", 'String'>
   readonly unitPrice: Prisma.FieldRef<"DocumentItem", 'Decimal'>
+  readonly unitCost: Prisma.FieldRef<"DocumentItem", 'Decimal'>
   readonly discount: Prisma.FieldRef<"DocumentItem", 'Decimal'>
   readonly discountPercent: Prisma.FieldRef<"DocumentItem", 'Decimal'>
   readonly taxRate: Prisma.FieldRef<"DocumentItem", 'Decimal'>

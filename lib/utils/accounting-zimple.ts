@@ -176,6 +176,8 @@ async function getCostOfSalesByDocument(organizationId: string, startDate: Date,
     select: {
       documentId: true,
       quantity: true,
+      // Sprint 2: unitCost es snapshot histórico. Fallback a product.cost durante transición pre-backfill.
+      unitCost: true,
       product: {
         select: {
           cost: true,
@@ -186,7 +188,10 @@ async function getCostOfSalesByDocument(organizationId: string, startDate: Date,
 
   return saleItems.reduce((acc, item) => {
     const quantity = decimalToNumber(item.quantity);
-    const cost = decimalToNumber(item.product?.cost);
+    const snapshotCost = decimalToNumber(item.unitCost);
+    const liveCost = decimalToNumber(item.product?.cost);
+    // Prioridad: snapshot histórico > costo live del catálogo > 0
+    const cost = snapshotCost > 0 ? snapshotCost : liveCost > 0 ? liveCost : 0;
     acc[item.documentId] = (acc[item.documentId] || 0) + quantity * cost;
     return acc;
   }, {} as Record<string, number>);

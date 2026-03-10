@@ -32,6 +32,18 @@ export async function startImpersonation(organizationId: string) {
     throw new Error('Organización no encontrada')
   }
 
+  // Desactivar cualquier sesión de impersonation previa del super admin
+  await db.impersonationSession.updateMany({
+    where: {
+      superAdminId: session.user.id,
+      isActive: true,
+    },
+    data: {
+      isActive: false,
+      endedAt: new Date(),
+    },
+  })
+
   // Crear sesión de impersonation (válida por 30 minutos)
   const expiresAt = new Date()
   expiresAt.setMinutes(expiresAt.getMinutes() + 30)
@@ -77,29 +89,38 @@ export async function startImpersonation(organizationId: string) {
  */
 export async function stopImpersonation() {
   const session = await auth()
+
+  if (!session || !session.user.isSuperAdmin) {
+    throw new Error('No tienes permisos para realizar esta acción')
+  }
+
   const cookieStore = await cookies()
   const impersonationSessionId = cookieStore.get('impersonation_session')?.value
 
-  if (!impersonationSessionId) {
-    throw new Error('No estás en modo impersonation')
-  }
-
-  // Marcar sesión como terminada
-  await db.impersonationSession.update({
-    where: { id: impersonationSessionId },
+  // Marcar como terminadas todas las sesiones activas del super admin
+  // (no depender únicamente de la cookie evita estados "pegados")
+  const endedAt = new Date()
+  const updated = await db.impersonationSession.updateMany({
+    where: {
+      superAdminId: session.user.id,
+      isActive: true,
+    },
     data: {
       isActive: false,
-      endedAt: new Date(),
+      endedAt,
     },
   })
 
   // Registrar en audit log
-  if (session) {
+  if (updated.count > 0) {
     await logAuditAction({
       userId: session.user.id,
       action: AUDIT_ACTIONS.STOP_IMPERSONATE,
       resource: 'ImpersonationSession',
-      resourceId: impersonationSessionId,
+      resourceId: impersonationSessionId || 'bulk-stop',
+      changes: {
+        closedSessions: updated.count,
+      },
     })
   }
 

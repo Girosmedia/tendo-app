@@ -60,6 +60,8 @@ interface DashboardZimpleChartsProps {
   realResultTrend: RealResultTrendItem[];
   productsWithoutSales30dCount: number;
   lowStockCount: number;
+  periodLabel: string;
+  compareLabel: string;
 }
 
 const salesConfig = {
@@ -133,6 +135,8 @@ export function DashboardZimpleCharts({
   realResultTrend,
   productsWithoutSales30dCount,
   lowStockCount,
+  periodLabel,
+  compareLabel,
 }: DashboardZimpleChartsProps) {
   const totalPaymentMix = paymentMix.reduce((sum, item) => sum + item.total, 0);
   const topProductsRevenue = topProducts.reduce((sum, product) => sum + product.revenue, 0);
@@ -146,11 +150,11 @@ export function DashboardZimpleCharts({
     <div className='grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-12'>
       <Card className='lg:col-span-7'>
         <CardHeader>
-          <CardTitle>Tendencia de Ventas (7 días)</CardTitle>
-          <CardDescription>Cómo se está moviendo tu caja día a día</CardDescription>
+          <CardTitle>Tendencia de Ventas ({periodLabel})</CardTitle>
+          <CardDescription>Cómo se está moviendo tu caja en el período activo</CardDescription>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={salesConfig} className='h-[240px] w-full'>
+          <ChartContainer config={salesConfig} className='h-60 w-full'>
             <AreaChart data={salesTrend} accessibilityLayer>
               <defs>
                 <linearGradient id='salesFill' x1='0' y1='0' x2='0' y2='1'>
@@ -175,11 +179,11 @@ export function DashboardZimpleCharts({
 
       <Card className='lg:col-span-5'>
         <CardHeader>
-          <CardTitle>Mix de Pagos (30 días)</CardTitle>
-          <CardDescription>Dónde está entrando tu dinero</CardDescription>
+          <CardTitle>Mix de Pagos ({periodLabel})</CardTitle>
+          <CardDescription>Dónde está entrando tu dinero en el período activo</CardDescription>
         </CardHeader>
         <CardContent className='space-y-4'>
-          <ChartContainer config={paymentConfig} className='h-[220px] w-full'>
+          <ChartContainer config={paymentConfig} className='h-55 w-full'>
             <PieChart>
               <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
               <Pie
@@ -216,14 +220,14 @@ export function DashboardZimpleCharts({
 
       <Card className='lg:col-span-8'>
         <CardHeader>
-          <CardTitle>Top Productos (30 días)</CardTitle>
-          <CardDescription>Qué productos están empujando tus ventas</CardDescription>
+          <CardTitle>Top Productos ({periodLabel})</CardTitle>
+          <CardDescription>Qué productos están empujando tus ventas en el período activo</CardDescription>
         </CardHeader>
         <CardContent>
           {topProducts.length === 0 ? (
             <p className='text-sm text-muted-foreground'>Aún no hay datos para este gráfico.</p>
           ) : (
-            <ChartContainer config={topProductsConfig} className='h-[280px] w-full'>
+            <ChartContainer config={topProductsConfig} className='h-70 w-full'>
               <BarChart data={topProducts} layout='vertical' margin={{ left: 10, right: 10 }} accessibilityLayer>
                 <CartesianGrid horizontal={false} />
                 <YAxis
@@ -280,11 +284,13 @@ export function DashboardZimpleCharts({
 
       <Card className='lg:col-span-12'>
         <CardHeader>
-          <CardTitle>Resultado Real (7 días)</CardTitle>
-          <CardDescription>Evolución de ventas netas, costo total y utilidad real con margen</CardDescription>
+          <CardTitle>Resultado Real ({periodLabel})</CardTitle>
+          <CardDescription>
+            Evolución de ventas netas, costo total y utilidad real con margen (comparado vs {compareLabel})
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={realResultConfig} className='h-[280px] w-full'>
+          <ChartContainer config={realResultConfig} className='h-70 w-full'>
             <LineChart data={realResultTrend} accessibilityLayer>
               <CartesianGrid vertical={false} />
               <XAxis dataKey='dateLabel' tickLine={false} axisLine={false} tickMargin={8} />

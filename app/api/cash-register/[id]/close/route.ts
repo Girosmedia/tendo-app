@@ -128,6 +128,22 @@ export async function POST(
       },
     });
 
+    // Registrar diferencial en tesorería si hay sobrante o faltante
+    if (difference !== 0) {
+      await db.treasuryMovement.create({
+        data: {
+          organizationId: organization.id,
+          type: difference > 0 ? 'INFLOW' : 'OUTFLOW',
+          category: 'CASH_REGISTER_DIFF',
+          source: 'CASH',
+          title: difference > 0 ? 'Sobrante arqueo de caja' : 'Faltante arqueo de caja',
+          amount: Math.abs(difference),
+          occurredAt: now,
+          createdBy: session.user.id,
+        },
+      });
+    }
+
     // Audit log
     await logAuditAction({
       userId: session.user.id,

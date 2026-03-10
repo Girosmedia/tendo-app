@@ -219,15 +219,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.impersonationSessionId = activeImpersonation.id;
           token.organizationId = activeImpersonation.targetOrganizationId;
           token.organizationStatus = null;
-        } else if (token.impersonationSessionId) {
-          // Limpiar impersonation si ya no está activa
-          delete token.impersonationSessionId;
-          // Resetear a la org original del super admin (null típicamente)
+        } else {
+          // Sin impersonation activa: limpiar y resetear SIEMPRE a la org base del super admin
+          if (token.impersonationSessionId) {
+            delete token.impersonationSessionId;
+          }
+
           const dbUser = await db.user.findUnique({
             where: { id: token.id as string },
             select: { currentOrganizationId: true },
           });
+
           token.organizationId = dbUser?.currentOrganizationId ?? null;
+
           if (dbUser?.currentOrganizationId) {
             const organization = await db.organization.findUnique({
               where: { id: dbUser.currentOrganizationId },
@@ -242,6 +246,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 },
               },
             });
+
             token.organizationStatus = organization?.status ?? null;
             token.enabledModules = organization
               ? resolveEntitlements({
